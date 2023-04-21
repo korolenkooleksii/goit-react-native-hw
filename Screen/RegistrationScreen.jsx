@@ -33,8 +33,8 @@ const RegistrationScreen = () => {
   };
 
   const keyboardHide = () => {
-    Keyboard.dismiss();
     setIsShowKeyboard(false);
+    Keyboard.dismiss();
   };
 
   return (
@@ -54,7 +54,6 @@ const RegistrationScreen = () => {
             <View style={styles.wrapInput}>
               <TextInput
                 style={styles.input}
-                autoFocus
                 maxLength={40}
                 placeholder="Логин"
                 placeholderTextColor="#BDBDBD"
