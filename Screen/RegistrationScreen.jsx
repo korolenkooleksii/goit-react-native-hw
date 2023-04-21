@@ -11,15 +11,19 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
+import Add from "../Component/Add";
+
 const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
   const [mail, setMail] = useState("");
   const [password, setPassword] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+  const [isShowPassword, setIsShowPassword] = useState(true);
 
   const handleLogin = (text) => setLogin(text);
   const handleMain = (text) => setMail(text);
   const handlePassword = (text) => setPassword(text);
+  const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
   const onLogin = () => {
     Alert.alert(`login: ${login}, email: ${mail}, password: ${password}`);
@@ -38,64 +42,78 @@ const RegistrationScreen = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
-    <ImageBackground
-      style={styles.image}
-      source={require("../assets/images/photo_bg.jpg")}
-    >
-        <View
-          style={{
-            ...styles.background,
-            marginBottom: isShowKeyboard ? -135 : 0,
-          }}
+    <TouchableWithoutFeedback onPress={() => keyboardHide()}>
+      <View style={{ flex: 1 }}>
+        <ImageBackground
+          style={styles.image}
+          source={require("../assets/images/photo_bg.jpg")}
         >
-          <Text style={styles.titleForm}>Регистрация</Text>
-          <View style={styles.form}>
-            <View style={styles.wrapInput}>
-              <TextInput
-                style={styles.input}
-                maxLength={40}
-                placeholder="Логин"
-                placeholderTextColor="#BDBDBD"
-                value={login}
-                onChangeText={handleLogin}
-                onFocus={() => setIsShowKeyboard(true)}
-              />
-              <TextInput
-                style={styles.input}
-                keyboardType="email-address"
-                placeholder="Адрес электронной почты"
-                placeholderTextColor="#BDBDBD"
-                value={mail}
-                onChangeText={handleMain}
-                onFocus={() => setIsShowKeyboard(true)}
-              />
-              <TextInput
-                style={styles.input}
-                placeholder="Пароль"
-                maxLength={40}
-                secureTextEntry={true}
-                placeholderTextColor="#BDBDBD"
-                value={password}
-                onChangeText={handlePassword}
-                onFocus={() => setIsShowKeyboard(true)}
-              />
+          <View
+            style={{
+              ...styles.background,
+              marginBottom: isShowKeyboard ? -170 : 0,
+            }}
+          >
+            <View style={styles.addPhoto}>
+              <Add style={styles.addPhotoBtn} />
             </View>
-            <View style={styles.wrapBtn}>
-              <TouchableOpacity
-                style={styles.btn}
-                activeOpacity={0.7}
-                onPress={onLogin}
-              >
-                <Text style={styles.textBtn}>Зарегистрироваться</Text>
-              </TouchableOpacity>
-              <Text style={styles.enter}>Уже есть аккаунт? Войти</Text>
+
+            <Text style={styles.titleForm}>Регистрация</Text>
+            <View style={styles.form}>
+              <View style={styles.wrapInput}>
+                <TextInput
+                  style={styles.input}
+                  maxLength={40}
+                  placeholder="Логин"
+                  placeholderTextColor="#BDBDBD"
+                  value={login}
+                  onChangeText={handleLogin}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  onEndEditing={() => setIsShowKeyboard(false)}
+                />
+                <TextInput
+                  style={styles.input}
+                  keyboardType="email-address"
+                  placeholder="Адрес электронной почты"
+                  placeholderTextColor="#BDBDBD"
+                  value={mail}
+                  onChangeText={handleMain}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  onEndEditing={() => setIsShowKeyboard(false)}
+                />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Пароль"
+                  maxLength={40}
+                  secureTextEntry={isShowPassword}
+                  placeholderTextColor="#BDBDBD"
+                  value={password}
+                  onChangeText={handlePassword}
+                  onFocus={() => setIsShowKeyboard(true)}
+                  onEndEditing={() => setIsShowKeyboard(false)}
+                />
+                <Text
+                  style={styles.show}
+                  onPress={() => handleIsShowPassword()}
+                >
+                  Показать
+                </Text>
+              </View>
+              <View style={styles.wrapBtn}>
+                <TouchableOpacity
+                  style={styles.btn}
+                  activeOpacity={0.7}
+                  onPress={onLogin}
+                >
+                  <Text style={styles.textBtn}>Зарегистрироваться</Text>
+                </TouchableOpacity>
+                <Text style={styles.enter}>Уже есть аккаунт? Войти</Text>
+              </View>
             </View>
           </View>
-          <View style={styles.addPhoto}></View>
-        </View>
-    </ImageBackground>
-      </TouchableWithoutFeedback>
+        </ImageBackground>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -114,6 +132,24 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
+  addPhoto: {
+    position: "absolute",
+    top: -60,
+    left: "50%",
+    transform: [{ translateX: -60 }],
+    width: 120,
+    height: 120,
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+  },
+  addPhotoBtn: {
+    position: "absolute",
+    bottom: 14,
+    right: -12,
+    width: 25,
+    height: 25,
+    fill: "#FF6C00",
+  },
   titleForm: {
     marginBottom: 32,
     fontFamily: "Roboto",
@@ -126,12 +162,13 @@ const styles = StyleSheet.create({
   },
   form: {
     marginHorizontal: 16,
-    gap: 32,
+    gap: 43,
   },
   wrapInput: {
     gap: 16,
   },
   input: {
+    position: "relative",
     borderWidth: 1,
     borderRadius: 8,
     borderColor: "#E8E8E8",
@@ -141,9 +178,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
   },
+  show: {
+    position: "absolute",
+    bottom: 37,
+    right: 16,
+    fontFamily: "Roboto",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#1B4371",
+  },
   wrapBtn: {
     gap: 16,
-    marginBottom: 45,
+    marginBottom: 78,
   },
   btn: {
     backgroundColor: "#FF6C00",
@@ -166,15 +212,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
-  },
-  addPhoto: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-    backgroundColor: "#F6F6F6",
   },
 });
 
