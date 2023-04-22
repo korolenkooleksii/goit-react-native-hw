@@ -11,29 +11,29 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import Add from "../Component/Add";
+const initialState = {
+  email: "",
+  password: "",
+};
 
 const LoginScreen = () => {
-  const [login, setLogin] = useState("");
-  const [mail, setMail] = useState("");
-  const [password, setPassword] = useState("");
+
+  const [state, setState] = useState(initialState);
+
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
 
-  const handleLogin = (text) => setLogin(text);
-  const handleMain = (text) => setMail(text);
-  const handlePassword = (text) => setPassword(text);
+  const handleMain = (value) =>
+    setState((prevState) => ({ ...prevState, email: value }));
+  const handlePassword = (value) =>
+    setState((prevState) => ({ ...prevState, password: value }));
+  
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
   const onLogin = () => {
-    Alert.alert(`login: ${login}, email: ${mail}, password: ${password}`);
-    reset();
-  };
-
-  const reset = () => {
-    setLogin("");
-    setMail("");
-    setPassword("");
+    // Alert.alert(state.email);
+    console.log(state);
+    setState(initialState);
   };
 
   const keyboardHide = () => {
@@ -51,7 +51,7 @@ const LoginScreen = () => {
           <View
             style={{
               ...styles.background,
-              marginBottom: isShowKeyboard ? -100 : 0,
+              marginBottom: isShowKeyboard ? -260 : 0,
             }}
           >
             <Text style={styles.titleForm}>Войти</Text>
@@ -62,8 +62,8 @@ const LoginScreen = () => {
                   keyboardType="email-address"
                   placeholder="Адрес электронной почты"
                   placeholderTextColor="#BDBDBD"
-                  value={mail}
-                  onChangeText={handleMain}
+                  value={state.email}
+                  onChangeText={(value) => handleMain(value)}
                   onFocus={() => setIsShowKeyboard(true)}
                   onEndEditing={() => setIsShowKeyboard(false)}
                 />
@@ -73,8 +73,8 @@ const LoginScreen = () => {
                   maxLength={40}
                   secureTextEntry={isShowPassword}
                   placeholderTextColor="#BDBDBD"
-                  value={password}
-                  onChangeText={handlePassword}
+                  value={state.password}
+                  onChangeText={(value)=>handlePassword(value)}
                   onFocus={() => setIsShowKeyboard(true)}
                   onEndEditing={() => setIsShowKeyboard(false)}
                 />
@@ -93,7 +93,9 @@ const LoginScreen = () => {
                 >
                   <Text style={styles.textBtn}>Войти</Text>
                 </TouchableOpacity>
-                <Text style={styles.enter}>Нет аккаунта? Зарегистироваться</Text>
+                <Text style={styles.enter}>
+                  Нет аккаунта? Зарегистироваться
+                </Text>
               </View>
             </View>
           </View>
@@ -114,15 +116,14 @@ const styles = StyleSheet.create({
     position: "relative",
     justifyContent: "flex-end",
     backgroundColor: "#FFFFFF",
-    height: 549,
+    height: 510,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
 
   titleForm: {
     marginBottom: 32,
-    fontFamily: "Roboto",
-    fontWeight: "bold",
+    fontFamily: "Roboto-Medium",
     fontSize: 30,
     lineHeight: 35,
     textAlign: "center",
@@ -138,20 +139,21 @@ const styles = StyleSheet.create({
   },
   input: {
     position: "relative",
+    height: 50,
     borderWidth: 1,
     borderRadius: 8,
     borderColor: "#E8E8E8",
     padding: 16,
-    backgroundColor: "#E8E8E8",
-    fontFamily: "Roboto",
+    backgroundColor: "#F6F6F6",
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
   },
   show: {
     position: "absolute",
-    bottom: 37,
+    bottom: 30,
     right: 16,
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
@@ -169,15 +171,14 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   textBtn: {
-    fontFamily: "Roboto",
-    fontStyle: "normal",
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#FFFFFF",
   },
   enter: {
     textAlign: "center",
-    fontFamily: "Roboto",
+    fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
     color: "#1B4371",
