@@ -17,17 +17,21 @@ const initialState = {
 };
 
 const LoginScreen = () => {
-
   const [state, setState] = useState(initialState);
-
+  const [isActive, setIsActive] = useState('');
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
 
-  const handleMain = (value) =>
-    setState((prevState) => ({ ...prevState, email: value }));
-  const handlePassword = (value) =>
-    setState((prevState) => ({ ...prevState, password: value }));
-  
+  const handleFocus = (val) => {
+    setIsShowKeyboard(true);
+    setIsActive(val);
+  };
+
+  const handleMain = (val) =>
+    setState((prevState) => ({ ...prevState, email: val }));
+  const handlePassword = (val) =>
+    setState((prevState) => ({ ...prevState, password: val }));
+
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
   const onLogin = () => {
@@ -58,24 +62,37 @@ const LoginScreen = () => {
             <View style={styles.form}>
               <View style={styles.wrapInput}>
                 <TextInput
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor: isActive === "login" ? "#FF6C00" : "#E8E8E8",
+                    backgroundColor:
+                      isActive === "login" ? "#FFFFFF" : "#F6F6F6",
+                  }}
                   keyboardType="email-address"
                   placeholder="Адрес электронной почты"
                   placeholderTextColor="#BDBDBD"
                   value={state.email}
                   onChangeText={(value) => handleMain(value)}
-                  onFocus={() => setIsShowKeyboard(true)}
+                  onFocus={() => handleFocus("login")}
+                  onBlur={() => setIsActive("")}
                   onEndEditing={() => setIsShowKeyboard(false)}
                 />
                 <TextInput
-                  style={styles.input}
+                  style={{
+                    ...styles.input,
+                    borderColor:
+                      isActive === "password" ? "#FF6C00" : "#E8E8E8",
+                    backgroundColor:
+                      isActive === "password" ? "#FFFFFF" : "#F6F6F6",
+                  }}
                   placeholder="Пароль"
                   maxLength={40}
                   secureTextEntry={isShowPassword}
                   placeholderTextColor="#BDBDBD"
                   value={state.password}
-                  onChangeText={(value)=>handlePassword(value)}
-                  onFocus={() => setIsShowKeyboard(true)}
+                  onChangeText={(value) => handlePassword(value)}
+                  onFocus={() => handleFocus("password")}
+                  onBlur={() => setIsActive("")}
                   onEndEditing={() => setIsShowKeyboard(false)}
                 />
                 <Text
@@ -142,10 +159,9 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderRadius: 8,
-    borderColor: "#E8E8E8",
     padding: 16,
-    backgroundColor: "#F6F6F6",
     fontFamily: "Roboto-Regular",
+    
     fontSize: 16,
     lineHeight: 19,
   },
