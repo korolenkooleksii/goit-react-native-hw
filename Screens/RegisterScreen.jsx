@@ -20,7 +20,7 @@ const initialState = {
   password: "",
 };
 
-const RegistrationScreen = () => {
+const RegisterScreen = () => {
   const [state, setState] = useState(initialState);
   const [isActive, setIsActive] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -259,4 +259,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrationScreen;
+export default RegisterScreen;

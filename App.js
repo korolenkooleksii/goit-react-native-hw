@@ -1,9 +1,12 @@
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
 import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-
+import RegisterScreen from "./Screens/RegisterScreen";
 import LoginScreen from "./Screens/LoginScreen";
-import RegistrationScreen from "./Screens/RegistrationScreen";
+
+const AuthStack = createStackNavigator();
 
 export default function App() {
   const [loadFonts] = useFonts({
@@ -26,8 +29,20 @@ export default function App() {
 
   return (
     <>
-      <RegistrationScreen />
-      {/* <LoginScreen /> */}
+      <NavigationContainer>
+        <AuthStack.Navigator>
+          <AuthStack.Screen
+            options={{ headerShown: false }}
+            name="Register"
+            component={RegisterScreen}
+          />
+          <AuthStack.Screen
+            options={{ headerShown: false }}
+            name="Login"
+            component={LoginScreen}
+          />
+        </AuthStack.Navigator>
+      </NavigationContainer>
     </>
   );
 }
