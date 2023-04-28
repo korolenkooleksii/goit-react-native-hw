@@ -2,9 +2,8 @@ import { useEffect } from "react";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 
-import { Text, View } from "react-native";
-import LoginScreen from "./Screen/LoginScreen";
-import RegistrationScreen from "./Screen/RegistrationScreen";
+import LoginScreen from "./Screens/LoginScreen";
+import RegistrationScreen from "./Screens/RegistrationScreen";
 
 export default function App() {
   const [loadFonts] = useFonts({

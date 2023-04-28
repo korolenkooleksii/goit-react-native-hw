@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   StyleSheet,
   ImageBackground,
@@ -9,29 +9,43 @@ import {
   Alert,
   Keyboard,
   TouchableWithoutFeedback,
+  Dimensions,
 } from "react-native";
 
-import Add from "../Component/Add";
-
 const initialState = {
-  login: '',
-  email: '',
-  password: '',
-}
+  email: "",
+  password: "",
+};
 
-const RegistrationScreen = () => {
+const LoginScreen = () => {
   const [state, setState] = useState(initialState);
   const [isActive, setIsActive] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
+
+  const [dimensions, setDimensions] = useState(
+    Dimensions.get("window").width - 16 * 2
+  );
+
+  useEffect(() => {
+    const onChange = () => {
+      const deviceWidth = Dimensions.get("window").width - 16 * 2;
+      console.log("onChange  deviceWidth:", deviceWidth)
+      
+      setDimensions(deviceWidth);
+    };
+
+    Dimensions.addEventListener("change", onChange);
+    return () => {
+      Dimensions.removeEventListener("change", onChange);
+    };
+  }, []);
 
   const handleFocus = (val) => {
     setIsShowKeyboard(true);
     setIsActive(val);
   };
 
-  const handleLogin = (val) =>
-    setState((prevState) => ({ ...prevState, login: val }));
   const handleMain = (val) =>
     setState((prevState) => ({ ...prevState, email: val }));
   const handlePassword = (val) =>
@@ -40,14 +54,20 @@ const RegistrationScreen = () => {
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
   const onLogin = () => {
-    // Alert.alert(state.login);
+    // Alert.alert(state.email);
     console.log(state);
     setState(initialState);
   };
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
+    setIsActive("");
     Keyboard.dismiss();
+  };
+
+  const handleEndEditing = () => {
+    setIsShowKeyboard(false);
+    setIsActive("");
   };
 
   return (
@@ -60,15 +80,11 @@ const RegistrationScreen = () => {
           <View
             style={{
               ...styles.background,
-              marginBottom: isShowKeyboard ? -200 : 0,
+              marginBottom: isShowKeyboard ? -260 : 0,
             }}
           >
-            <View style={styles.addPhoto}>
-              <Add style={styles.addPhotoBtn} />
-            </View>
-
-            <Text style={styles.titleForm}>Регистрация</Text>
-            <View style={styles.form}>
+            <Text style={styles.titleForm}>Войти</Text>
+            <View style={{...styles.form, width: dimensions}}>
               <View style={styles.wrapInput}>
                 <TextInput
                   style={{
@@ -77,30 +93,13 @@ const RegistrationScreen = () => {
                     backgroundColor:
                       isActive === "login" ? "#FFFFFF" : "#F6F6F6",
                   }}
-                  maxLength={40}
-                  placeholder="Логин"
-                  placeholderTextColor="#BDBDBD"
-                  value={state.login}
-                  onChangeText={(value) => handleLogin(value)}
-                  onFocus={() => handleFocus("login")}
-                  onBlur={() => setIsActive("")}
-                  onEndEditing={() => setIsShowKeyboard(false)}
-                />
-                <TextInput
-                  style={{
-                    ...styles.input,
-                    borderColor: isActive === "email" ? "#FF6C00" : "#E8E8E8",
-                    backgroundColor:
-                      isActive === "email" ? "#FFFFFF" : "#F6F6F6",
-                  }}
                   keyboardType="email-address"
                   placeholder="Адрес электронной почты"
                   placeholderTextColor="#BDBDBD"
                   value={state.email}
                   onChangeText={(value) => handleMain(value)}
-                  onFocus={() => handleFocus("email")}
-                  onBlur={() => setIsActive("")}
-                  onEndEditing={() => setIsShowKeyboard(false)}
+                  onFocus={() => handleFocus("login")}
+                  onEndEditing={handleEndEditing}
                 />
                 <TextInput
                   style={{
@@ -117,8 +116,7 @@ const RegistrationScreen = () => {
                   value={state.password}
                   onChangeText={(value) => handlePassword(value)}
                   onFocus={() => handleFocus("password")}
-                  onBlur={() => setIsActive("")}
-                  onEndEditing={() => setIsShowKeyboard(false)}
+                  onEndEditing={handleEndEditing}
                 />
                 <Text
                   style={styles.show}
@@ -133,9 +131,11 @@ const RegistrationScreen = () => {
                   activeOpacity={0.7}
                   onPress={onLogin}
                 >
-                  <Text style={styles.textBtn}>Зарегистрироваться</Text>
+                  <Text style={styles.textBtn}>Войти</Text>
                 </TouchableOpacity>
-                <Text style={styles.enter}>Уже есть аккаунт? Войти</Text>
+                <Text style={styles.enter}>
+                  Нет аккаунта? Зарегистироваться
+                </Text>
               </View>
             </View>
           </View>
@@ -154,30 +154,14 @@ const styles = StyleSheet.create({
   },
   background: {
     position: "relative",
+    alignItems: "center",
     justifyContent: "flex-end",
     backgroundColor: "#FFFFFF",
-    height: 580,
+    height: 510,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
-  addPhoto: {
-    position: "absolute",
-    top: -60,
-    left: "50%",
-    transform: [{ translateX: -60 }],
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-    backgroundColor: "#F6F6F6",
-  },
-  addPhotoBtn: {
-    position: "absolute",
-    bottom: 14,
-    right: -12,
-    width: 25,
-    height: 25,
-    fill: "#FF6C00",
-  },
+
   titleForm: {
     marginBottom: 32,
     fontFamily: "Roboto-Medium",
@@ -188,7 +172,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   form: {
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
     gap: 43,
   },
   wrapInput: {
@@ -196,17 +180,18 @@ const styles = StyleSheet.create({
   },
   input: {
     position: "relative",
+    height: 50,
     borderWidth: 1,
     borderRadius: 8,
     padding: 16,
-    height: 50,
     fontFamily: "Roboto-Regular",
+
     fontSize: 16,
     lineHeight: 19,
   },
   show: {
     position: "absolute",
-    bottom: 34,
+    bottom: 30,
     right: 16,
     fontFamily: "Roboto-Regular",
     fontSize: 16,
@@ -215,7 +200,7 @@ const styles = StyleSheet.create({
   },
   wrapBtn: {
     gap: 16,
-    marginBottom: 78,
+    marginBottom: 144,
   },
   btn: {
     backgroundColor: "#FF6C00",
@@ -240,4 +225,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrationScreen;
+export default LoginScreen;
