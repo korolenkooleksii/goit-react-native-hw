@@ -17,7 +17,7 @@ const initialState = {
   password: "",
 };
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [isActive, setIsActive] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
@@ -30,8 +30,8 @@ const LoginScreen = () => {
   useEffect(() => {
     const onChange = () => {
       const deviceWidth = Dimensions.get("window").width - 16 * 2;
-      console.log("onChange  deviceWidth:", deviceWidth)
-      
+      console.log("onChange  deviceWidth:", deviceWidth);
+
       setDimensions(deviceWidth);
     };
 
@@ -75,7 +75,7 @@ const LoginScreen = () => {
       <View style={{ flex: 1 }}>
         <ImageBackground
           style={styles.image}
-          source={require("../assets/images/photo_bg.jpg")}
+          source={require("../../assets/images/photo_bg.jpg")}
         >
           <View
             style={{
@@ -84,7 +84,7 @@ const LoginScreen = () => {
             }}
           >
             <Text style={styles.titleForm}>Войти</Text>
-            <View style={{...styles.form, width: dimensions}}>
+            <View style={{ ...styles.form, width: dimensions }}>
               <View style={styles.wrapInput}>
                 <TextInput
                   style={{
@@ -133,9 +133,14 @@ const LoginScreen = () => {
                 >
                   <Text style={styles.textBtn}>Войти</Text>
                 </TouchableOpacity>
-                <Text style={styles.enter}>
-                  Нет аккаунта? Зарегистироваться
-                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => navigation.navigate("Register")}
+                >
+                  <Text style={styles.enter}>
+                    Нет аккаунта? Зарегистироваться
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

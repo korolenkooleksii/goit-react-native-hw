@@ -12,7 +12,7 @@ import {
   Dimensions,
 } from "react-native";
 
-import Add from "../Component/Add";
+import Add from "../../Component/Add";
 
 const initialState = {
   login: "",
@@ -20,13 +20,15 @@ const initialState = {
   password: "",
 };
 
-const RegisterScreen = () => {
+const RegisterScreen = ({ navigation }) => {
   const [state, setState] = useState(initialState);
   const [isActive, setIsActive] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
 
-  const [dimensions, setDimensions] = useState(Dimensions.get("window").width - 16 * 2);
+  const [dimensions, setDimensions] = useState(
+    Dimensions.get("window").width - 16 * 2
+  );
 
   useEffect(() => {
     const onChange = () => {
@@ -62,21 +64,21 @@ const RegisterScreen = () => {
 
   const keyboardHide = () => {
     setIsShowKeyboard(false);
-    setIsActive('');
+    setIsActive("");
     Keyboard.dismiss();
   };
 
   const handleEndEditing = () => {
     setIsShowKeyboard(false);
     setIsActive("");
-  }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={() => keyboardHide()}>
       <View style={{ flex: 1 }}>
         <ImageBackground
           style={styles.image}
-          source={require("../assets/images/photo_bg.jpg")}
+          source={require("../../assets/images/photo_bg.jpg")}
         >
           <View
             style={{
@@ -153,7 +155,12 @@ const RegisterScreen = () => {
                 >
                   <Text style={styles.textBtn}>Зарегистрироваться</Text>
                 </TouchableOpacity>
-                <Text style={styles.enter}>Уже есть аккаунт? Войти</Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => navigation.navigate("Login")}
+                >
+                  <Text style={styles.enter}>Уже есть аккаунт? Войти</Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
