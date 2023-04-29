@@ -48,7 +48,7 @@ export default function App() {
     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
   });
 
-  const routing = useRoute(null);
+  const routing = useRoute([]);
 
   useEffect(() => {
     async function prepare() {

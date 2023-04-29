@@ -10,7 +10,8 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
-  Platform
+  Platform,
+  KeyboardAvoidingView,
 } from "react-native";
 
 const initialState = {
@@ -71,12 +72,6 @@ const LoginScreen = ({ navigation }) => {
     setIsActive("");
   };
 
-  const value = () => {
-    if (Platform.OS == 'ios') {
-      return (isShowKeyboard ? 100 : 50)
-    } (isShowKeyboard ? -260 : 0)
-  }
-
   return (
     <TouchableWithoutFeedback onPress={() => keyboardHide()}>
       <View style={{ flex: 1 }}>
@@ -84,74 +79,77 @@ const LoginScreen = ({ navigation }) => {
           style={styles.image}
           source={require("../../assets/images/photo_bg.jpg")}
         >
-          <View
-            // style={{
-            //   ...styles.background,
-            //   marginBottom: isShowKeyboard ? -260 : 0,
-            // }}
-            style={{...styles.background, marginBottom: value()}}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
           >
-            <Text style={styles.titleForm}>Войти</Text>
-            <View style={{ ...styles.form, width: dimensions }}>
-              <View style={styles.wrapInput}>
-                <TextInput
-                  style={{
-                    ...styles.input,
-                    borderColor: isActive === "login" ? "#FF6C00" : "#E8E8E8",
-                    backgroundColor:
-                      isActive === "login" ? "#FFFFFF" : "#F6F6F6",
-                  }}
-                  keyboardType="email-address"
-                  placeholder="Адрес электронной почты"
-                  placeholderTextColor="#BDBDBD"
-                  value={state.email}
-                  onChangeText={(value) => handleMain(value)}
-                  onFocus={() => handleFocus("login")}
-                  onEndEditing={handleEndEditing}
-                />
-                <TextInput
-                  style={{
-                    ...styles.input,
-                    borderColor:
-                      isActive === "password" ? "#FF6C00" : "#E8E8E8",
-                    backgroundColor:
-                      isActive === "password" ? "#FFFFFF" : "#F6F6F6",
-                  }}
-                  placeholder="Пароль"
-                  maxLength={40}
-                  secureTextEntry={isShowPassword}
-                  placeholderTextColor="#BDBDBD"
-                  value={state.password}
-                  onChangeText={(value) => handlePassword(value)}
-                  onFocus={() => handleFocus("password")}
-                  onEndEditing={handleEndEditing}
-                />
-                <Text
-                  style={styles.show}
-                  onPress={() => handleIsShowPassword()}
-                >
-                  Показать
-                </Text>
-              </View>
-              <View style={styles.wrapBtn}>
-                <TouchableOpacity
-                  style={styles.btn}
-                  activeOpacity={0.7}
-                  onPress={onLogin}
-                >
-                  <Text style={styles.textBtn}>Войти</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={() => navigation.navigate("Register")}
-                >
-                  <Text style={styles.enter}>
-                    Нет аккаунта? Зарегистироваться
+            <View
+              style={{
+                ...styles.background,
+                marginBottom: isShowKeyboard ? -260 : 0,
+              }}
+            >
+              <Text style={styles.titleForm}>Войти</Text>
+              <View style={{ ...styles.form, width: dimensions }}>
+                <View style={styles.wrapInput}>
+                  <TextInput
+                    style={{
+                      ...styles.input,
+                      borderColor: isActive === "login" ? "#FF6C00" : "#E8E8E8",
+                      backgroundColor:
+                        isActive === "login" ? "#FFFFFF" : "#F6F6F6",
+                    }}
+                    keyboardType="email-address"
+                    placeholder="Адрес электронной почты"
+                    placeholderTextColor="#BDBDBD"
+                    value={state.email}
+                    onChangeText={(value) => handleMain(value)}
+                    onFocus={() => handleFocus("login")}
+                    onEndEditing={handleEndEditing}
+                  />
+                  <TextInput
+                    style={{
+                      ...styles.input,
+                      borderColor:
+                        isActive === "password" ? "#FF6C00" : "#E8E8E8",
+                      backgroundColor:
+                        isActive === "password" ? "#FFFFFF" : "#F6F6F6",
+                    }}
+                    placeholder="Пароль"
+                    maxLength={40}
+                    secureTextEntry={isShowPassword}
+                    placeholderTextColor="#BDBDBD"
+                    value={state.password}
+                    onChangeText={(value) => handlePassword(value)}
+                    onFocus={() => handleFocus("password")}
+                    onEndEditing={handleEndEditing}
+                  />
+                  <Text
+                    style={styles.show}
+                    onPress={() => handleIsShowPassword()}
+                  >
+                    Показать
                   </Text>
-                </TouchableOpacity>
+                </View>
+                <View style={styles.wrapBtn}>
+                  <TouchableOpacity
+                    style={styles.btn}
+                    activeOpacity={0.7}
+                    onPress={onLogin}
+                  >
+                    <Text style={styles.textBtn}>Войти</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => navigation.navigate("Register")}
+                  >
+                    <Text style={styles.enter}>
+                      Нет аккаунта? Зарегистироваться
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
-          </View>
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
