@@ -13,7 +13,7 @@ import {
   KeyboardAvoidingView
 } from "react-native";
 
-import Add from "../../Component/Add";
+import Add from "../../components/Add";
 
 const initialState = {
   login: "",
@@ -37,10 +37,9 @@ const RegisterScreen = ({ navigation }) => {
       setDimensions(deviceWidth);
     };
 
-    Dimensions.addEventListener("change", onChange);
-    return () => {
-      Dimensions.removeEventListener("change", onChange);
-    };
+    const dimensionsHandler = Dimensions.addEventListener("change", onChange);
+    return () => dimensionsHandler.remove();
+
   }, []);
 
   const handleFocus = (val) => {
@@ -81,9 +80,9 @@ const RegisterScreen = ({ navigation }) => {
           style={styles.image}
           source={require("../../assets/images/photo_bg.jpg")}
         >
-          <KeyboardAvoidingView
+          {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
+          > */}
             <View
               style={{
                 ...styles.background,
@@ -168,7 +167,7 @@ const RegisterScreen = ({ navigation }) => {
                 </View>
               </View>
             </View>
-          </KeyboardAvoidingView>
+          {/* </KeyboardAvoidingView> */}
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>

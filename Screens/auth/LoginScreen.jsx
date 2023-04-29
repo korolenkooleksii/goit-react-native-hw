@@ -32,15 +32,13 @@ const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     const onChange = () => {
       const deviceWidth = Dimensions.get("window").width - 16 * 2;
-      console.log("onChange  deviceWidth:", deviceWidth);
 
       setDimensions(deviceWidth);
     };
 
-    Dimensions.addEventListener("change", onChange);
-    return () => {
-      Dimensions.removeEventListener("change", onChange);
-    };
+    const dimensionsHandler = Dimensions.addEventListener("change", onChange);
+    return () => dimensionsHandler.remove();
+
   }, []);
 
   const handleFocus = (val) => {
@@ -79,9 +77,9 @@ const LoginScreen = ({ navigation }) => {
           style={styles.image}
           source={require("../../assets/images/photo_bg.jpg")}
         >
-          <KeyboardAvoidingView
+          {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : "height"}
-          >
+          > */}
             <View
               style={{
                 ...styles.background,
@@ -149,7 +147,7 @@ const LoginScreen = ({ navigation }) => {
                 </View>
               </View>
             </View>
-          </KeyboardAvoidingView>
+          {/* </KeyboardAvoidingView> */}
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
