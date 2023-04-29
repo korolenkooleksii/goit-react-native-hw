@@ -10,6 +10,7 @@ import {
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
+  Platform
 } from "react-native";
 
 const initialState = {
@@ -70,6 +71,12 @@ const LoginScreen = ({ navigation }) => {
     setIsActive("");
   };
 
+  const value = () => {
+    if (Platform.OS == 'ios') {
+      return (isShowKeyboard ? 100 : 50)
+    } (isShowKeyboard ? -260 : 0)
+  }
+
   return (
     <TouchableWithoutFeedback onPress={() => keyboardHide()}>
       <View style={{ flex: 1 }}>
@@ -78,10 +85,11 @@ const LoginScreen = ({ navigation }) => {
           source={require("../../assets/images/photo_bg.jpg")}
         >
           <View
-            style={{
-              ...styles.background,
-              marginBottom: isShowKeyboard ? -260 : 0,
-            }}
+            // style={{
+            //   ...styles.background,
+            //   marginBottom: isShowKeyboard ? -260 : 0,
+            // }}
+            style={{...styles.background, marginBottom: value()}}
           >
             <Text style={styles.titleForm}>Войти</Text>
             <View style={{ ...styles.form, width: dimensions }}>
