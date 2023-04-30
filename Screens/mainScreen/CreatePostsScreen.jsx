@@ -7,6 +7,7 @@ import {
   Dimensions,
   TextInput,
   Image,
+  Button,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 
@@ -19,6 +20,23 @@ const initialState = {
 const CreatePostsScreen = () => {
   const [post, setPost] = useState(initialState);
   const [camera, setCamera] = useState(null);
+  const [type, setType] = useState(CameraType.back);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+
+  if (!permission) {
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: "center" }}>
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
 
   const handlePhoto = (val) =>
     setPost((prevState) => ({ ...prevState, photo: val }));
@@ -55,7 +73,6 @@ const CreatePostsScreen = () => {
               />
             </TouchableOpacity>
           </Camera>
-          {/* <View style={styles.placePhoto}></View> */}
           <Text style={{ ...styles.text }}>Загрузите фото</Text>
         </View>
 
