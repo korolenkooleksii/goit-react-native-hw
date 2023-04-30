@@ -52,6 +52,12 @@ const CreatePostsScreen = () => {
     console.log("takePhoto  photo:", photo.uri);
   };
 
+  const toggleCameraType = () => {
+    setType((current) =>
+      current === CameraType.back ? CameraType.front : CameraType.back
+    );
+  };
+
   return (
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={styles.container}>
@@ -71,6 +77,14 @@ const CreatePostsScreen = () => {
                 source={require("../../assets/images/camera.png")}
                 style={styles.snap}
               />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={toggleCameraType} style={styles.flipBtn}>
+              <Image
+                source={require("../../assets/images/flip.png")}
+                // style={styles.flipImage}
+                style={{ width: 15, height: 15 }}
+              />
+              {/* <Text style={{ color: "#fff" }}>Flip</Text> */}
             </TouchableOpacity>
           </Camera>
           <Text style={{ ...styles.text }}>Загрузите фото</Text>
@@ -129,6 +143,18 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderRadius: 8,
 
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  flipBtn: {
+    position: "absolute",
+    bottom: 15,
+    right: 15,
+    backgroundColor: "#fff",
+    borderRadius: 50,
+    width: 30,
+    height: 30,
+    // flex: 1,
     alignItems: "center",
     justifyContent: "center",
   },
