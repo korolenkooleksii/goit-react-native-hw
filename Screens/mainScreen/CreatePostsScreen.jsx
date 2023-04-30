@@ -49,7 +49,7 @@ const CreatePostsScreen = () => {
     const photo = await camera.takePictureAsync();
     handlePhoto(photo.uri);
 
-    console.log("takePhoto  photo:", photo.uri);
+    // console.log("takePhoto  photo:", photo.uri);
   };
 
   const toggleCameraType = () => {
@@ -62,7 +62,7 @@ const CreatePostsScreen = () => {
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={styles.container}>
         <View style={styles.fotoArea}>
-          <Camera style={styles.camera} ref={setCamera}>
+          <Camera style={styles.camera} ref={setCamera} type={type}>
             {post.photo && (
               <View style={styles.takePhotoContainer}>
                 <Image
@@ -75,16 +75,14 @@ const CreatePostsScreen = () => {
             <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
               <Image
                 source={require("../../assets/images/camera.png")}
-                style={styles.snap}
+                style={{ width: 24, height: 24 }}
               />
             </TouchableOpacity>
             <TouchableOpacity onPress={toggleCameraType} style={styles.flipBtn}>
               <Image
                 source={require("../../assets/images/flip.png")}
-                // style={styles.flipImage}
                 style={{ width: 15, height: 15 }}
               />
-              {/* <Text style={{ color: "#fff" }}>Flip</Text> */}
             </TouchableOpacity>
           </Camera>
           <Text style={{ ...styles.text }}>Загрузите фото</Text>
@@ -152,9 +150,8 @@ const styles = StyleSheet.create({
     right: 15,
     backgroundColor: "#fff",
     borderRadius: 50,
-    width: 30,
-    height: 30,
-    // flex: 1,
+    width: 26,
+    height: 26,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -172,11 +169,6 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 50,
     backgroundColor: "#FFFFFF",
-  },
-  snap: {
-    width: 24,
-    height: 24,
-    // color: "#BDBDBD",
   },
   text: {
     fontFamily: "Roboto-Regular",
