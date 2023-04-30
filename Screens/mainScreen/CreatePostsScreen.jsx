@@ -39,12 +39,15 @@ const CreatePostsScreen = () => {
       <View style={styles.container}>
         <View style={styles.fotoArea}>
           <Camera style={styles.camera} ref={setCamera}>
-            <View style={styles.takePhotoContainer}>
-              <Image
-                source={{ uri: post.photo }}
-                style={{ width: 150, height: 150 }}
-              />
-            </View>
+            {post.photo && (
+              <View style={styles.takePhotoContainer}>
+                <Image
+                  source={{ uri: post.photo }}
+                  style={{ width: 150, height: 150 }}
+                />
+              </View>
+            )}
+
             <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
               <Image
                 source={require("../../assets/images/camera.png")}
@@ -118,7 +121,6 @@ const styles = StyleSheet.create({
     left: 0,
     borderColor: "#fff",
     borderWidth: 1,
-    
   },
   snapContainer: {
     alignItems: "center",
