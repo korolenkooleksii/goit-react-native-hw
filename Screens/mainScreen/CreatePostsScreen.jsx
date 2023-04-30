@@ -11,7 +11,7 @@ import {
 import { Camera, CameraType } from "expo-camera";
 
 const initialState = {
-  photo: "",
+  photo: null,
   name: "",
   geo: "",
 };
@@ -30,7 +30,7 @@ const CreatePostsScreen = () => {
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
     handlePhoto(photo.uri);
-    
+
     console.log("takePhoto  photo:", photo.uri);
   };
 
@@ -39,6 +39,12 @@ const CreatePostsScreen = () => {
       <View style={styles.container}>
         <View style={styles.fotoArea}>
           <Camera style={styles.camera} ref={setCamera}>
+            <View style={styles.takePhotoContainer}>
+              <Image
+                source={{ uri: post.photo }}
+                style={{ width: 150, height: 150 }}
+              />
+            </View>
             <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
               <Image
                 source={require("../../assets/images/camera.png")}
@@ -105,6 +111,14 @@ const styles = StyleSheet.create({
 
     alignItems: "center",
     justifyContent: "center",
+  },
+  takePhotoContainer: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    borderColor: "#fff",
+    borderWidth: 1,
+    
   },
   snapContainer: {
     alignItems: "center",
