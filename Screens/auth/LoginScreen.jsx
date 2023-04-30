@@ -32,13 +32,10 @@ const LoginScreen = ({ navigation }) => {
   useEffect(() => {
     const onChange = () => {
       const deviceWidth = Dimensions.get("window").width - 16 * 2;
-
       setDimensions(deviceWidth);
     };
-
     const dimensionsHandler = Dimensions.addEventListener("change", onChange);
     return () => dimensionsHandler.remove();
-
   }, []);
 
   const handleFocus = (val) => {

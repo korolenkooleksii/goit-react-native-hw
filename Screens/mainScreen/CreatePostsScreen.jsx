@@ -23,6 +23,19 @@ const CreatePostsScreen = () => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
+  const [dimensions, setDimensions] = useState(
+    Dimensions.get("window").width - 16 * 2
+  );
+
+  useEffect(() => {
+    const onChange = () => {
+      const deviceWidth = Dimensions.get("window").width - 16 * 2;
+      setDimensions(deviceWidth);
+    };
+    const dimensionsHandler = Dimensions.addEventListener("change", onChange);
+    return () => dimensionsHandler.remove();
+  }, []);
+
   if (!permission) {
     return <View />;
   }
@@ -68,7 +81,11 @@ const CreatePostsScreen = () => {
                 <View style={styles.takePhotoContainer}>
                   <Image
                     source={{ uri: post.photo }}
-                    style={{ width: '100%', height: "100%", resizeMode: "cover" }}
+                    style={{
+                      width: dimensions,
+                      height: 240,
+                      resizeMode: "cover",
+                    }}
                   />
                 </View>
               )}
@@ -145,7 +162,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
-    overflow: 'hidden',
+    overflow: "hidden",
   },
   camera: {
     resizeMode: "cover",
@@ -168,13 +185,10 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    borderColor: "#fff",
-    borderWidth: 1,
+    // borderColor: "#fff",
+    // borderWidth: 1,
     borderRadius: 8,
     overflow: "hidden",
-    // width: 100,
-    // height: 100,
-    // flex: 1,
   },
   snapContainer: {
     alignItems: "center",
