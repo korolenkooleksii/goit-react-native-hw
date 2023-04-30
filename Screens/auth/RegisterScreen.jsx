@@ -80,9 +80,9 @@ const RegisterScreen = ({ navigation }) => {
           style={styles.image}
           source={require("../../assets/images/photo_bg.jpg")}
         >
-          {/* <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          > */}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : ""}
+          >
             <View
               style={{
                 ...styles.background,
@@ -167,7 +167,7 @@ const RegisterScreen = ({ navigation }) => {
                 </View>
               </View>
             </View>
-          {/* </KeyboardAvoidingView> */}
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
