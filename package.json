@@ -34,7 +34,8 @@
     "react-native-screens": "~3.20.0",
     "react-native-svg": "^13.4.0",
     "react-native-tab-view": "^3.5.1",
-    "react-native-web": "~0.18.10"
+    "react-native-web": "~0.18.10",
+    "expo-camera": "~13.2.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

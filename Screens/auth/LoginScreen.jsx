@@ -77,9 +77,9 @@ const LoginScreen = ({ navigation }) => {
           style={styles.image}
           source={require("../../assets/images/photo_bg.jpg")}
         >
-          {/* <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : "height"}
-          > */}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : ""}
+          >
             <View
               style={{
                 ...styles.background,
@@ -147,7 +147,7 @@ const LoginScreen = ({ navigation }) => {
                 </View>
               </View>
             </View>
-          {/* </KeyboardAvoidingView> */}
+          </KeyboardAvoidingView>
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
@@ -194,7 +194,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     fontFamily: "Roboto-Regular",
-
     fontSize: 16,
     lineHeight: 19,
   },
@@ -214,7 +213,6 @@ const styles = StyleSheet.create({
   btn: {
     backgroundColor: "#FF6C00",
     borderRadius: 100,
-    height: 51,
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
