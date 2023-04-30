@@ -62,29 +62,38 @@ const CreatePostsScreen = () => {
     <View style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={styles.container}>
         <View style={styles.fotoArea}>
-          <Camera style={styles.camera} ref={setCamera} type={type}>
-            {post.photo && (
-              <View style={styles.takePhotoContainer}>
-                <Image
-                  source={{ uri: post.photo }}
-                  style={{ width: 150, height: 150 }}
-                />
-              </View>
-            )}
+          <View style={styles.cameraContainer}>
+            <Camera style={styles.camera} ref={setCamera} type={type}>
+              {post.photo && (
+                <View style={styles.takePhotoContainer}>
+                  <Image
+                    source={{ uri: post.photo }}
+                    style={{ width: '100%', height: "100%", resizeMode: "cover" }}
+                  />
+                </View>
+              )}
 
-            <TouchableOpacity onPress={takePhoto} style={styles.snapContainer}>
-              <Image
-                source={require("../../assets/images/camera.png")}
-                style={{ width: 24, height: 24 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={toggleCameraType} style={styles.flipBtn}>
-              <Image
-                source={require("../../assets/images/flip.png")}
-                style={{ width: 15, height: 15 }}
-              />
-            </TouchableOpacity>
-          </Camera>
+              <TouchableOpacity
+                onPress={takePhoto}
+                style={styles.snapContainer}
+              >
+                <Image
+                  source={require("../../assets/images/camera.png")}
+                  style={{ width: 24, height: 24 }}
+                />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={toggleCameraType}
+                style={styles.flipBtn}
+              >
+                <Image
+                  source={require("../../assets/images/flip.png")}
+                  style={{ width: 15, height: 15 }}
+                />
+              </TouchableOpacity>
+            </Camera>
+          </View>
+
           <Text style={{ ...styles.text }}>Загрузите фото</Text>
         </View>
 
@@ -128,19 +137,19 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   fotoArea: {
-    height: 267,
     flex: 0,
     gap: 8,
   },
-  camera: {
-    height: 240,
+  cameraContainer: {
     backgroundColor: "#F6F6F6",
-
     borderWidth: 1,
-    // borderColor: "#E8E8E8",
-    borderColor: "red",
+    borderColor: "#E8E8E8",
     borderRadius: 8,
-
+    overflow: 'hidden',
+  },
+  camera: {
+    resizeMode: "cover",
+    height: 240,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -161,6 +170,11 @@ const styles = StyleSheet.create({
     left: 0,
     borderColor: "#fff",
     borderWidth: 1,
+    borderRadius: 8,
+    overflow: "hidden",
+    // width: 100,
+    // height: 100,
+    // flex: 1,
   },
   snapContainer: {
     alignItems: "center",
