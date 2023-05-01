@@ -72,8 +72,8 @@ const useRoute = (isAuth) => {
             </View>
           ),
           tabBarStyle: {
-            display: 'none',
-          }
+            display: "none",
+          },
         }}
         name="Create Post"
         component={CreatePostScreen}

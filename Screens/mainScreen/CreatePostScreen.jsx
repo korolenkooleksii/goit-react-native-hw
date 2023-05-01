@@ -8,6 +8,9 @@ import {
   TextInput,
   Image,
   Button,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 // import icons
@@ -20,7 +23,7 @@ const initialState = {
   geo: "",
 };
 
-const CreatePostScreen = () => {
+const CreatePostScreen = ({ navigation }) => {
   const [post, setPost] = useState(initialState);
   const [camera, setCamera] = useState(null);
   const [type, setType] = useState(CameraType.back);
@@ -75,86 +78,92 @@ const CreatePostScreen = () => {
   };
 
   return (
-    <View style={{ flex: 1, backgroundColor: "#FFF" }}>
-      <View style={styles.container}>
-        <View style={styles.fotoArea}>
-          <View style={styles.cameraContainer}>
-            <Camera style={styles.camera} ref={setCamera} type={type}>
-              {post.photo && (
-                <View style={styles.takePhotoContainer}>
-                  <Image
-                    source={{ uri: post.photo }}
-                    style={{
-                      width: dimensions,
-                      height: 240,
-                      resizeMode: "cover",
-                    }}
-                  />
-                </View>
-              )}
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={{ flex: 1, backgroundColor: "#FFF" }}>
+        <View style={styles.container}>
+          {/* <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : 'height'}
+          > */}
+            <View style={styles.fotoArea}>
+              <View style={styles.cameraContainer}>
+                <Camera style={styles.camera} ref={setCamera} type={type}>
+                  {post.photo && (
+                    <View style={styles.takePhotoContainer}>
+                      <Image
+                        source={{ uri: post.photo }}
+                        style={{
+                          width: dimensions,
+                          height: 240,
+                          resizeMode: "cover",
+                        }}
+                      />
+                    </View>
+                  )}
 
-              <TouchableOpacity
-                onPress={takePhoto}
-                style={styles.snapContainer}
-              >
-                <Image
-                  source={require("../../assets/images/camera.png")}
-                  style={{ width: 24, height: 24 }}
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={toggleCameraType}
-                style={styles.flipBtn}
-              >
-                <Image
-                  source={require("../../assets/images/flip.png")}
-                  style={{ width: 15, height: 15 }}
-                />
-              </TouchableOpacity>
-            </Camera>
-          </View>
+                  <TouchableOpacity
+                    onPress={takePhoto}
+                    style={styles.snapContainer}
+                  >
+                    <Image
+                      source={require("../../assets/images/camera.png")}
+                      style={{ width: 24, height: 24 }}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={toggleCameraType}
+                    style={styles.flipBtn}
+                  >
+                    <Image
+                      source={require("../../assets/images/flip.png")}
+                      style={{ width: 15, height: 15 }}
+                    />
+                  </TouchableOpacity>
+                </Camera>
+              </View>
 
-          <Text style={{ ...styles.text }}>Загрузите фото</Text>
-        </View>
+              <Text style={{ ...styles.text }}>Загрузите фото</Text>
+            </View>
 
-        <View style={styles.info}>
-          <TextInput
-            style={{ ...styles.text, ...styles.name }}
-            placeholder="Название..."
-            placeholderTextColor="#BDBDBD"
-            value={post.name}
-            onChangeText={(value) => handleName(value)}
-            // onFocus={() => }
-            // onEndEditing={}
-          />
-          <TextInput
-            style={{ ...styles.text, ...styles.name, ...styles.geo }}
-            placeholder="Местность..."
-            placeholderTextColor="#BDBDBD"
-            value={post.geo}
-            onChangeText={(value) => handleGeo(value)}
-            // onFocus={() => }
-            // onEndEditing={()=>}
-          />
-          <Feather
-            name="map-pin"
-            size={24}
-            color="#BDBDBD"
-            style={styles.mapPin}
-          />
-        </View>
-        <TouchableOpacity
-          style={styles.btn}
-          // activeOpacity={0.7}
-          // onPress={onLogin}
-        >
-          <Text style={{ ...styles.text }}>Опубликовать</Text>
-        </TouchableOpacity>
-        <View style={styles.remove}>
-          <AntDesign name="delete" size={24} color="#BDBDBD" />
+            <View style={styles.info}>
+              <TextInput
+                style={{ ...styles.text, ...styles.name }}
+                placeholder="Название..."
+                placeholderTextColor="#BDBDBD"
+                value={post.name}
+                onChangeText={(value) => handleName(value)}
+                // onFocus={() => }
+                // onEndEditing={}
+              />
+              <TextInput
+                style={{ ...styles.text, ...styles.name, ...styles.geo }}
+                placeholder="Местность..."
+                placeholderTextColor="#BDBDBD"
+                value={post.geo}
+                onChangeText={(value) => handleGeo(value)}
+                // onFocus={() => }
+                // onEndEditing={()=>}
+              />
+              <Feather
+                name="map-pin"
+                size={24}
+                color="#BDBDBD"
+                style={styles.mapPin}
+              />
+            </View>
+            <TouchableOpacity
+              style={styles.btn}
+              // activeOpacity={0.7}
+              onPress={() => navigation.navigate("Posts")}
+            >
+              <Text style={{ ...styles.text }}>Опубликовать</Text>
+            </TouchableOpacity>
+            <View style={styles.remove}>
+              <AntDesign name="delete" size={24} color="#BDBDBD" />
+            </View>
+          {/* </KeyboardAvoidingView> */}
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -230,7 +239,7 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   geo: {
-paddingLeft: 30,
+    paddingLeft: 30,
   },
   mapPin: {
     position: "absolute",
@@ -252,9 +261,9 @@ paddingLeft: 30,
     width: 70,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#F6F6F6",
-    marginTop: "auto",
-    marginBottom: 30,
+    // backgroundColor: "#F6F6F6",
+    backgroundColor: "#e47373",
+    marginTop: 120,
   },
 });
 
