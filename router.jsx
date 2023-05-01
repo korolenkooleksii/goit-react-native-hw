@@ -1,20 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import RegisterScreen from "./screens/auth/RegisterScreen";
 import LoginScreen from "./screens/auth/LoginScreen";
-import PostsScreen from "./screens/mainScreen/PostsScreen";
+import Home from "./screens/mainScreen/Home";
 import ProfileScreen from "./screens/mainScreen/ProfileScreen";
-import CreatePostsScreen from "./screens/mainScreen/CreatePostsScreen";
+import CreatePostScreen from "./screens/mainScreen/CreatePostScreen";
 
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
 //icons import
 import { Feather } from "@expo/vector-icons";
-
+import { View, StyleSheet } from "react-native";
 
 const useRoute = (isAuth) => {
   if (!isAuth) {
@@ -34,24 +34,49 @@ const useRoute = (isAuth) => {
     );
   }
   return (
-    <MainTab.Navigator screenOptions={{ tabBarShowLabel: false }}>
+    <MainTab.Navigator
+      screenOptions={{
+        tabBarShowLabel: false,
+        tabBarStyle: {
+          height: 80,
+        },
+        headerStyle: {
+          height: 88,
+        },
+        headerTitleStyle: {
+          fontFamily: "Roboto-Medium",
+          fontSize: 17,
+          lineHeight: 22,
+          letterSpacing: -0.408,
+          color: "#212121",
+        },
+        headerTitleAlign: "center",
+      }}
+    >
       <MainTab.Screen
         options={{
           tabBarIcon: ({ focused, size, color }) => (
             <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
           ),
+          headerShown: false,
         }}
-        name="Публикации"
-        component={PostsScreen}
+        name="Home"
+        component={Home}
       />
+
       <MainTab.Screen
         options={{
           tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="plus" size={16} color="rgba(33, 33, 33, 0.8)" />
+            <View style={styles.createBtn}>
+              <Feather name="plus" size={20} color="#FFFFFF" />
+            </View>
           ),
+          tabBarStyle: {
+            display: 'none',
+          }
         }}
-        name="Создание публикации"
-        component={CreatePostsScreen}
+        name="Create Post"
+        component={CreatePostScreen}
       />
       <MainTab.Screen
         options={{
@@ -66,6 +91,15 @@ const useRoute = (isAuth) => {
   );
 };
 
+const styles = StyleSheet.create({
+  createBtn: {
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#FF6C00",
+  },
+});
+
 export default useRoute;
-
-

@@ -10,6 +10,9 @@ import {
   Button,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
+// import icons
+import { AntDesign } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 const initialState = {
   photo: null,
@@ -17,7 +20,7 @@ const initialState = {
   geo: "",
 };
 
-const CreatePostsScreen = () => {
+const CreatePostScreen = () => {
   const [post, setPost] = useState(initialState);
   const [camera, setCamera] = useState(null);
   const [type, setType] = useState(CameraType.back);
@@ -126,12 +129,18 @@ const CreatePostsScreen = () => {
           />
           <TextInput
             style={{ ...styles.text, ...styles.name, ...styles.geo }}
-            placeholder="Местность"
+            placeholder="Местность..."
             placeholderTextColor="#BDBDBD"
             value={post.geo}
             onChangeText={(value) => handleGeo(value)}
             // onFocus={() => }
             // onEndEditing={()=>}
+          />
+          <Feather
+            name="map-pin"
+            size={24}
+            color="#BDBDBD"
+            style={styles.mapPin}
           />
         </View>
         <TouchableOpacity
@@ -141,6 +150,9 @@ const CreatePostsScreen = () => {
         >
           <Text style={{ ...styles.text }}>Опубликовать</Text>
         </TouchableOpacity>
+        <View style={styles.remove}>
+          <AntDesign name="delete" size={24} color="#BDBDBD" />
+        </View>
       </View>
     </View>
   );
@@ -217,6 +229,14 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     color: "#212121",
   },
+  geo: {
+paddingLeft: 30,
+  },
+  mapPin: {
+    position: "absolute",
+    left: 0,
+    bottom: 32,
+  },
   btn: {
     backgroundColor: "#F6F6F6",
     borderRadius: 100,
@@ -225,6 +245,17 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   textBtn: {},
+  remove: {
+    justifyContent: "center",
+    alignItems: "center",
+    alignSelf: "center",
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: "#F6F6F6",
+    marginTop: "auto",
+    marginBottom: 30,
+  },
 });
 
-export default CreatePostsScreen;
+export default CreatePostScreen;
