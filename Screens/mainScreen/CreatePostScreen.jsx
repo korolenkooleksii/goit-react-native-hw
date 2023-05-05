@@ -67,9 +67,12 @@ const CreatePostScreen = ({ navigation }) => {
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
     handlePhoto(photo.uri);
-
     // console.log("takePhoto  photo:", photo.uri);
   };
+
+  const sendPhoto = ()=>{
+    navigation.navigate('Posts', {photo})
+  }
 
   const toggleCameraType = () => {
     setType((current) =>
@@ -160,7 +163,7 @@ const CreatePostScreen = ({ navigation }) => {
             // activeOpacity={0.7}
             onPress={() => navigation.navigate("Posts")}
           >
-            <Text style={{ ...styles.text }}>Опубликовать</Text>
+            <Text style={{ ...styles.text }} onPress={sendPhoto}>Опубликовать</Text>
           </TouchableOpacity>
           <View
             style={{
