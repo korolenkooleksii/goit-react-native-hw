@@ -20,7 +20,7 @@ import { Feather } from "@expo/vector-icons";
 const initialState = {
   photo: null,
   name: "",
-  geo: "",
+  location: "",
 };
 
 const CreatePostScreen = ({ navigation }) => {
@@ -61,17 +61,17 @@ const CreatePostScreen = ({ navigation }) => {
     setPost((prevState) => ({ ...prevState, photo: val }));
   const handleName = (val) =>
     setPost((prevState) => ({ ...prevState, name: val }));
-  const handleGeo = (val) =>
-    setPost((prevState) => ({ ...prevState, geo: val }));
+  const handleLocation = (val) =>
+    setPost((prevState) => ({ ...prevState, location: val }));
 
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
     handlePhoto(photo.uri);
-    // console.log("takePhoto  photo:", photo.uri);
   };
 
   const sendPhoto = ()=>{
-    navigation.navigate('Posts', {photo})
+    navigation.navigate('Posts', {post})
+    // console.log('post - ', post);
   }
 
   const toggleCameraType = () => {
@@ -92,7 +92,7 @@ const CreatePostScreen = ({ navigation }) => {
           {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : 'height'}
           > */}
-          <View style={styles.fotoArea}>
+          <View style={styles.photoArea}>
             <View style={styles.cameraContainer}>
               <Camera style={styles.camera} ref={setCamera} type={type}>
                 {post.photo && (
@@ -147,7 +147,7 @@ const CreatePostScreen = ({ navigation }) => {
               placeholder="Местность..."
               placeholderTextColor="#BDBDBD"
               value={post.geo}
-              onChangeText={(value) => handleGeo(value)}
+              onChangeText={(value) => handleLocation(value)}
               // onFocus={() => }
               // onEndEditing={()=>}
             />
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     marginTop: 32,
     marginHorizontal: 16,
   },
-  fotoArea: {
+  photoArea: {
     flex: 0,
     gap: 8,
   },
