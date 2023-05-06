@@ -13,8 +13,8 @@ const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
 //icons import
-import { Feather } from "@expo/vector-icons";
-import { View, StyleSheet } from "react-native";
+import { Feather, AntDesign } from "@expo/vector-icons";
+import { View, StyleSheet, TouchableOpacity } from "react-native";
 
 const useRoute = (isAuth) => {
   if (!isAuth) {
@@ -74,6 +74,15 @@ const useRoute = (isAuth) => {
           tabBarStyle: {
             display: "none",
           },
+          headerLeft: ({ navigation }) => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Post")}
+              activeOpacity={0.7}
+              style={{marginHorizontal: 16}}
+            >
+              <AntDesign name="arrowleft" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+          ),
         }}
         name="Create Post"
         component={CreatePostScreen}

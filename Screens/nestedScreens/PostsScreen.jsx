@@ -108,16 +108,11 @@ const PostsScreen = ({ navigation, route }) => {
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
       />
-      <Text>Posts Screen</Text>
       <Button
         title="go to Map Screen"
         onPress={() => navigation.navigate("Map")}
       />
-      <Button
-        title="go to Comments Screen"
-        onPress={() => navigation.navigate("Comments")}
-      />
-    </View>
+     </View>
   );
 };
 
