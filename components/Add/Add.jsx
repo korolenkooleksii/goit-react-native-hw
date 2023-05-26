@@ -1,7 +1,7 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 /* SVGR has dropped some elements not supported by react-native-svg: title */
-const Add = (props) => (
+export const Add = (props) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     data-name="Livello 1"
@@ -14,4 +14,4 @@ const Add = (props) => (
     <Path d="M90 61H67V38a3 3 0 0 0-6 0v23H38a3 3 0 0 0 0 6h23v23a3 3 0 0 0 6 0V67h23a3 3 0 0 0 0-6Z" />
   </Svg>
 );
-export default Add;
+

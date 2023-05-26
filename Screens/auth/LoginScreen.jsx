@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
 import {
   StyleSheet,
   ImageBackground,
@@ -6,16 +8,16 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
-  Alert,
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import { authSignInUser } from "../../redux/auth/authOperations";
 
 const initialState = {
-  email: "",
+  mail: "",
   password: "",
 };
 
@@ -28,6 +30,8 @@ const LoginScreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onChange = () => {
@@ -44,15 +48,14 @@ const LoginScreen = ({ navigation }) => {
   };
 
   const handleMain = (val) =>
-    setState((prevState) => ({ ...prevState, email: val }));
+    setState((prevState) => ({ ...prevState, mail: val }));
   const handlePassword = (val) =>
     setState((prevState) => ({ ...prevState, password: val }));
 
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
-  const onLogin = () => {
-    // Alert.alert(state.email);
-    console.log(state);
+  const handleAuthSignIn = () => {
+    dispatch(authSignInUser(state));
     setState(initialState);
   };
 
@@ -129,7 +132,8 @@ const LoginScreen = ({ navigation }) => {
                   <TouchableOpacity
                     style={styles.btn}
                     activeOpacity={0.7}
-                    onPress={onLogin}
+                    onPress={handleAuthSignIn}
+                    disabled={!state.email && !state.password}
                   >
                     <Text style={styles.textBtn}>Войти</Text>
                   </TouchableOpacity>

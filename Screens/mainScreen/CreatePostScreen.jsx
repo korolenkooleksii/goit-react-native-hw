@@ -11,8 +11,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
+  Alert,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
+import * as Location from "expo-location";
 // import icons
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -21,6 +23,7 @@ const initialState = {
   photo: null,
   name: "",
   location: "",
+  geo: {},
 };
 
 const CreatePostScreen = ({ navigation }) => {
@@ -32,6 +35,15 @@ const CreatePostScreen = ({ navigation }) => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        alert("Permission to access location was denied");
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     const onChange = () => {
@@ -57,6 +69,15 @@ const CreatePostScreen = ({ navigation }) => {
     );
   }
 
+  const getLocation = async () => {
+    const location = await Location.getCurrentPositionAsync({});
+    const coords = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+    setPost((prevState) => ({ ...prevState, geo: coords }));
+  };
+
   const handlePhoto = (val) =>
     setPost((prevState) => ({ ...prevState, photo: val }));
   const handleName = (val) =>
@@ -66,13 +87,14 @@ const CreatePostScreen = ({ navigation }) => {
 
   const takePhoto = async () => {
     const photo = await camera.takePictureAsync();
+    getLocation();
     handlePhoto(photo.uri);
   };
 
-  const sendPhoto = ()=>{
-    navigation.navigate('Posts', {post})
-    // console.log('post - ', post);
-  }
+  const sendPhoto = () => {
+    navigation.navigate("Posts", { post });
+    console.log("post - ", post);
+  };
 
   const toggleCameraType = () => {
     setType((current) =>
@@ -146,7 +168,7 @@ const CreatePostScreen = ({ navigation }) => {
               style={{ ...styles.text, ...styles.name, ...styles.geo }}
               placeholder="Местность..."
               placeholderTextColor="#BDBDBD"
-              value={post.geo}
+              value={post.location}
               onChangeText={(value) => handleLocation(value)}
               // onFocus={() => }
               // onEndEditing={()=>}
@@ -163,7 +185,9 @@ const CreatePostScreen = ({ navigation }) => {
             // activeOpacity={0.7}
             onPress={() => navigation.navigate("Posts")}
           >
-            <Text style={{ ...styles.text }} onPress={sendPhoto}>Опубликовать</Text>
+            <Text style={{ ...styles.text }} onPress={sendPhoto}>
+              Опубликовать
+            </Text>
           </TouchableOpacity>
           <View
             style={{

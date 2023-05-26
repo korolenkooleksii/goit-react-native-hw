@@ -9,9 +9,12 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
+import { useAuth } from "../../hooks/useAuth";
 
 const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
+
+  const {email, login} = useAuth()
 
   useEffect(() => {
     if (route.params) {
@@ -103,6 +106,29 @@ const PostsScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignSelf: 'flex-start',
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <View style={styles.photoUser}></View>
+        <View>
+          <Text style={{
+            fontFamily: "Roboto-Medium",
+            fontSize: 13,
+            lineHeight: 15,
+          }}>{login}</Text>
+          <Text style={{
+            fontFamily: "Roboto-Regular",
+            fontSize: 11,
+            lineHeight: 13,
+          }}>{email}</Text>
+        </View>
+      </View>
+
       <FlatList
         data={posts}
         keyExtractor={(item, index) => index.toString()}
@@ -112,7 +138,7 @@ const PostsScreen = ({ navigation, route }) => {
         title="go to Map Screen"
         onPress={() => navigation.navigate("Map")}
       />
-     </View>
+    </View>
   );
 };
 
@@ -122,6 +148,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 32,
+    marginTop: 32,
+    marginHorizontal: 16,
+  },
+  photoUser: {
+    width: 60,
+    height: 60,
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+    borderWidth: 1,
+    borderColor: "red",
   },
 });
 

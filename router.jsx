@@ -9,26 +9,28 @@ import Home from "./screens/mainScreen/Home";
 import ProfileScreen from "./screens/mainScreen/ProfileScreen";
 import CreatePostScreen from "./screens/mainScreen/CreatePostScreen";
 
+import { View, StyleSheet, TouchableOpacity } from "react-native";
+//icons import
+import { Feather, AntDesign } from "@expo/vector-icons";
+
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
-//icons import
-import { Feather, AntDesign } from "@expo/vector-icons";
-import { View, StyleSheet, TouchableOpacity } from "react-native";
+
 
 const useRoute = (isAuth) => {
   if (!isAuth) {
     return (
-      <AuthStack.Navigator initialRouteName="Login">
-        <AuthStack.Screen
-          options={{ headerShown: false }}
-          name="Login"
-          component={LoginScreen}
-        />
+      <AuthStack.Navigator initialRouteName="Register">
         <AuthStack.Screen
           options={{ headerShown: false }}
           name="Register"
           component={RegisterScreen}
+        />
+        <AuthStack.Screen
+          options={{ headerShown: false }}
+          name="Login"
+          component={LoginScreen}
         />
       </AuthStack.Navigator>
     );
@@ -65,7 +67,7 @@ const useRoute = (isAuth) => {
       />
 
       <MainTab.Screen
-        options={{
+        options={({ navigation }) => ({
           tabBarIcon: ({ focused, size, color }) => (
             <View style={styles.createBtn}>
               <Feather name="plus" size={20} color="#FFFFFF" />
@@ -74,16 +76,16 @@ const useRoute = (isAuth) => {
           tabBarStyle: {
             display: "none",
           },
-          headerLeft: ({ navigation }) => (
+          headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Post")}
+              onPress={() => navigation.navigate("Home", { screen: "Post" })}
               activeOpacity={0.7}
-              style={{marginHorizontal: 16}}
+              style={{ marginHorizontal: 16 }}
             >
               <AntDesign name="arrowleft" size={24} color="#BDBDBD" />
             </TouchableOpacity>
           ),
-        }}
+        })}
         name="Create Post"
         component={CreatePostScreen}
       />

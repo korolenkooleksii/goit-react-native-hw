@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+
 import {
   StyleSheet,
   ImageBackground,
@@ -6,18 +8,20 @@ import {
   TouchableOpacity,
   Text,
   TextInput,
-  Alert,
   Keyboard,
   TouchableWithoutFeedback,
   Dimensions,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 
-import Add from "../../components/Add";
+
+import { authSignUpUser } from "../../redux/auth/authOperations";
+import { Add } from "../../components/Add/Add";
+
 
 const initialState = {
   login: "",
-  email: "",
+  mail: "",
   password: "",
 };
 
@@ -26,10 +30,12 @@ const RegisterScreen = ({ navigation }) => {
   const [isActive, setIsActive] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
-
+  
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const onChange = () => {
@@ -39,7 +45,6 @@ const RegisterScreen = ({ navigation }) => {
 
     const dimensionsHandler = Dimensions.addEventListener("change", onChange);
     return () => dimensionsHandler.remove();
-
   }, []);
 
   const handleFocus = (val) => {
@@ -50,15 +55,14 @@ const RegisterScreen = ({ navigation }) => {
   const handleLogin = (val) =>
     setState((prevState) => ({ ...prevState, login: val }));
   const handleMain = (val) =>
-    setState((prevState) => ({ ...prevState, email: val }));
+    setState((prevState) => ({ ...prevState, mail: val }));
   const handlePassword = (val) =>
     setState((prevState) => ({ ...prevState, password: val }));
 
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
-  const onLogin = () => {
-    // Alert.alert(state.login);
-    console.log(state);
+  const handleAuthSignUp = () => {
+    dispatch(authSignUpUser(state))
     setState(initialState);
   };
 
@@ -154,7 +158,8 @@ const RegisterScreen = ({ navigation }) => {
                   <TouchableOpacity
                     style={styles.btn}
                     activeOpacity={0.7}
-                    onPress={onLogin}
+                    onPress={handleAuthSignUp}
+                    disabled={!state.login && !state.email && !state.password}
                   >
                     <Text style={styles.textBtn}>Зарегистрироваться</Text>
                   </TouchableOpacity>
