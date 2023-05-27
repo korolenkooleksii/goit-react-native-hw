@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { authSignUpUser } from "../../redux/auth/authOperations";
+
 import {
   StyleSheet,
   ImageBackground,
@@ -13,9 +15,6 @@ import {
   Dimensions,
   KeyboardAvoidingView,
 } from "react-native";
-
-
-import { authSignUpUser } from "../../redux/auth/authOperations";
 import { Add } from "../../components/Add/Add";
 
 

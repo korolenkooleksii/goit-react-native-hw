@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
+import { authSignInUser } from "../../redux/auth/authOperations";
+
 import {
   StyleSheet,
   ImageBackground,
@@ -14,7 +16,6 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
-import { authSignInUser } from "../../redux/auth/authOperations";
 
 const initialState = {
   mail: "",

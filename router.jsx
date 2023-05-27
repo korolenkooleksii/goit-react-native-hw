@@ -1,5 +1,3 @@
-import React, { useState } from "react";
-
 import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
@@ -16,12 +14,10 @@ import { Feather, AntDesign } from "@expo/vector-icons";
 const AuthStack = createStackNavigator();
 const MainTab = createBottomTabNavigator();
 
-
-
 const useRoute = (isAuth) => {
   if (!isAuth) {
     return (
-      <AuthStack.Navigator initialRouteName="Register">
+      <AuthStack.Navigator initialRouteName="Login">
         <AuthStack.Screen
           options={{ headerShown: false }}
           name="Register"

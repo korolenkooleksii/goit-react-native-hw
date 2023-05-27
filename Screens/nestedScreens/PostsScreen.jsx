@@ -10,23 +10,40 @@ import {
 } from "react-native";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../firebase";
 
 const PostsScreen = ({ navigation, route }) => {
   const [posts, setPosts] = useState([]);
 
-  const {email, login} = useAuth()
+  const { email, login } = useAuth();
 
   useEffect(() => {
-    if (route.params) {
-      setPosts((prevState) => [...prevState, route.params]);
-    }
-  }, [route.params]);
+    getAllPosts();
+  }, []);
 
-  const renderItem = ({
-    item: {
-      post: { photo, location, name },
-    },
-  }) => {
+  const getAllPosts = async () => {
+    const querySnapshot = await getDocs(collection(db, "posts"));
+
+    querySnapshot.forEach((doc) => {
+
+      if (doc.id) {
+        setPosts((prevState) => [
+          ...prevState,
+          {
+            photo: doc.data().photo,
+            location: doc.data().location,
+            comment: doc.data().comment,
+            id: doc.id,
+          },
+        ]);
+      }
+    });
+  };
+
+
+  const renderItem = ({ item: { photo, location, comment } }) => {
+    // console.log("photo - ", photo);
     return (
       <View style={{ marginBottom: 32, gap: 8 }}>
         <View
@@ -55,7 +72,7 @@ const PostsScreen = ({ navigation, route }) => {
             color: "#212121",
           }}
         >
-          {name}
+          {comment}
         </Text>
         <View
           style={{
@@ -109,29 +126,37 @@ const PostsScreen = ({ navigation, route }) => {
       <View
         style={{
           flexDirection: "row",
-          alignSelf: 'flex-start',
+          alignSelf: "flex-start",
           alignItems: "center",
           gap: 8,
         }}
       >
         <View style={styles.photoUser}></View>
         <View>
-          <Text style={{
-            fontFamily: "Roboto-Medium",
-            fontSize: 13,
-            lineHeight: 15,
-          }}>{login}</Text>
-          <Text style={{
-            fontFamily: "Roboto-Regular",
-            fontSize: 11,
-            lineHeight: 13,
-          }}>{email}</Text>
+          <Text
+            style={{
+              fontFamily: "Roboto-Medium",
+              fontSize: 13,
+              lineHeight: 15,
+            }}
+          >
+            {login}
+          </Text>
+          <Text
+            style={{
+              fontFamily: "Roboto-Regular",
+              fontSize: 11,
+              lineHeight: 13,
+            }}
+          >
+            {email}
+          </Text>
         </View>
       </View>
 
       <FlatList
         data={posts}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
       <Button

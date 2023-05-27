@@ -19,6 +19,11 @@ import * as Location from "expo-location";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+import { storage, db } from "../../firebase";
+import { useAuth } from "../../hooks/useAuth";
+
 const initialState = {
   photo: null,
   name: "",
@@ -28,9 +33,17 @@ const initialState = {
 
 const CreatePostScreen = ({ navigation }) => {
   const [post, setPost] = useState(initialState);
+  // const [locationName, setLocationName] = useState('Ukraine');
+
+  const [photo, setPhoto] = useState(null);
+  const [comment, setComment] = useState(null);
+  const [location, setLocation] = useState("");
+
   const [camera, setCamera] = useState(null);
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
+
+  const { login, userId } = useAuth();
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
@@ -40,8 +53,14 @@ const CreatePostScreen = ({ navigation }) => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        alert("Permission to access location was denied");
+        console.log("Permission to access location was denied");
       }
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
     })();
   }, []);
 
@@ -69,37 +88,56 @@ const CreatePostScreen = ({ navigation }) => {
     );
   }
 
-  const getLocation = async () => {
-    const location = await Location.getCurrentPositionAsync({});
-    const coords = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    };
-    setPost((prevState) => ({ ...prevState, geo: coords }));
-  };
-
-  const handlePhoto = (val) =>
-    setPost((prevState) => ({ ...prevState, photo: val }));
-  const handleName = (val) =>
-    setPost((prevState) => ({ ...prevState, name: val }));
-  const handleLocation = (val) =>
-    setPost((prevState) => ({ ...prevState, location: val }));
-
-  const takePhoto = async () => {
-    const photo = await camera.takePictureAsync();
-    getLocation();
-    handlePhoto(photo.uri);
-  };
-
-  const sendPhoto = () => {
-    navigation.navigate("Posts", { post });
-    console.log("post - ", post);
-  };
-
   const toggleCameraType = () => {
     setType((current) =>
       current === CameraType.back ? CameraType.front : CameraType.back
     );
+  };
+
+  const takePhoto = async () => {
+    const { uri } = await camera.takePictureAsync();
+    setPhoto(uri);
+
+    setPost((prevState) => ({ ...prevState, photo: uri }));
+  };
+
+  const sendPhoto = () => {
+    uploadPostToServer();
+
+    navigation.navigate("Posts");
+    // console.log("post ---- ", post);
+    // console.log("comment - ", comment);
+    // console.log("location - ", location);
+  };
+
+  const uploadPhotoToServer = async () => {
+    const uniquePostId = Date.now().toString();
+
+    const storageRef = ref(storage, `posts/${uniquePostId}`);
+
+    await uploadBytes(storageRef, photo);
+
+    const pathReference = ref(storage, `posts/${uniquePostId}`);
+
+    const processedPhoto = await getDownloadURL(pathReference);
+    return processedPhoto;
+  };
+
+  const uploadPostToServer = async () => {
+    const photo = await uploadPhotoToServer();
+
+    try {
+      const docRef = await addDoc(collection(db, "posts"), {
+        photo,
+        comment,
+        location,
+        userId,
+        login,
+      });
+      // console.log("Document written with ID: ", docRef.id);
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
   };
 
   return (
@@ -159,8 +197,8 @@ const CreatePostScreen = ({ navigation }) => {
               style={{ ...styles.text, ...styles.name }}
               placeholder="Название..."
               placeholderTextColor="#BDBDBD"
-              value={post.name}
-              onChangeText={(value) => handleName(value)}
+              value={comment}
+              onChangeText={(value) => setComment(value)}
               // onFocus={() => }
               // onEndEditing={}
             />
@@ -168,8 +206,8 @@ const CreatePostScreen = ({ navigation }) => {
               style={{ ...styles.text, ...styles.name, ...styles.geo }}
               placeholder="Местность..."
               placeholderTextColor="#BDBDBD"
-              value={post.location}
-              onChangeText={(value) => handleLocation(value)}
+              value="Ukraine"
+              // onChangeText={(value) => handleLocation(value)}
               // onFocus={() => }
               // onEndEditing={()=>}
             />
@@ -274,7 +312,9 @@ const styles = StyleSheet.create({
   name: {
     paddingTop: 16,
     paddingBottom: 16,
+
     // borderBottomColor: "#E8E8E8",
+
     borderBottomColor: "red",
     borderBottomWidth: 1,
     color: "#212121",

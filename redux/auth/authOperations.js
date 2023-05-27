@@ -1,15 +1,13 @@
 import {
-  getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   updateProfile,
   signOut,
 } from "firebase/auth";
-
+import { auth } from "../../firebase";
 import { updateUserProfile, authStateChange, authSignOut } from "./authSlice";
 
-const auth = getAuth();
 
 const authSignUpUser =
   ({ login, mail, password }) =>
@@ -49,11 +47,9 @@ const authSignInUser =
   async (dispatch) => {
 
     try {
-      const user = await signInWithEmailAndPassword(auth, mail, password);
+      await signInWithEmailAndPassword(auth, mail, password);
 
       const {displayName, uid, email, photoURL} = await auth.currentUser;
-
-      console.log(displayName, uid, email);
 
       dispatch(
         updateUserProfile({
