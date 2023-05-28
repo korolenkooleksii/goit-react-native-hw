@@ -62,6 +62,7 @@ const PostsScreen = ({ navigation, route }) => {
               resizeMode: "cover",
             }}
             source={{ uri: photo }}
+            // src={ photo }
           />
         </View>
         <Text
@@ -113,7 +114,7 @@ const PostsScreen = ({ navigation, route }) => {
                 color: "#212121",
               }}
             >
-              {location}
+              
             </Text>
           </View>
         </View>

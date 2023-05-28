@@ -32,12 +32,13 @@ const initialState = {
 };
 
 const CreatePostScreen = ({ navigation }) => {
-  const [post, setPost] = useState(initialState);
   // const [locationName, setLocationName] = useState('Ukraine');
 
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState(null);
-  const [location, setLocation] = useState("");
+  const [location, setLocation] = useState([]);
+
+  const [text, setText] = useState("Ukraine");
 
   const [camera, setCamera] = useState(null);
   const [type, setType] = useState(CameraType.back);
@@ -54,13 +55,17 @@ const CreatePostScreen = ({ navigation }) => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
         console.log("Permission to access location was denied");
+        return;
       }
-      let location = await Location.getCurrentPositionAsync({});
+      let currentLocation = await Location.getCurrentPositionAsync({});
       const coords = {
-        latitude: location.coords.latitude,
-        longitude: location.coords.longitude,
+        latitude: currentLocation.coords.latitude,
+        longitude: currentLocation.coords.longitude,
       };
-      setLocation(coords);
+      setLocation(currentLocation);
+
+      setText(JSON.stringify(currentLocation));
+      console.log(555);
     })();
   }, []);
 
@@ -97,8 +102,6 @@ const CreatePostScreen = ({ navigation }) => {
   const takePhoto = async () => {
     const { uri } = await camera.takePictureAsync();
     setPhoto(uri);
-
-    setPost((prevState) => ({ ...prevState, photo: uri }));
   };
 
   const reset = () => {
@@ -107,11 +110,15 @@ const CreatePostScreen = ({ navigation }) => {
   };
 
   const uploadPhotoToServer = async () => {
-    const uniquePostId = Date.now().toString();
+    const response = await fetch(photo);
+    const file = await response.blob();
 
+    const uniquePostId = Date.now().toString();
     const storageRef = ref(storage, `posts/${uniquePostId}`);
 
-    await uploadBytes(storageRef, photo);
+    await uploadBytes(storageRef, file).then((snapshot) => {
+      Alert.alert('Uploaded a photo!');
+    });
 
     const pathReference = ref(storage, `posts/${uniquePostId}`);
 
@@ -130,6 +137,8 @@ const CreatePostScreen = ({ navigation }) => {
         userId,
         login,
       });
+      console.log(888888888);
+      // console.log('docRef - '. docRef);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -222,17 +231,13 @@ const CreatePostScreen = ({ navigation }) => {
               placeholderTextColor="#BDBDBD"
               value={comment}
               onChangeText={(value) => setComment(value)}
-              // onFocus={() => }
-              // onEndEditing={}
             />
             <TextInput
               style={{ ...styles.text, ...styles.name, ...styles.geo }}
               placeholder="Местность..."
               placeholderTextColor="#BDBDBD"
-              value="Ukraine"
-              // onChangeText={(value) => handleLocation(value)}
-              // onFocus={() => }
-              // onEndEditing={()=>}
+              // value='Vinnitsa'
+              value={text}
             />
             <Feather
               name="map-pin"
@@ -312,7 +317,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 15,
     right: 15,
-    // backgroundColor: "#fff",
     borderRadius: 50,
     width: 26,
     height: 26,
@@ -334,8 +338,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 50,
-
-    // backgroundColor: "#FFFFFF",
   },
   text: {
     fontFamily: "Roboto-Regular",
@@ -351,10 +353,7 @@ const styles = StyleSheet.create({
   name: {
     paddingTop: 16,
     paddingBottom: 16,
-
-    // borderBottomColor: "#E8E8E8",
-
-    borderBottomColor: "red",
+    borderBottomColor: "#E8E8E8",
     borderBottomWidth: 1,
     color: "#212121",
   },
