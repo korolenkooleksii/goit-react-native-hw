@@ -24,13 +24,6 @@ import { addDoc, collection } from "firebase/firestore";
 import { storage, db } from "../../firebase";
 import { useAuth } from "../../hooks/useAuth";
 
-const initialState = {
-  photo: null,
-  name: "",
-  location: "",
-  geo: {},
-};
-
 const CreatePostScreen = ({ navigation }) => {
   // const [locationName, setLocationName] = useState('Ukraine');
 
@@ -65,7 +58,7 @@ const CreatePostScreen = ({ navigation }) => {
       setLocation(currentLocation);
 
       setText(JSON.stringify(currentLocation));
-      console.log(555);
+      console.log('Location job');
     })();
   }, []);
 
@@ -117,7 +110,7 @@ const CreatePostScreen = ({ navigation }) => {
     const storageRef = ref(storage, `posts/${uniquePostId}`);
 
     await uploadBytes(storageRef, file).then((snapshot) => {
-      Alert.alert('Uploaded a photo!');
+      // Alert.alert('Uploaded a photo!');
     });
 
     const pathReference = ref(storage, `posts/${uniquePostId}`);
@@ -133,11 +126,11 @@ const CreatePostScreen = ({ navigation }) => {
       const docRef = await addDoc(collection(db, "posts"), {
         photo,
         comment,
-        location,
+        location: location.coords,
         userId,
         login,
       });
-      console.log(888888888);
+      console.log('Photo uploaded!');
       // console.log('docRef - '. docRef);
     } catch (e) {
       console.error("Error adding document: ", e);

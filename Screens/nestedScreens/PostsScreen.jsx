@@ -10,40 +10,47 @@ import {
 } from "react-native";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 
-const PostsScreen = ({ navigation, route }) => {
+const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
   const { email, login } = useAuth();
 
-  useEffect(() => {
-    getAllPosts();
-  }, []);
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "posts"), (snapshot) => {
+        setPosts(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
+      }),
 
-  const getAllPosts = async () => {
-    const querySnapshot = await getDocs(collection(db, "posts"));
+    []
+  );
 
-    querySnapshot.forEach((doc) => {
+  // const getAllPosts = async () => {
+  //   const querySnapshot = await getDocs(collection(db, "posts"));
+  //   querySnapshot.forEach((doc) => {
+  //     if (doc.id) {
+  //       setPosts((prevState) => [
+  //         ...prevState,
+  //         {
+  //           photo: doc.data().photo,
+  //           location: doc.data().location,
+  //           comment: doc.data().comment,
+  //           id: doc.id,
+  //         },
+  //       ]);
+  //     }
+  //   });
+  // };
 
-      if (doc.id) {
-        setPosts((prevState) => [
-          ...prevState,
-          {
-            photo: doc.data().photo,
-            location: doc.data().location,
-            comment: doc.data().comment,
-            id: doc.id,
-          },
-        ]);
-      }
+  const getPosts = async () => {
+    onSnapshot(collection(db, "posts"), (snapshot) => {
+      setPosts(snapshot.docs.map((doc) => doc.data()));
     });
   };
 
-
   const renderItem = ({ item: { photo, location, comment } }) => {
-    // console.log("photo - ", photo);
     return (
       <View style={{ marginBottom: 32, gap: 8 }}>
         <View
@@ -62,7 +69,6 @@ const PostsScreen = ({ navigation, route }) => {
               resizeMode: "cover",
             }}
             source={{ uri: photo }}
-            // src={ photo }
           />
         </View>
         <Text
@@ -113,9 +119,7 @@ const PostsScreen = ({ navigation, route }) => {
                 textDecorationLine: "underline",
                 color: "#212121",
               }}
-            >
-              
-            </Text>
+            ></Text>
           </View>
         </View>
       </View>
