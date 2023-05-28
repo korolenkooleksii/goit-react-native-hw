@@ -8,32 +8,34 @@ import {
 import { auth } from "../../firebase";
 import { updateUserProfile, authStateChange, authSignOut } from "./authSlice";
 
-
 const authSignUpUser =
   ({ login, mail, password, avatar }) =>
   async (dispatch) => {
-    console.log('avatar --- ', avatar);
-    
+    console.log("avatar --- ", avatar);
+
     try {
       await createUserWithEmailAndPassword(auth, mail, password);
 
       await auth.currentUser;
 
+      const response = await fetch(avatar);
+      const file = await response.blob();
+
       await updateProfile(auth.currentUser, {
         displayName: login,
-        photoURL: "",
+        avatar: file,
       });
 
-      const { displayName, uid, email, photoURL } = await auth.currentUser;
+      const { displayName, uid, email, avatar } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
           login: displayName,
           userId: uid,
           email,
+          avatar,
         })
       );
-
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -46,11 +48,10 @@ const authSignUpUser =
 const authSignInUser =
   ({ mail, password }) =>
   async (dispatch) => {
-
     try {
       await signInWithEmailAndPassword(auth, mail, password);
 
-      const {displayName, uid, email, photoURL} = await auth.currentUser;
+      const { displayName, uid, email, photoURL } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
@@ -59,7 +60,6 @@ const authSignInUser =
           email,
         })
       );
-
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -78,7 +78,6 @@ const authSignOutUser = () => async (dispatch, getState) => {
 const authStateChangeUser = () => async (dispatch, getState) => {
   await onAuthStateChanged(auth, (user) => {
     if (user) {
-
       dispatch(
         updateUserProfile({
           login: user.displayName,
