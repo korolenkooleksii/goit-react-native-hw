@@ -88,10 +88,10 @@ const RegisterScreen = ({ navigation }) => {
       quality: 1,
     });
 
-    console.log(result);
+    // console.log(result);
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      setImage(result);
     }
   };
 
@@ -112,13 +112,14 @@ const RegisterScreen = ({ navigation }) => {
               }}
             >
               <View style={styles.addPhoto}>
-                <View style={{ overflow: "hidden" }}>
+                <View style={{ overflow: "hidden", borderRadius: 16, backgroundColor: "#F6F6F6", }}>
                   {image && (
                     <Image
-                      source={{ uri: image}}
+                      source={{ uri: image.assets[0].uri}}
                       style={{
-                        // width: '100%',
-                        // height: '100%',
+                        width: '100%',
+                        height: '100%',
+                        
                         resizeMode: "cover",
                       }}
                     />
@@ -235,8 +236,8 @@ const styles = StyleSheet.create({
     transform: [{ translateX: -60 }],
     width: 120,
     height: 120,
-    borderRadius: 16,
-    backgroundColor: "#F6F6F6",
+    
+    
   },
   addPhotoBtn: {
     position: "absolute",
