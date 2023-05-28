@@ -16,11 +16,11 @@ const authSlice = createSlice({
       state.login = payload.login;
       state.userId = payload.userId;
       state.email = payload.email;
-      state.avatar = payload.avatar;
-      console.log(state);
     },
     addUserAvatar(state, {payload}){
-      
+      state.avatar = payload.userAvatar;
+
+      console.log('state.avatar - ', state.avatar);
     },
     authStateChange(state, { payload }) {
       state.stateChange = payload.stateChange;

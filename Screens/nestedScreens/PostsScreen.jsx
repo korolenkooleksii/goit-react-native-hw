@@ -16,10 +16,10 @@ import { db } from "../../firebase";
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
-  const { email, login } = useAuth();
+  const { email, login, avatar } = useAuth();
   // console.log(email);
   // console.log(login);
-  // console.log(useAuth());
+  // console.log('avatar - ', avatar);
 
   useEffect(
     () =>
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
-    
+
     borderColor: "red",
   },
 });

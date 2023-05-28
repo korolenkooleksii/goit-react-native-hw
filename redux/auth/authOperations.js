@@ -9,7 +9,7 @@ import { auth } from "../../firebase";
 import { updateUserProfile, authStateChange, authSignOut } from "./authSlice";
 
 const authSignUpUser =
-  ({ login, mail, password, avatar }) =>
+  ({ login, mail, password }) =>
   async (dispatch) => {
     console.log("avatar --- ", avatar);
 
@@ -18,22 +18,19 @@ const authSignUpUser =
 
       await auth.currentUser;
 
-      const response = await fetch(avatar);
-      const file = await response.blob();
-
       await updateProfile(auth.currentUser, {
         displayName: login,
-        // avatar: file,
       });
 
-      const { displayName, uid, email } = await auth.currentUser;
+      const { displayName, uid, email, userAvatar } = await auth.currentUser;
+      console.log("🚀 =>   userAvatar - ", userAvatar)
 
       dispatch(
         updateUserProfile({
           login: displayName,
           userId: uid,
           email,
-          // avatar,
+          avatar: userAvatar,
         })
       );
     } catch (error) {
@@ -51,7 +48,7 @@ const authSignInUser =
     try {
       await signInWithEmailAndPassword(auth, mail, password);
 
-      const { displayName, uid, email, photoURL } = await auth.currentUser;
+      const { displayName, uid, email } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({

@@ -17,6 +17,7 @@ import {
   Image,
 } from "react-native";
 import { Add } from "../../components/Add/Add";
+import { Remove } from "../../components/Remove/Remove";
 import * as ImagePicker from "expo-image-picker";
 import { addUserAvatar } from "../../redux/auth/authSlice";
 
@@ -26,7 +27,6 @@ const initialState = {
   login: "",
   mail: "",
   password: "",
-  avatar: defaultPhoto,
 };
 
 const RegisterScreen = ({ navigation }) => {
@@ -35,7 +35,8 @@ const RegisterScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
 
-  // const [image, setImage] = useState(null);
+  const [avatar, setAvatar] = useState(null);
+
   const [isImage, setIsImage] = useState(false);
 
   const [dimensions, setDimensions] = useState(
@@ -65,8 +66,6 @@ const RegisterScreen = ({ navigation }) => {
     setState((prevState) => ({ ...prevState, mail: val }));
   const handlePassword = (val) =>
     setState((prevState) => ({ ...prevState, password: val }));
-  const handleAvatar = (val) =>
-    setState((prevState) => ({ ...prevState, avatar: val.assets[0].uri }));
 
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
@@ -96,10 +95,8 @@ const RegisterScreen = ({ navigation }) => {
     });
 
     if (!result.canceled) {
-      handleAvatar(result);
-      // setImage(result);
+      setAvatar(result.assets[0].uri);
       setIsImage(true);
-      // dispatch(addUserAvatar(image));
     }
   };
 
@@ -129,7 +126,7 @@ const RegisterScreen = ({ navigation }) => {
                 >
                   <Image
                     // source={{ uri: image.assets[0].uri }}
-                    source={{ uri: state.avatar }}
+                    source={{ uri: avatar }}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -137,7 +134,11 @@ const RegisterScreen = ({ navigation }) => {
                     }}
                   />
                 </View>
-                <Add style={styles.addPhotoBtn} onPress={pickImage} />
+                {avatar ? (
+                  <Remove style={styles.removePhotoBtn} />
+                ) : (
+                  <Add style={styles.addPhotoBtn} onPress={pickImage} />
+                )}
               </View>
 
               <Text style={styles.titleForm}>Регистрация</Text>
@@ -253,6 +254,13 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
     fill: "#FF6C00",
+  },
+  removePhotoBtn: {
+    position: "absolute",
+    bottom: -76,
+    left: 102,
+    width: 25,
+    height: 25,
   },
   titleForm: {
     marginBottom: 32,
