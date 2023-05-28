@@ -17,9 +17,9 @@ const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
   const { email, login } = useAuth();
-  console.log(email);
-  console.log(login);
-  console.log(useAuth());
+  // console.log(email);
+  // console.log(login);
+  // console.log(useAuth());
 
   useEffect(
     () =>

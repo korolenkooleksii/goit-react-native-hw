@@ -17,6 +17,7 @@ const authSlice = createSlice({
       state.userId = payload.userId;
       state.email = payload.email;
       state.avatar = payload.avatar;
+      console.log(state);
     },
     addUserAvatar(state, {payload}){
       

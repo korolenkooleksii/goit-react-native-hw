@@ -23,17 +23,17 @@ const authSignUpUser =
 
       await updateProfile(auth.currentUser, {
         displayName: login,
-        avatar: file,
+        // avatar: file,
       });
 
-      const { displayName, uid, email, avatar } = await auth.currentUser;
+      const { displayName, uid, email } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
           login: displayName,
           userId: uid,
           email,
-          avatar,
+          // avatar,
         })
       );
     } catch (error) {
