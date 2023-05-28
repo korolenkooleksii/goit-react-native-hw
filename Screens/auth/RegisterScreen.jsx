@@ -158,7 +158,7 @@ const RegisterScreen = ({ navigation }) => {
                     style={styles.btn}
                     activeOpacity={0.7}
                     onPress={handleAuthSignUp}
-                    disabled={!state.login && !state.email && !state.password}
+                    disabled={!state.login && !state.mail && !state.password}
                   >
                     <Text style={styles.textBtn}>Зарегистрироваться</Text>
                   </TouchableOpacity>

@@ -101,13 +101,9 @@ const CreatePostScreen = ({ navigation }) => {
     setPost((prevState) => ({ ...prevState, photo: uri }));
   };
 
-  const sendPhoto = () => {
-    uploadPostToServer();
-
-    navigation.navigate("Posts");
-    // console.log("post ---- ", post);
-    // console.log("comment - ", comment);
-    // console.log("location - ", location);
+  const reset = () => {
+    setPhoto(null);
+    setComment(null);
   };
 
   const uploadPhotoToServer = async () => {
@@ -134,10 +130,15 @@ const CreatePostScreen = ({ navigation }) => {
         userId,
         login,
       });
-      // console.log("Document written with ID: ", docRef.id);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+  };
+
+  const sendPhoto = () => {
+    uploadPostToServer();
+    navigation.navigate("Posts");
+    reset();
   };
 
   return (
@@ -145,7 +146,7 @@ const CreatePostScreen = ({ navigation }) => {
       <View
         style={{
           flex: 1,
-          backgroundColor: "#FFF",
+          backgroundColor: "#FFFFFF",
         }}
       >
         <View style={styles.container}>
@@ -155,10 +156,10 @@ const CreatePostScreen = ({ navigation }) => {
           <View style={styles.photoArea}>
             <View style={styles.cameraContainer}>
               <Camera style={styles.camera} ref={setCamera} type={type}>
-                {post.photo && (
+                {photo && (
                   <View style={styles.takePhotoContainer}>
                     <Image
-                      source={{ uri: post.photo }}
+                      source={{ uri: photo }}
                       style={{
                         width: dimensions,
                         height: 240,
@@ -170,26 +171,48 @@ const CreatePostScreen = ({ navigation }) => {
 
                 <TouchableOpacity
                   onPress={takePhoto}
-                  style={styles.snapContainer}
+                  style={{
+                    ...styles.snapContainer,
+                    backgroundColor: photo
+                      ? "rgba(255, 255, 255, 0.3)"
+                      : "#FFFFFF",
+                  }}
                 >
                   <Image
                     source={require("../../assets/images/camera.png")}
-                    style={{ width: 24, height: 24 }}
+                    style={{
+                      width: 24,
+                      height: 24,
+                      tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                    }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={toggleCameraType}
-                  style={styles.flipBtn}
+                  style={{
+                    ...styles.flipBtn,
+                    backgroundColor: photo
+                      ? "rgba(255, 255, 255, 0.3)"
+                      : "#FFFFFF",
+                  }}
                 >
                   <Image
                     source={require("../../assets/images/flip.png")}
-                    style={{ width: 15, height: 15 }}
+                    style={{
+                      width: 15,
+                      height: 15,
+                      tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                    }}
                   />
                 </TouchableOpacity>
               </Camera>
             </View>
 
-            <Text style={{ ...styles.text }}>Загрузите фото</Text>
+            {photo ? (
+              <Text style={{ ...styles.text }}>Редактировать фото</Text>
+            ) : (
+              <Text style={{ ...styles.text }}> Загрузите фото</Text>
+            )}
           </View>
 
           <View style={styles.info}>
@@ -219,11 +242,21 @@ const CreatePostScreen = ({ navigation }) => {
             />
           </View>
           <TouchableOpacity
-            style={styles.btn}
-            // activeOpacity={0.7}
+            style={{
+              ...styles.btn,
+              backgroundColor: photo && comment ? "#FF6C00" : "#F6F6F6",
+            }}
+            disabled={!photo && !comment}
+            activeOpacity={0.7}
             onPress={() => navigation.navigate("Posts")}
           >
-            <Text style={{ ...styles.text }} onPress={sendPhoto}>
+            <Text
+              style={{
+                ...styles.text,
+                color: photo && comment ? "#FFFFFF" : "#E8E8E8",
+              }}
+              onPress={sendPhoto}
+            >
               Опубликовать
             </Text>
           </TouchableOpacity>
@@ -235,7 +268,12 @@ const CreatePostScreen = ({ navigation }) => {
             }}
           >
             <View style={styles.remove}>
-              <AntDesign name="delete" size={24} color="#BDBDBD" />
+              <AntDesign
+                name="delete"
+                size={24}
+                color="#BDBDBD"
+                onPress={reset}
+              />
             </View>
           </View>
 
@@ -274,7 +312,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 15,
     right: 15,
-    backgroundColor: "#fff",
+    // backgroundColor: "#fff",
     borderRadius: 50,
     width: 26,
     height: 26,
@@ -296,7 +334,8 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 50,
-    backgroundColor: "#FFFFFF",
+
+    // backgroundColor: "#FFFFFF",
   },
   text: {
     fontFamily: "Roboto-Regular",
@@ -328,7 +367,6 @@ const styles = StyleSheet.create({
     bottom: 32,
   },
   btn: {
-    backgroundColor: "#F6F6F6",
     borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
@@ -339,7 +377,6 @@ const styles = StyleSheet.create({
     flex: 0,
     justifyContent: "center",
     alignItems: "center",
-
     width: 70,
     height: 40,
     borderRadius: 20,

@@ -134,7 +134,7 @@ const LoginScreen = ({ navigation }) => {
                     style={styles.btn}
                     activeOpacity={0.7}
                     onPress={handleAuthSignIn}
-                    disabled={!state.email && !state.password}
+                    disabled={!state.mail && !state.password}
                   >
                     <Text style={styles.textBtn}>Войти</Text>
                   </TouchableOpacity>
