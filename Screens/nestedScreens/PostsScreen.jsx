@@ -17,6 +17,9 @@ const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
   const { email, login } = useAuth();
+  console.log(email);
+  console.log(login);
+  console.log(useAuth());
 
   useEffect(
     () =>
@@ -44,11 +47,6 @@ const PostsScreen = ({ navigation }) => {
   //   });
   // };
 
-  const getPosts = async () => {
-    onSnapshot(collection(db, "posts"), (snapshot) => {
-      setPosts(snapshot.docs.map((doc) => doc.data()));
-    });
-  };
 
   const renderItem = ({ item: { photo, location, comment } }) => {
     return (
@@ -110,7 +108,13 @@ const PostsScreen = ({ navigation }) => {
           <View
             style={{ flexDirection: "row", gap: 4, alignItems: "flex-end" }}
           >
-            <Feather name="map-pin" size={24} color="#BDBDBD" />
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Map", {location: location})}
+              activeOpacity={0.7}
+            >
+              <Feather name="map-pin" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+            
             <Text
               style={{
                 fontFamily: "Roboto-Regular",
@@ -119,7 +123,7 @@ const PostsScreen = ({ navigation }) => {
                 textDecorationLine: "underline",
                 color: "#212121",
               }}
-            ></Text>
+            >{JSON.stringify(location)}</Text>
           </View>
         </View>
       </View>
@@ -164,10 +168,10 @@ const PostsScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
-      <Button
+      {/* <Button
         title="go to Map Screen"
         onPress={() => navigation.navigate("Map")}
-      />
+      /> */}
     </View>
   );
 };
@@ -187,6 +191,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
+    
     borderColor: "red",
   },
 });

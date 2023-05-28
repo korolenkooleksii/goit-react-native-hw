@@ -14,9 +14,10 @@ import {
   TouchableWithoutFeedback,
   Dimensions,
   KeyboardAvoidingView,
+  Image,
 } from "react-native";
 import { Add } from "../../components/Add/Add";
-
+import * as ImagePicker from "expo-image-picker";
 
 const initialState = {
   login: "",
@@ -29,12 +30,14 @@ const RegisterScreen = ({ navigation }) => {
   const [isActive, setIsActive] = useState("");
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
-  
+
+  const [image, setImage] = useState(null);
+
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const onChange = () => {
@@ -61,7 +64,7 @@ const RegisterScreen = ({ navigation }) => {
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
   const handleAuthSignUp = () => {
-    dispatch(authSignUpUser(state))
+    dispatch(authSignUpUser(state));
     setState(initialState);
   };
 
@@ -74,6 +77,22 @@ const RegisterScreen = ({ navigation }) => {
   const handleEndEditing = () => {
     setIsShowKeyboard(false);
     setIsActive("");
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
+    }
   };
 
   return (
@@ -93,7 +112,21 @@ const RegisterScreen = ({ navigation }) => {
               }}
             >
               <View style={styles.addPhoto}>
-                <Add style={styles.addPhotoBtn} />
+                <View style={{ overflow: "hidden" }}>
+                  {image && (
+                    <Image
+                      source={{ uri: image}}
+                      style={{
+                        // width: '100%',
+                        // height: '100%',
+                        resizeMode: "cover",
+                      }}
+                    />
+                  )}
+                </View>
+                {/* <TouchableOpacity onPress={pickImage}> */}
+                  <Add style={styles.addPhotoBtn} onPress={pickImage}/>
+                {/* </TouchableOpacity> */}
               </View>
 
               <Text style={styles.titleForm}>Регистрация</Text>
@@ -196,6 +229,7 @@ const styles = StyleSheet.create({
   },
   addPhoto: {
     position: "absolute",
+    // zIndex: 5,
     top: -60,
     left: "50%",
     transform: [{ translateX: -60 }],
@@ -206,6 +240,7 @@ const styles = StyleSheet.create({
   },
   addPhotoBtn: {
     position: "absolute",
+    // zIndex: 10,
     bottom: 14,
     right: -12,
     width: 25,

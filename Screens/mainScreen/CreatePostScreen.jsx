@@ -25,13 +25,9 @@ import { storage, db } from "../../firebase";
 import { useAuth } from "../../hooks/useAuth";
 
 const CreatePostScreen = ({ navigation }) => {
-  // const [locationName, setLocationName] = useState('Ukraine');
-
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState(null);
   const [location, setLocation] = useState([]);
-
-  const [text, setText] = useState("Ukraine");
 
   const [camera, setCamera] = useState(null);
   const [type, setType] = useState(CameraType.back);
@@ -55,10 +51,7 @@ const CreatePostScreen = ({ navigation }) => {
         latitude: currentLocation.coords.latitude,
         longitude: currentLocation.coords.longitude,
       };
-      setLocation(currentLocation);
-
-      setText(JSON.stringify(currentLocation));
-      console.log('Location job');
+      setLocation(coords);
     })();
   }, []);
 
@@ -126,12 +119,10 @@ const CreatePostScreen = ({ navigation }) => {
       const docRef = await addDoc(collection(db, "posts"), {
         photo,
         comment,
-        location: location.coords,
+        location,
         userId,
         login,
       });
-      console.log('Photo uploaded!');
-      // console.log('docRef - '. docRef);
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -230,7 +221,7 @@ const CreatePostScreen = ({ navigation }) => {
               placeholder="Местность..."
               placeholderTextColor="#BDBDBD"
               // value='Vinnitsa'
-              value={text}
+              value={JSON.stringify(location)}
             />
             <Feather
               name="map-pin"
