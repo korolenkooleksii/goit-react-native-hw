@@ -10,8 +10,9 @@ import { updateUserProfile, authStateChange, authSignOut } from "./authSlice";
 
 
 const authSignUpUser =
-  ({ login, mail, password }) =>
+  ({ login, mail, password, avatar }) =>
   async (dispatch) => {
+    console.log('avatar --- ', avatar);
     
     try {
       await createUserWithEmailAndPassword(auth, mail, password);

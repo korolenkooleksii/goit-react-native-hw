@@ -5,6 +5,7 @@ const initialState = {
   userId: null,
   email: null,
   stateChange: false,
+  avatar: null,
 };
 
 const authSlice = createSlice({
@@ -15,6 +16,10 @@ const authSlice = createSlice({
       state.login = payload.login;
       state.userId = payload.userId;
       state.email = payload.email;
+      state.avatar = payload.avatar;
+    },
+    addUserAvatar(state, {payload}){
+      
     },
     authStateChange(state, { payload }) {
       state.stateChange = payload.stateChange;
@@ -30,5 +35,5 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 
-export const { updateUserProfile, authStateChange, authSignOut } =
+export const { updateUserProfile, authStateChange, authSignOut, addUserAvatar } =
   authSlice.actions;

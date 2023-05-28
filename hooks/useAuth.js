@@ -1,5 +1,5 @@
 import { useSelector } from 'react-redux';
-import { selectEmail, selectLogin, selectStateChange, selectUserId } from '../redux/auth/selectors';
+import { selectAvatar, selectEmail, selectLogin, selectStateChange, selectUserId,  } from '../redux/auth/selectors';
 
 export const useAuth = () => {
   return {
@@ -7,5 +7,6 @@ export const useAuth = () => {
     userId: useSelector(selectUserId),
     stateChange: useSelector(selectStateChange),
     email: useSelector(selectEmail),
+    avatar: useSelector(selectAvatar),
   };
 };

@@ -18,11 +18,15 @@ import {
 } from "react-native";
 import { Add } from "../../components/Add/Add";
 import * as ImagePicker from "expo-image-picker";
+import { addUserAvatar } from "../../redux/auth/authSlice";
+
+const defaultPhoto = "https://via.placeholder.com/130x130";
 
 const initialState = {
   login: "",
   mail: "",
   password: "",
+  avatar: defaultPhoto,
 };
 
 const RegisterScreen = ({ navigation }) => {
@@ -31,7 +35,8 @@ const RegisterScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
 
-  const [image, setImage] = useState(null);
+  // const [image, setImage] = useState(null);
+  const [isImage, setIsImage] = useState(false);
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
@@ -60,6 +65,8 @@ const RegisterScreen = ({ navigation }) => {
     setState((prevState) => ({ ...prevState, mail: val }));
   const handlePassword = (val) =>
     setState((prevState) => ({ ...prevState, password: val }));
+  const handleAvatar = (val) =>
+    setState((prevState) => ({ ...prevState, avatar: val.assets[0].uri }));
 
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
@@ -88,10 +95,11 @@ const RegisterScreen = ({ navigation }) => {
       quality: 1,
     });
 
-    // console.log(result);
-
     if (!result.canceled) {
-      setImage(result);
+      handleAvatar(result);
+      // setImage(result);
+      setIsImage(true);
+      // dispatch(addUserAvatar(image));
     }
   };
 
@@ -112,22 +120,24 @@ const RegisterScreen = ({ navigation }) => {
               }}
             >
               <View style={styles.addPhoto}>
-                <View style={{ overflow: "hidden", borderRadius: 16, backgroundColor: "#F6F6F6", }}>
-                  {image && (
-                    <Image
-                      source={{ uri: image.assets[0].uri}}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        
-                        resizeMode: "cover",
-                      }}
-                    />
-                  )}
+                <View
+                  style={{
+                    overflow: "hidden",
+                    borderRadius: 16,
+                    backgroundColor: "#F6F6F6",
+                  }}
+                >
+                  <Image
+                    // source={{ uri: image.assets[0].uri }}
+                    source={{ uri: state.avatar }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      resizeMode: "cover",
+                    }}
+                  />
                 </View>
-                {/* <TouchableOpacity onPress={pickImage}> */}
-                  <Add style={styles.addPhotoBtn} onPress={pickImage}/>
-                {/* </TouchableOpacity> */}
+                <Add style={styles.addPhotoBtn} onPress={pickImage} />
               </View>
 
               <Text style={styles.titleForm}>Регистрация</Text>
@@ -230,18 +240,14 @@ const styles = StyleSheet.create({
   },
   addPhoto: {
     position: "absolute",
-    // zIndex: 5,
     top: -60,
     left: "50%",
     transform: [{ translateX: -60 }],
     width: 120,
     height: 120,
-    
-    
   },
   addPhotoBtn: {
     position: "absolute",
-    // zIndex: 10,
     bottom: 14,
     right: -12,
     width: 25,
