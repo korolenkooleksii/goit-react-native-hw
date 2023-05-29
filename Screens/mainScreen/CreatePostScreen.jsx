@@ -15,6 +15,8 @@ import {
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 import * as Location from "expo-location";
+import * as ImagePicker from "expo-image-picker";
+
 // import icons
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -106,7 +108,7 @@ const CreatePostScreen = ({ navigation }) => {
   };
 
   const uploadPhotoToServer = async () => {
-    const response = await fetch(photo);
+    const response = await fetch(photo ? photo : pickPhoto);
     const file = await response.blob();
 
     const uniquePostId = Date.now().toString();
@@ -130,7 +132,7 @@ const CreatePostScreen = ({ navigation }) => {
       const docRef = await addDoc(collection(db, "posts"), {
         login,
         userId,
-        photo,
+        photo: photo,
         comment,
         terrain,
         location,
@@ -144,6 +146,20 @@ const CreatePostScreen = ({ navigation }) => {
     uploadPostToServer();
     navigation.navigate("Posts");
     reset();
+  };
+
+  const pickImage = async () => {
+    // No permissions request is necessary for launching the image library
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setPickPhoto(result.assets[0].uri);
+    }
   };
 
   return (
@@ -170,7 +186,7 @@ const CreatePostScreen = ({ navigation }) => {
                   }}
                 >
                   <Image
-                    // source={{ uri: avatar }}
+                    source={{ uri: pickPhoto }}
                     style={{
                       height: "100%",
                       width: "100%",
@@ -234,7 +250,10 @@ const CreatePostScreen = ({ navigation }) => {
             </View>
 
             {!photo && !pickPhoto ? (
-              <Text style={{ ...styles.text }}> Завантажити фото</Text>
+              <Text style={{ ...styles.text }} onPress={pickImage}>
+                {" "}
+                Завантажити фото
+              </Text>
             ) : (
               <TouchableOpacity onPress={() => deletePhoto()}>
                 <Text style={{ ...styles.text }}>Редагувати фото</Text>
@@ -267,7 +286,10 @@ const CreatePostScreen = ({ navigation }) => {
           <TouchableOpacity
             style={{
               ...styles.btn,
-              backgroundColor: photo && comment ? "#FF6C00" : "#F6F6F6",
+              backgroundColor:
+                (photo || pickPhoto) && comment && terrain
+                  ? "#FF6C00"
+                  : "#F6F6F6",
             }}
             disabled={!photo && !comment}
             activeOpacity={0.7}
