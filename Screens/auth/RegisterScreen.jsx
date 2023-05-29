@@ -15,10 +15,16 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Image,
+  Alert,
 } from "react-native";
 import { Add } from "../../components/Add/Add";
 import { Remove } from "../../components/Remove/Remove";
 import * as ImagePicker from "expo-image-picker";
+
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+import { storage, db } from "../../firebase";
+import { useAuth } from "../../hooks/useAuth";
 
 const defaultPhoto = "https://via.placeholder.com/130x130";
 
@@ -34,8 +40,7 @@ const RegisterScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
 
-  const [avatar, setAvatar] = useState(null);
-
+  const [avatar, setAvatar] = useState(defaultPhoto);
   const [isImage, setIsImage] = useState(false);
 
   const [dimensions, setDimensions] = useState(
@@ -70,6 +75,9 @@ const RegisterScreen = ({ navigation }) => {
 
   const handleAuthSignUp = () => {
     dispatch(authSignUpUser(state));
+
+    uploadAvatarToServer();
+
     setState(initialState);
   };
 
@@ -99,6 +107,29 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
+  const uploadAvatarToServer = async () => {
+    const response = await fetch(avatar);
+    const file = await response.blob();
+
+    const uniquePostId = Date.now().toString();
+    const storageRef = ref(storage, `avatar/${uniquePostId}`);
+
+    await uploadBytes(storageRef, file).then((snapshot) => {
+      // Alert.alert("Uploaded an avatar!");
+    });
+
+    const pathReference = ref(storage, `avatar/${uniquePostId}`);
+    const processedAvatar = await getDownloadURL(pathReference);
+
+    try {
+      const docRef = await addDoc(collection(db, "avatar"), {
+        processedAvatar,
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
+
   return (
     <TouchableWithoutFeedback onPress={() => keyboardHide()}>
       <View style={{ flex: 1 }}>
@@ -125,7 +156,7 @@ const RegisterScreen = ({ navigation }) => {
                 >
                   <Image
                     // source={{ uri: image.assets[0].uri }}
-                    source={{ uri: avatar || defaultPhoto }}
+                    source={{ uri: avatar }}
                     style={{
                       width: "100%",
                       height: "100%",

@@ -111,6 +111,7 @@ const CreatePostScreen = ({ navigation }) => {
     const pathReference = ref(storage, `posts/${uniquePostId}`);
 
     const processedPhoto = await getDownloadURL(pathReference);
+    
     return processedPhoto;
   };
 

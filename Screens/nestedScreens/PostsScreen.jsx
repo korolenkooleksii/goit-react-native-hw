@@ -12,17 +12,29 @@ import { useAuth } from "../../hooks/useAuth";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 
+const defaultPhoto = "https://via.placeholder.com/130x130";
+
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-
+  const [avatar, setAvatar] = useState(defaultPhoto);
   const { email, login } = useAuth();
 
   useEffect(
     () =>
       onSnapshot(collection(db, "posts"), (snapshot) => {
-        setPosts(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})));
+        setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       }),
+    []
+  );
 
+  useEffect(
+    () =>
+      onSnapshot(collection(db, "avatar"), (snapshot) => {
+        if (snapshot?.docs[0]?.data()) {
+          setAvatar(snapshot.docs[0].data().processedAvatar);
+        }
+        
+      }),
     []
   );
 
@@ -87,12 +99,12 @@ const PostsScreen = ({ navigation }) => {
             style={{ flexDirection: "row", gap: 4, alignItems: "flex-end" }}
           >
             <TouchableOpacity
-              onPress={() => navigation.navigate("Map", {location: location})}
+              onPress={() => navigation.navigate("Map", { location: location })}
               activeOpacity={0.7}
             >
               <Feather name="map-pin" size={24} color="#BDBDBD" />
             </TouchableOpacity>
-            
+
             <Text
               style={{
                 fontFamily: "Roboto-Regular",
@@ -101,7 +113,9 @@ const PostsScreen = ({ navigation }) => {
                 textDecorationLine: "underline",
                 color: "#212121",
               }}
-            >{terrain}</Text>
+            >
+              {terrain}
+            </Text>
           </View>
         </View>
       </View>
@@ -118,7 +132,16 @@ const PostsScreen = ({ navigation }) => {
           gap: 8,
         }}
       >
-        <View style={styles.photoUser}></View>
+        <View style={styles.photoUser}>
+          <Image
+            source={{ uri: avatar }}
+            style={{
+              width: "100%",
+              height: "100%",
+              resizeMode: "cover",
+            }}
+          />
+        </View>
         <View>
           <Text
             style={{
@@ -146,10 +169,6 @@ const PostsScreen = ({ navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
       />
-      {/* <Button
-        title="go to Map Screen"
-        onPress={() => navigation.navigate("Map")}
-      /> */}
     </View>
   );
 };
@@ -169,8 +188,8 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
-
-    borderColor: "red",
+    overflow: "hidden",
+    borderColor: "transparent",
   },
 });
 

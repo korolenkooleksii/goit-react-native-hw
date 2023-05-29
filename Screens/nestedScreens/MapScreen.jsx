@@ -4,8 +4,6 @@ import { View, Text, StyleSheet, Dimensions } from "react-native";
 
 const MapScreen = ({route}) => {
   const {latitude, longitude} = route.params.location;
-  console.log('latitude - ', latitude);
-  console.log('longitude - ', longitude);
   return (
     <View style={styles.container}>
       <MapView
