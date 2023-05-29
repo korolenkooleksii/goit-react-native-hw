@@ -19,7 +19,6 @@ import {
 import { Add } from "../../components/Add/Add";
 import { Remove } from "../../components/Remove/Remove";
 import * as ImagePicker from "expo-image-picker";
-import { addUserAvatar } from "../../redux/auth/authSlice";
 
 const defaultPhoto = "https://via.placeholder.com/130x130";
 
@@ -126,7 +125,7 @@ const RegisterScreen = ({ navigation }) => {
                 >
                   <Image
                     // source={{ uri: image.assets[0].uri }}
-                    source={{ uri: avatar }}
+                    source={{ uri: avatar || defaultPhoto }}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -134,7 +133,7 @@ const RegisterScreen = ({ navigation }) => {
                     }}
                   />
                 </View>
-                {avatar ? (
+                {isImage ? (
                   <Remove style={styles.removePhotoBtn} />
                 ) : (
                   <Add style={styles.addPhotoBtn} onPress={pickImage} />
@@ -183,7 +182,7 @@ const RegisterScreen = ({ navigation }) => {
                         isActive === "password" ? "#FFFFFF" : "#F6F6F6",
                     }}
                     placeholder="Пароль"
-                    maxLength={40}
+                    maxLength={20}
                     secureTextEntry={isShowPassword}
                     placeholderTextColor="#BDBDBD"
                     value={state.password}

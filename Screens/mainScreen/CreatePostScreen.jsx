@@ -27,7 +27,8 @@ import { useAuth } from "../../hooks/useAuth";
 const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState(null);
-  const [location, setLocation] = useState([]);
+  const [location, setLocation] = useState(null);
+  const [terrain, setTerrain] = useState(null);
 
   const [camera, setCamera] = useState(null);
   const [type, setType] = useState(CameraType.back);
@@ -93,6 +94,7 @@ const CreatePostScreen = ({ navigation }) => {
   const reset = () => {
     setPhoto(null);
     setComment(null);
+    setTerrain(null);
   };
 
   const uploadPhotoToServer = async () => {
@@ -117,11 +119,12 @@ const CreatePostScreen = ({ navigation }) => {
 
     try {
       const docRef = await addDoc(collection(db, "posts"), {
+        login,
+        userId,
         photo,
         comment,
+        terrain,
         location,
-        userId,
-        login,
       });
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -202,26 +205,28 @@ const CreatePostScreen = ({ navigation }) => {
             </View>
 
             {photo ? (
-              <Text style={{ ...styles.text }}>Редактировать фото</Text>
+              <TouchableOpacity onPress={() => setPhoto(null)}>
+                <Text style={{ ...styles.text }}>Редагувати фото</Text>
+              </TouchableOpacity>
             ) : (
-              <Text style={{ ...styles.text }}> Загрузите фото</Text>
+              <Text style={{ ...styles.text }}> Завантажити фото</Text>
             )}
           </View>
 
           <View style={styles.info}>
             <TextInput
               style={{ ...styles.text, ...styles.name }}
-              placeholder="Название..."
+              placeholder="Назва..."
               placeholderTextColor="#BDBDBD"
               value={comment}
               onChangeText={(value) => setComment(value)}
             />
             <TextInput
               style={{ ...styles.text, ...styles.name, ...styles.geo }}
-              placeholder="Местность..."
+              placeholder="Місцевість..."
               placeholderTextColor="#BDBDBD"
-              // value='Vinnitsa'
-              value={JSON.stringify(location)}
+              value={terrain}
+              onChangeText={(value) => setTerrain(value)}
             />
             <Feather
               name="map-pin"
@@ -246,7 +251,7 @@ const CreatePostScreen = ({ navigation }) => {
               }}
               onPress={sendPhoto}
             >
-              Опубликовать
+              Опубліковати
             </Text>
           </TouchableOpacity>
           <View

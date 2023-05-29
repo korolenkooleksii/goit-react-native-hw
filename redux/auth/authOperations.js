@@ -11,7 +11,6 @@ import { updateUserProfile, authStateChange, authSignOut } from "./authSlice";
 const authSignUpUser =
   ({ login, mail, password }) =>
   async (dispatch) => {
-    console.log("avatar --- ", avatar);
 
     try {
       await createUserWithEmailAndPassword(auth, mail, password);
@@ -22,15 +21,13 @@ const authSignUpUser =
         displayName: login,
       });
 
-      const { displayName, uid, email, userAvatar } = await auth.currentUser;
-      console.log("🚀 =>   userAvatar - ", userAvatar)
+      const { displayName, uid, email } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
           login: displayName,
           userId: uid,
           email,
-          avatar: userAvatar,
         })
       );
     } catch (error) {

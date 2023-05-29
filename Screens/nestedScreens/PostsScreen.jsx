@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Button,
   FlatList,
   Image,
   TouchableOpacity,
@@ -16,10 +15,7 @@ import { db } from "../../firebase";
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
 
-  const { email, login, avatar } = useAuth();
-  // console.log(email);
-  // console.log(login);
-  // console.log('avatar - ', avatar);
+  const { email, login } = useAuth();
 
   useEffect(
     () =>
@@ -30,25 +26,7 @@ const PostsScreen = ({ navigation }) => {
     []
   );
 
-  // const getAllPosts = async () => {
-  //   const querySnapshot = await getDocs(collection(db, "posts"));
-  //   querySnapshot.forEach((doc) => {
-  //     if (doc.id) {
-  //       setPosts((prevState) => [
-  //         ...prevState,
-  //         {
-  //           photo: doc.data().photo,
-  //           location: doc.data().location,
-  //           comment: doc.data().comment,
-  //           id: doc.id,
-  //         },
-  //       ]);
-  //     }
-  //   });
-  // };
-
-
-  const renderItem = ({ item: { photo, location, comment } }) => {
+  const renderItem = ({ item: { photo, location, comment, terrain } }) => {
     return (
       <View style={{ marginBottom: 32, gap: 8 }}>
         <View
@@ -123,7 +101,7 @@ const PostsScreen = ({ navigation }) => {
                 textDecorationLine: "underline",
                 color: "#212121",
               }}
-            >{JSON.stringify(location)}</Text>
+            >{terrain}</Text>
           </View>
         </View>
       </View>
