@@ -98,9 +98,9 @@ const LoginScreen = ({ navigation }) => {
                         isActive === "login" ? "#FFFFFF" : "#F6F6F6",
                     }}
                     keyboardType="email-address"
-                    placeholder="Адрес электронной почты"
+                    placeholder="Адреса електронної пошти"
                     placeholderTextColor="#BDBDBD"
-                    value={state.email}
+                    value={state.mail}
                     onChangeText={(value) => handleMain(value)}
                     onFocus={() => handleFocus("login")}
                     onEndEditing={handleEndEditing}
@@ -126,7 +126,7 @@ const LoginScreen = ({ navigation }) => {
                     style={styles.show}
                     onPress={() => handleIsShowPassword()}
                   >
-                    Показать
+                    Показати
                   </Text>
                 </View>
                 <View style={styles.wrapBtn}>
@@ -136,14 +136,14 @@ const LoginScreen = ({ navigation }) => {
                     onPress={handleAuthSignIn}
                     disabled={!state.mail && !state.password}
                   >
-                    <Text style={styles.textBtn}>Войти</Text>
+                    <Text style={styles.textBtn}>Увійти</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => navigation.navigate("Register")}
                   >
                     <Text style={styles.enter}>
-                      Нет аккаунта? Зарегистироваться
+                      Немає акаунту? Зареєструватися
                     </Text>
                   </TouchableOpacity>
                 </View>

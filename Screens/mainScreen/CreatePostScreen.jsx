@@ -30,6 +30,8 @@ const CreatePostScreen = ({ navigation }) => {
   const [location, setLocation] = useState(null);
   const [terrain, setTerrain] = useState(null);
 
+  const [pickPhoto, setPickPhoto] = useState(null);
+
   const [camera, setCamera] = useState(null);
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
@@ -95,6 +97,12 @@ const CreatePostScreen = ({ navigation }) => {
     setPhoto(null);
     setComment(null);
     setTerrain(null);
+    setPickPhoto(null);
+  };
+
+  const deletePhoto = () => {
+    setPhoto(null);
+    setPickPhoto(null);
   };
 
   const uploadPhotoToServer = async () => {
@@ -111,7 +119,7 @@ const CreatePostScreen = ({ navigation }) => {
     const pathReference = ref(storage, `posts/${uniquePostId}`);
 
     const processedPhoto = await getDownloadURL(pathReference);
-    
+
     return processedPhoto;
   };
 
@@ -152,65 +160,85 @@ const CreatePostScreen = ({ navigation }) => {
           > */}
           <View style={styles.photoArea}>
             <View style={styles.cameraContainer}>
-              <Camera style={styles.camera} ref={setCamera} type={type}>
-                {photo && (
-                  <View style={styles.takePhotoContainer}>
+              {pickPhoto ? (
+                <View
+                  style={{
+                    // resizeMode: "cover",
+                    height: 240,
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Image
+                    // source={{ uri: avatar }}
+                    style={{
+                      height: "100%",
+                      width: "100%",
+                      resizeMode: "cover",
+                    }}
+                  />
+                </View>
+              ) : (
+                <Camera style={styles.camera} ref={setCamera} type={type}>
+                  {photo && (
+                    <View style={styles.takePhotoContainer}>
+                      <Image
+                        source={{ uri: photo }}
+                        style={{
+                          width: dimensions,
+                          height: 240,
+                          resizeMode: "cover",
+                        }}
+                      />
+                    </View>
+                  )}
+
+                  <TouchableOpacity
+                    onPress={takePhoto}
+                    style={{
+                      ...styles.snapContainer,
+                      backgroundColor: photo
+                        ? "rgba(255, 255, 255, 0.3)"
+                        : "#FFFFFF",
+                    }}
+                  >
                     <Image
-                      source={{ uri: photo }}
+                      source={require("../../assets/images/camera.png")}
                       style={{
-                        width: dimensions,
-                        height: 240,
-                        resizeMode: "cover",
+                        width: 24,
+                        height: 24,
+                        tintColor: photo ? "#FFFFFF" : "#BDBDBD",
                       }}
                     />
-                  </View>
-                )}
-
-                <TouchableOpacity
-                  onPress={takePhoto}
-                  style={{
-                    ...styles.snapContainer,
-                    backgroundColor: photo
-                      ? "rgba(255, 255, 255, 0.3)"
-                      : "#FFFFFF",
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/images/camera.png")}
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={toggleCameraType}
                     style={{
-                      width: 24,
-                      height: 24,
-                      tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                      ...styles.flipBtn,
+                      backgroundColor: photo
+                        ? "rgba(255, 255, 255, 0.3)"
+                        : "#FFFFFF",
                     }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={toggleCameraType}
-                  style={{
-                    ...styles.flipBtn,
-                    backgroundColor: photo
-                      ? "rgba(255, 255, 255, 0.3)"
-                      : "#FFFFFF",
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/images/flip.png")}
-                    style={{
-                      width: 15,
-                      height: 15,
-                      tintColor: photo ? "#FFFFFF" : "#BDBDBD",
-                    }}
-                  />
-                </TouchableOpacity>
-              </Camera>
+                  >
+                    <Image
+                      source={require("../../assets/images/flip.png")}
+                      style={{
+                        width: 15,
+                        height: 15,
+                        tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                      }}
+                    />
+                  </TouchableOpacity>
+                </Camera>
+              )}
             </View>
 
-            {photo ? (
-              <TouchableOpacity onPress={() => setPhoto(null)}>
+            {!photo && !pickPhoto ? (
+              <Text style={{ ...styles.text }}> Завантажити фото</Text>
+            ) : (
+              <TouchableOpacity onPress={() => deletePhoto()}>
                 <Text style={{ ...styles.text }}>Редагувати фото</Text>
               </TouchableOpacity>
-            ) : (
-              <Text style={{ ...styles.text }}> Завантажити фото</Text>
             )}
           </View>
 

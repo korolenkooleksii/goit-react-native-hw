@@ -24,7 +24,6 @@ import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import { storage, db } from "../../firebase";
-import { useAuth } from "../../hooks/useAuth";
 
 const defaultPhoto = "https://via.placeholder.com/130x130";
 
@@ -155,7 +154,6 @@ const RegisterScreen = ({ navigation }) => {
                   }}
                 >
                   <Image
-                    // source={{ uri: image.assets[0].uri }}
                     source={{ uri: avatar }}
                     style={{
                       width: "100%",
@@ -171,7 +169,7 @@ const RegisterScreen = ({ navigation }) => {
                 )}
               </View>
 
-              <Text style={styles.titleForm}>Регистрация</Text>
+              <Text style={styles.titleForm}>Реєстрація</Text>
               <View style={{ ...styles.form, width: dimensions }}>
                 <View style={styles.wrapInput}>
                   <TextInput
@@ -182,7 +180,7 @@ const RegisterScreen = ({ navigation }) => {
                         isActive === "login" ? "#FFFFFF" : "#F6F6F6",
                     }}
                     maxLength={40}
-                    placeholder="Логин"
+                    placeholder="Логін"
                     placeholderTextColor="#BDBDBD"
                     value={state.login}
                     onChangeText={(value) => handleLogin(value)}
@@ -197,9 +195,9 @@ const RegisterScreen = ({ navigation }) => {
                         isActive === "email" ? "#FFFFFF" : "#F6F6F6",
                     }}
                     keyboardType="email-address"
-                    placeholder="Адрес электронной почты"
+                    placeholder="Адреса електронної пошти"
                     placeholderTextColor="#BDBDBD"
-                    value={state.email}
+                    value={state.mail}
                     onChangeText={(value) => handleMain(value)}
                     onFocus={() => handleFocus("email")}
                     onEndEditing={handleEndEditing}
@@ -225,7 +223,7 @@ const RegisterScreen = ({ navigation }) => {
                     style={styles.show}
                     onPress={() => handleIsShowPassword()}
                   >
-                    Показать
+                    Показати
                   </Text>
                 </View>
                 <View style={styles.wrapBtn}>
@@ -235,13 +233,13 @@ const RegisterScreen = ({ navigation }) => {
                     onPress={handleAuthSignUp}
                     disabled={!state.login && !state.mail && !state.password}
                   >
-                    <Text style={styles.textBtn}>Зарегистрироваться</Text>
+                    <Text style={styles.textBtn}>Зареєструватись</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.7}
                     onPress={() => navigation.navigate("Login")}
                   >
-                    <Text style={styles.enter}>Уже есть аккаунт? Войти</Text>
+                    <Text style={styles.enter}>Вже є акаунт? Увійти</Text>
                   </TouchableOpacity>
                 </View>
               </View>
