@@ -26,7 +26,6 @@ const MapScreen = ({route}) => {
           description="Remember"
         />
       </MapView>
-      <Text>Map Screen</Text>
     </View>
   );
 };

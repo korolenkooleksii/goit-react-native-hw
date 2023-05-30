@@ -16,7 +16,10 @@
     "jsEngine": "hermes",
     "ios": {
       "jsEngine": "jsc",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "UIBackgroundModes": ["location", "fetch"]
+      }
     },
     "android": {
       "jsEngine": "jsc",

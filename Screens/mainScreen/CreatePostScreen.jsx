@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import * as Location from "expo-location";
+import * as ImagePicker from "expo-image-picker";
 import {
   TouchableOpacity,
   View,
@@ -14,8 +16,6 @@ import {
   Alert,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
-import * as Location from "expo-location";
-import * as ImagePicker from "expo-image-picker";
 
 // import icons
 import { AntDesign } from "@expo/vector-icons";
@@ -29,7 +29,7 @@ import { useAuth } from "../../hooks/useAuth";
 const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState(null);
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState({latitude: 13.406, longitude: 123.3753});
   const [terrain, setTerrain] = useState(null);
 
   const [pickPhoto, setPickPhoto] = useState(null);
@@ -47,6 +47,9 @@ const CreatePostScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
+      
+      console.log("🚀 =>   status", status)
+      
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         return;
@@ -57,6 +60,8 @@ const CreatePostScreen = ({ navigation }) => {
         longitude: currentLocation.coords.longitude,
       };
       setLocation(coords);
+
+      console.log('location is ready');
     })();
   }, []);
 
