@@ -50,20 +50,7 @@ const Home = () => {
           ),
         })}
       />
-      <NestedScreen.Screen
-        name="Map"
-        component={MapScreen}
-        options={{
-          headerShown: true,
-          tabBarStyle: { display: 'none' },
-      
-        }}
-        // options={() => ({
-        //   tabBarStyle: {
-        //     display: "none",
-        //   },
-        // })}
-      />
+      <NestedScreen.Screen name="Map" component={MapScreen} />
       <NestedScreen.Screen name="Comments" component={CommentsScreen} />
     </NestedScreen.Navigator>
   );

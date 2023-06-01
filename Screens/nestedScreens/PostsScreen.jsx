@@ -6,6 +6,7 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
@@ -18,6 +19,19 @@ const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [avatar, setAvatar] = useState(defaultPhoto);
   const { email, login } = useAuth();
+
+  const [dimensions, setDimensions] = useState(
+    Dimensions.get("window").width - 16 * 2
+  );
+
+  useEffect(() => {
+    const onChange = () => {
+      const deviceWidth = Dimensions.get("window").width - 16 * 2;
+      setDimensions(deviceWidth);
+    };
+    const dimensionsHandler = Dimensions.addEventListener("change", onChange);
+    return () => dimensionsHandler.remove();
+  }, []);
 
   useEffect(
     () =>
@@ -33,7 +47,6 @@ const PostsScreen = ({ navigation }) => {
         if (snapshot?.docs[0]?.data()) {
           setAvatar(snapshot.docs[0].data().processedAvatar);
         }
-        
       }),
     []
   );
@@ -43,8 +56,9 @@ const PostsScreen = ({ navigation }) => {
       <View style={{ marginBottom: 32, gap: 8 }}>
         <View
           style={{
-            width: 342,
+            flex: 1,
             height: 240,
+            height: dimensions * 0.7,
             marginBottom: 8,
             borderRadius: 8,
             overflow: "hidden",
@@ -124,51 +138,59 @@ const PostsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <View
-        style={{
-          flexDirection: "row",
-          alignSelf: "flex-start",
-          alignItems: "center",
-          gap: 8,
-        }}
-      >
-        <View style={styles.photoUser}>
-          <Image
-            source={{ uri: avatar }}
+      <View style={{ width: dimensions }}>
+        <View
+          style={{
+            paddingTop: 32,
+            paddingBottom: 32,
+            flexDirection: "row",
+            alignItems: "center",
+            gap: 8,
+          }}
+        >
+          <View
             style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "cover",
-            }}
-          />
-        </View>
-        <View>
-          <Text
-            style={{
-              fontFamily: "Roboto-Medium",
-              fontSize: 13,
-              lineHeight: 15,
+              ...styles.photoUser,
+              width: dimensions * 0.18,
+              height: dimensions * 0.18,
             }}
           >
-            {login}
-          </Text>
-          <Text
-            style={{
-              fontFamily: "Roboto-Regular",
-              fontSize: 11,
-              lineHeight: 13,
-            }}
-          >
-            {email}
-          </Text>
+            <Image
+              source={{ uri: avatar }}
+              style={{
+                width: "100%",
+                height: "100%",
+                resizeMode: "cover",
+              }}
+            />
+          </View>
+          <View>
+            <Text
+              style={{
+                fontFamily: "Roboto-Medium",
+                fontSize: 13,
+                lineHeight: 15,
+              }}
+            >
+              {login}
+            </Text>
+            <Text
+              style={{
+                fontFamily: "Roboto-Regular",
+                fontSize: 11,
+                lineHeight: 13,
+              }}
+            >
+              {email}
+            </Text>
+          </View>
         </View>
+        <FlatList
+          data={posts}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+        />
       </View>
-
-      <FlatList
-        data={posts}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-      />
     </View>
   );
 };
@@ -176,15 +198,11 @@ const PostsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
-    gap: 32,
-    marginTop: 32,
-    marginHorizontal: 16,
+    backgroundColor: "#ffffff",
   },
   photoUser: {
-    width: 60,
-    height: 60,
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
     borderWidth: 1,
