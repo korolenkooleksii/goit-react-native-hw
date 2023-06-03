@@ -32,69 +32,71 @@ const useRoute = (isAuth) => {
     );
   }
   return (
-    <MainTab.Navigator
-      screenOptions={{
-        tabBarShowLabel: false,
-        tabBarStyle: {
-          height: 80,
-        },
-        headerStyle: {
-          height: 88,
-        },
-        headerTitleStyle: {
-          fontFamily: "Roboto-Medium",
-          fontSize: 17,
-          lineHeight: 22,
-          letterSpacing: -0.408,
-          color: "#212121",
-        },
-        headerTitleAlign: "center",
-      }}
-    >
-      <MainTab.Screen
-        options={{
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
-          ),
-          headerShown: false,
-        }}
-        name="Home"
-        component={Home}
-      />
 
-      <MainTab.Screen
-        options={({ navigation }) => ({
-          tabBarIcon: ({ focused, size, color }) => (
-            <View style={styles.createBtn}>
-              <Feather name="plus" size={20} color="#FFFFFF" />
-            </View>
-          ),
+      <MainTab.Navigator
+        screenOptions={{
+          tabBarShowLabel: false,
           tabBarStyle: {
-            display: "none",
+            height: 80,
           },
-          headerLeft: () => (
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Home", { screen: "Post" })}
-              activeOpacity={0.7}
-              style={{ marginHorizontal: 16 }}
-            >
-              <AntDesign name="arrowleft" size={24} color="#BDBDBD" />
-            </TouchableOpacity>
-          ),
-        })}
-        name="Create Post"
-        component={CreatePostScreen}
-      />
-      <MainTab.Screen
-        options={{
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
-          ),
+          headerStyle: {
+            height: 88,
+          },
+          headerTitleStyle: {
+            fontFamily: "Roboto-Medium",
+            fontSize: 17,
+            lineHeight: 22,
+            letterSpacing: -0.408,
+            color: "#212121",
+          },
+          headerTitleAlign: "center",
         }}
-        name="Profile"
-        component={ProfileScreen}
-      />
-    </MainTab.Navigator>
+      >
+        <MainTab.Screen
+          options={{
+            tabBarIcon: ({ focused, size, color }) => (
+              <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
+            ),
+            headerShown: false,
+          }}
+          name="Home"
+          component={Home}
+        />
+
+        <MainTab.Screen
+          options={({ navigation }) => ({
+            tabBarIcon: ({ focused, size, color }) => (
+              <View style={styles.createBtn}>
+                <Feather name="plus" size={20} color="#FFFFFF" />
+              </View>
+            ),
+            tabBarStyle: {
+              display: "none",
+            },
+            headerLeft: () => (
+              <TouchableOpacity
+                onPress={() => navigation.navigate("Home", { screen: "Post" })}
+                activeOpacity={0.7}
+                style={{ marginHorizontal: 16 }}
+              >
+                <AntDesign name="arrowleft" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            ),
+          })}
+          name="Create Post"
+          component={CreatePostScreen}
+        />
+        <MainTab.Screen
+          options={{
+            tabBarIcon: ({ focused, size, color }) => (
+              <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
+            ),
+          }}
+          name="Profile"
+          component={ProfileScreen}
+        />
+      </MainTab.Navigator>
+
   );
 };
 

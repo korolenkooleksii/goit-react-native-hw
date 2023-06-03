@@ -51,15 +51,7 @@ const Home = () => {
         })}
       />
       <NestedScreen.Screen name="Map" component={MapScreen} />
-      <NestedScreen.Screen
-        name="Comments"
-        component={CommentsScreen}
-        options={() => ({
-          tabBarStyle: {
-            display: "none",
-          },
-        })}
-      />
+      <NestedScreen.Screen name="Comments" component={CommentsScreen} />
     </NestedScreen.Navigator>
   );
 };

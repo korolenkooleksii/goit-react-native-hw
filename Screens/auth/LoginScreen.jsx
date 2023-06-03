@@ -16,7 +16,6 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
-import { deviceWidth } from "../../utils/deviceWidth";
 
 const initialState = {
   mail: "",
