@@ -29,7 +29,10 @@ import { useAuth } from "../../hooks/useAuth";
 const CreatePostScreen = ({ navigation }) => {
   const [photo, setPhoto] = useState(null);
   const [comment, setComment] = useState(null);
-  const [location, setLocation] = useState({latitude: 13.406, longitude: 123.3753});
+  const [location, setLocation] = useState({
+    latitude: 13.406,
+    longitude: 123.3753,
+  });
   const [terrain, setTerrain] = useState(null);
 
   const [pickPhoto, setPickPhoto] = useState(null);
@@ -47,9 +50,9 @@ const CreatePostScreen = ({ navigation }) => {
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      
-      console.log("🚀 =>   status", status)
-      
+
+      console.log("🚀 =>   status", status);
+
       if (status !== "granted") {
         console.log("Permission to access location was denied");
         return;
@@ -61,7 +64,7 @@ const CreatePostScreen = ({ navigation }) => {
       };
       setLocation(coords);
 
-      console.log('location is ready');
+      console.log("location is ready");
     })();
   }, []);
 
@@ -172,20 +175,25 @@ const CreatePostScreen = ({ navigation }) => {
       <View
         style={{
           flex: 1,
+          alignItems: "center",
           backgroundColor: "#FFFFFF",
         }}
       >
-        <View style={styles.container}>
+        <View style={{ ...styles.container, width: dimensions }}>
           {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : 'height'}
           > */}
           <View style={styles.photoArea}>
-            <View style={styles.cameraContainer}>
+            <View
+              style={{
+                ...styles.cameraContainer,
+                width: dimensions,
+                height: dimensions * 0.7,
+              }}
+            >
               {pickPhoto ? (
                 <View
                   style={{
-                    // resizeMode: "cover",
-                    height: 240,
                     alignItems: "center",
                     justifyContent: "center",
                   }}
@@ -339,7 +347,6 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 32,
     marginTop: 32,
-    marginHorizontal: 16,
   },
   photoArea: {
     flex: 0,

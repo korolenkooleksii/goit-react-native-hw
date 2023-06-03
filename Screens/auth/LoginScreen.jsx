@@ -16,6 +16,7 @@ import {
   Platform,
   KeyboardAvoidingView,
 } from "react-native";
+import { deviceWidth } from "../../utils/deviceWidth";
 
 const initialState = {
   mail: "",
@@ -161,7 +162,6 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     justifyContent: "flex-end",
-    // alignItems: "center",
   },
   background: {
     position: "relative",
@@ -183,7 +183,6 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
   form: {
-    // marginHorizontal: 16,
     gap: 43,
   },
   wrapInput: {
