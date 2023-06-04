@@ -12,6 +12,7 @@ import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
+import { async } from "@firebase/util";
 
 const defaultPhoto = "https://via.placeholder.com/130x130";
 
@@ -36,25 +37,29 @@ const PostsScreen = ({ navigation }) => {
     return () => dimensionsHandler.remove();
   }, []);
 
-  useEffect(
-    () =>
-      onSnapshot(collection(db, "posts"), (snapshot) => {
-        setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      }),
-    []
-  );
+  useEffect(() => {
+    getAllPosts();
+  }, []);
 
-  useEffect(
-    () =>
-      onSnapshot(collection(db, "avatar"), (snapshot) => {
-        if (snapshot?.docs[0]?.data()) {
-          setAvatar(snapshot.docs[0].data().processedAvatar);
-        }
-      }),
-    []
-  );
+  useEffect(() => {
+    getAvatar();
+  }, []);
 
-  const renderItem = ({ item: { photo, location, comment, terrain } }) => {
+  const getAllPosts = async () => {
+    await onSnapshot(collection(db, "posts"), (snapshot) => {
+      setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    });
+  };
+
+  const getAvatar = async () => {
+    await onSnapshot(collection(db, "avatar"), (snapshot) => {
+      if (snapshot?.docs[0]?.data()) {
+        setAvatar(snapshot.docs[0].data().processedAvatar);
+      }
+    });
+  };
+
+  const renderItem = ({ item: { photo, location, comment, terrain, id } }) => {
     return (
       <View style={styles.list}>
         <View style={{ ...styles.item, height: dimensions * 0.7 }}>
@@ -64,7 +69,7 @@ const PostsScreen = ({ navigation }) => {
         <View style={styles.content}>
           <View style={styles.wrapContent}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Comments")}
+              onPress={() => navigation.navigate("Comments", {postId: id})}
               activeOpacity={0.7}
             >
               <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
@@ -73,7 +78,7 @@ const PostsScreen = ({ navigation }) => {
           </View>
           <View style={styles.wrapContent}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Map", { location: location })}
+              onPress={() => navigation.navigate("Map", { location })}
               activeOpacity={0.7}
             >
               <Feather name="map-pin" size={24} color="#BDBDBD" />

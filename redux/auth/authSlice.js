@@ -19,8 +19,6 @@ const authSlice = createSlice({
     },
     addUserAvatar(state, {payload}){
       state.avatar = payload.userAvatar;
-
-      console.log('state.avatar - ', state.avatar);
     },
     authStateChange(state, { payload }) {
       state.stateChange = payload.stateChange;

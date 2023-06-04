@@ -140,7 +140,7 @@ const CreatePostScreen = ({ navigation }) => {
       const docRef = await addDoc(collection(db, "posts"), {
         login,
         userId,
-        photo: photo,
+        photo,
         comment,
         terrain,
         location,
@@ -401,7 +401,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 16,
   },
-  textBtn: {},
   remove: {
     flex: 0,
     justifyContent: "center",
