@@ -172,53 +172,22 @@ const CreatePostScreen = ({ navigation }) => {
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View
-        style={{
-          flex: 1,
-          alignItems: "center",
-          backgroundColor: "#FFFFFF",
-        }}
-      >
+      <View style={styles.background}>
         <View style={{ ...styles.container, width: dimensions }}>
           {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : 'height'}
           > */}
           <View style={styles.photoArea}>
             <View
-              style={{
-                ...styles.cameraContainer,
-                width: dimensions,
-                height: dimensions * 0.7,
-              }}
+              style={{ ...styles.cameraContainer, height: dimensions * 0.7 }}
             >
               {pickPhoto ? (
-                <View
-                  style={{
-                    alignItems: "center",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Image
-                    source={{ uri: pickPhoto }}
-                    style={{
-                      height: "100%",
-                      width: "100%",
-                      resizeMode: "cover",
-                    }}
-                  />
-                </View>
+                <Image source={{ uri: pickPhoto }} style={styles.image} />
               ) : (
                 <Camera style={styles.camera} ref={setCamera} type={type}>
                   {photo && (
                     <View style={styles.takePhotoContainer}>
-                      <Image
-                        source={{ uri: photo }}
-                        style={{
-                          width: dimensions,
-                          height: 240,
-                          resizeMode: "cover",
-                        }}
-                      />
+                      <Image source={{ uri: photo }} style={styles.image} />
                     </View>
                   )}
 
@@ -343,10 +312,20 @@ const CreatePostScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  background: {
+    flex: 1,
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
+  },
   container: {
     flex: 1,
     gap: 32,
     marginTop: 32,
+  },
+  image: {
+    height: "100%",
+    width: "100%",
+    resizeMode: "cover",
   },
   photoArea: {
     flex: 0,
@@ -360,8 +339,7 @@ const styles = StyleSheet.create({
     overflow: "hidden",
   },
   camera: {
-    resizeMode: "cover",
-    height: 240,
+    height: "100%",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -379,8 +357,8 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: 0,
     left: 0,
-    // borderColor: "#fff",
-    // borderWidth: 1,
+    height: "100%",
+    width: "100%",
     borderRadius: 8,
     overflow: "hidden",
   },

@@ -20,6 +20,9 @@ const PostsScreen = ({ navigation }) => {
   const [avatar, setAvatar] = useState(defaultPhoto);
   const { email, login } = useAuth();
 
+  console.log("login 🚀  => ", login);
+  console.log("email 🚀  => ", email);
+
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
@@ -53,65 +56,22 @@ const PostsScreen = ({ navigation }) => {
 
   const renderItem = ({ item: { photo, location, comment, terrain } }) => {
     return (
-      <View style={{ marginBottom: 32, gap: 8 }}>
-        <View
-          style={{
-            flex: 1,
-            height: 240,
-            height: dimensions * 0.7,
-            marginBottom: 8,
-            borderRadius: 8,
-            overflow: "hidden",
-          }}
-        >
-          <Image
-            style={{
-              width: "100%",
-              height: "100%",
-              resizeMode: "cover",
-            }}
-            source={{ uri: photo }}
-          />
+      <View style={styles.list}>
+        <View style={{ ...styles.item, height: dimensions * 0.7 }}>
+          <Image style={styles.image} source={{ uri: photo }} />
         </View>
-        <Text
-          style={{
-            fontFamily: "Roboto-Medium",
-            fontSize: 16,
-            lineHeight: 19,
-            color: "#212121",
-          }}
-        >
-          {comment}
-        </Text>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 50,
-          }}
-        >
-          <View
-            style={{ flexDirection: "row", gap: 6, alignItems: "flex-end" }}
-          >
+        <Text style={styles.comment}>{comment}</Text>
+        <View style={styles.content}>
+          <View style={styles.wrapContent}>
             <TouchableOpacity
               onPress={() => navigation.navigate("Comments")}
               activeOpacity={0.7}
             >
               <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
             </TouchableOpacity>
-            <Text
-              style={{
-                fontFamily: "Roboto-Regular",
-                fontSize: 16,
-                lineHeight: 19,
-                color: "#BDBDBD",
-              }}
-            >
-              0
-            </Text>
+            <Text style={styles.counter}>0</Text>
           </View>
-          <View
-            style={{ flexDirection: "row", gap: 4, alignItems: "flex-end" }}
-          >
+          <View style={styles.wrapContent}>
             <TouchableOpacity
               onPress={() => navigation.navigate("Map", { location: location })}
               activeOpacity={0.7}
@@ -119,17 +79,7 @@ const PostsScreen = ({ navigation }) => {
               <Feather name="map-pin" size={24} color="#BDBDBD" />
             </TouchableOpacity>
 
-            <Text
-              style={{
-                fontFamily: "Roboto-Regular",
-                fontSize: 16,
-                lineHeight: 19,
-                textDecorationLine: "underline",
-                color: "#212121",
-              }}
-            >
-              {terrain}
-            </Text>
+            <Text style={styles.terrain}>{terrain}</Text>
           </View>
         </View>
       </View>
@@ -137,17 +87,9 @@ const PostsScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={styles.background}>
       <View style={{ width: dimensions }}>
-        <View
-          style={{
-            paddingTop: 32,
-            paddingBottom: 32,
-            flexDirection: "row",
-            alignItems: "center",
-            gap: 8,
-          }}
-        >
+        <View style={styles.avatarWrap}>
           <View
             style={{
               ...styles.photoUser,
@@ -155,34 +97,11 @@ const PostsScreen = ({ navigation }) => {
               height: dimensions * 0.18,
             }}
           >
-            <Image
-              source={{ uri: avatar }}
-              style={{
-                width: "100%",
-                height: "100%",
-                resizeMode: "cover",
-              }}
-            />
+            <Image source={{ uri: avatar }} style={styles.image} />
           </View>
           <View>
-            <Text
-              style={{
-                fontFamily: "Roboto-Medium",
-                fontSize: 13,
-                lineHeight: 15,
-              }}
-            >
-              {login}
-            </Text>
-            <Text
-              style={{
-                fontFamily: "Roboto-Regular",
-                fontSize: 11,
-                lineHeight: 13,
-              }}
-            >
-              {email}
-            </Text>
+            <Text style={styles.login}>{login}</Text>
+            <Text style={styles.email}>{email}</Text>
           </View>
         </View>
         <FlatList
@@ -196,11 +115,39 @@ const PostsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    // justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#ffffff",
+  },
+  avatarWrap: {
+    paddingTop: 32,
+    paddingBottom: 32,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
+  },
+  list: { marginBottom: 32, gap: 8 },
+  item: {
+    flex: 1,
+    marginBottom: 8,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  login: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 13,
+    lineHeight: 15,
+  },
+  email: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 11,
+    lineHeight: 13,
   },
   photoUser: {
     borderRadius: 16,
@@ -208,6 +155,34 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     overflow: "hidden",
     borderColor: "transparent",
+  },
+  content: {
+    flexDirection: "row",
+    gap: 50,
+  },
+  wrapContent: {
+    flexDirection: "row",
+    gap: 6,
+    alignItems: "flex-end",
+  },
+  comment: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  terrain: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    textDecorationLine: "underline",
+    color: "#212121",
+  },
+  counter: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#BDBDBD",
   },
 });
 
