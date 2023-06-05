@@ -14,11 +14,20 @@ import { AntDesign } from "@expo/vector-icons";
 import { async } from "@firebase/util";
 import { useAuth } from "../../hooks/useAuth";
 
+import { collection, doc, setDoc, addDoc, add, onSnapshot } from "firebase/firestore";
+import { storage, db } from "../../firebase";
+import { currentDate } from "../../utils/currentDate";
+import { currentTime } from "../../utils/currentTime";
+
+const defaultPhoto = "https://via.placeholder.com/130x130";
+
 const CommentsScreen = ({ route }) => {
   const { postId } = route.params;
 
   const [comment, setComment] = useState(null);
-  const {login} =  useAuth()
+  const [avatar, setAvatar] = useState(defaultPhoto);
+  
+  const { login } = useAuth();
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
@@ -33,7 +42,38 @@ const CommentsScreen = ({ route }) => {
     return () => dimensionsHandler.remove();
   }, []);
 
-  const createComment = async () => {};
+  useEffect(() => {
+    getAvatar();
+  }, []);
+
+  const getAvatar = async () => {
+    await onSnapshot(collection(db, "avatar"), (snapshot) => {
+      if (snapshot?.docs[0]?.data()) {
+        setAvatar(snapshot.docs[0].data().processedAvatar);
+      }
+    });
+  };
+
+  const createComment = async () => {
+
+    console.log('avatar - ', avatar);
+
+    const date = currentDate()
+    const time =  currentTime()
+
+    try {
+      const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
+        avatar,
+        login,
+        comment,
+        date,
+        time
+
+      });
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  };
 
   return (
     <View style={styles.background}>
@@ -84,7 +124,7 @@ const CommentsScreen = ({ route }) => {
               name="arrowup"
               size={18}
               color="#ffffff"
-              onPress={() => console.log(comment)}
+              onPress={createComment}
             />
           </View>
         </View>

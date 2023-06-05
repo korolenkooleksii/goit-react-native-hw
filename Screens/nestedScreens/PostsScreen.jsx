@@ -12,7 +12,6 @@ import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
-import { async } from "@firebase/util";
 
 const defaultPhoto = "https://via.placeholder.com/130x130";
 
@@ -69,7 +68,7 @@ const PostsScreen = ({ navigation }) => {
         <View style={styles.content}>
           <View style={styles.wrapContent}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Comments", {postId: id})}
+              onPress={() => navigation.navigate("Comments", { postId: id })}
               activeOpacity={0.7}
             >
               <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
