@@ -20,10 +20,6 @@ const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [avatar, setAvatar] = useState(defaultPhoto);
   const { email, login } = useAuth();
-
-  console.log("login 🚀  => ", login);
-  console.log("email 🚀  => ", email);
-
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
@@ -49,6 +45,8 @@ const PostsScreen = ({ navigation }) => {
     await onSnapshot(collection(db, "posts"), (snapshot) => {
       setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
+
+    // console.log("posts ---- ", posts);
   };
 
   const getAvatar = async () => {
@@ -98,7 +96,12 @@ const PostsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.background}>
-      <View style={{ width: dimensions }}>
+      <View
+        style={{
+          width: dimensions,
+          paddingBottom: 105,
+        }}
+      >
         <View style={styles.avatarWrap}>
           <View
             style={{
@@ -120,7 +123,6 @@ const PostsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />
-
       </View>
     </View>
   );
@@ -131,6 +133,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#ffffff",
+    borderTopColor: "#BDBDBD",
+    borderTopWidth: 1,
   },
   avatarWrap: {
     paddingVertical: 32,

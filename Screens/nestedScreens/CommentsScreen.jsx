@@ -71,7 +71,6 @@ const CommentsScreen = ({ route }) => {
 
     try {
       const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
-        // avatar,
         login,
         comment,
         date,
