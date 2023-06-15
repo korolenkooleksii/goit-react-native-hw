@@ -8,6 +8,9 @@ import {
   Dimensions,
   Image,
   TextInput,
+  FlatList,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -29,10 +32,10 @@ import { currentTime } from "../../utils/currentTime";
 const defaultPhoto = "https://via.placeholder.com/130x130";
 
 const CommentsScreen = ({ route }) => {
-  const { postId } = route.params;
+  const { postId, photoPost } = route.params;
 
-  const [comment, setComment] = useState(null);
-  const [allComments, setAllComments] = useState(null);
+  const [comment, setComment] = useState("");
+  const [allComments, setAllComments] = useState([]);
   const [avatar, setAvatar] = useState(defaultPhoto);
 
   const { login } = useAuth();
@@ -68,7 +71,7 @@ const CommentsScreen = ({ route }) => {
 
     try {
       const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
-        avatar,
+        // avatar,
         login,
         comment,
         date,
@@ -88,64 +91,123 @@ const CommentsScreen = ({ route }) => {
         );
       }
     );
-    console.log('allComments - ', allComments);
+  };
+
+  const keyboardHide = () => {
+    Keyboard.dismiss();
+  };
+
+  const handlePress = () => {
+    createComment();
+    Keyboard.dismiss();
+    setComment("");
+  };
+
+  const renderItem = ({ item: { comment, date, time } }) => {
+    return (
+      <View style={styles.item}>
+        <View
+          style={{
+            flexDirection: "row",
+            // gap: 16,
+
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              ...styles.commentWrap,
+              width: dimensions - 44,
+            }}
+          >
+            <Text style={styles.text}>{comment}</Text>
+            <Text style={styles.date}>
+              {date} | {time}
+            </Text>
+          </View>
+          <View
+            style={{
+              width: 28,
+              height: 28,
+              borderRadius: 50,
+              // backgroundColor: "#F6F6F6",
+              // borderWidth: 1,
+              overflow: "hidden",
+              borderColor: "transparent",
+            }}
+          >
+            <Image style={styles.image} source={{ uri: avatar }} />
+          </View>
+        </View>
+      </View>
+    );
   };
 
   return (
-    <View style={styles.background}>
-      <View
-        style={{
-          ...styles.container,
-          width: dimensions,
-
-          borderWidth: 1,
-          borderColor: "red",
-        }}
-      >
+    <TouchableWithoutFeedback onPress={keyboardHide}>
+      <View style={styles.background}>
         <View
           style={{
-            ...styles.photoPost,
+            ...styles.container,
             width: dimensions,
-            height: dimensions * 0.7,
-
-            borderWidth: 1,
-            borderColor: "green",
           }}
         >
-          <Image
-            // source={{ uri: pickPhoto }}
-            style={styles.image}
-          />
-        </View>
+          <View
+            style={{
+              ...styles.photoWrap,
+              width: dimensions,
+              height: dimensions * 0.7,
+            }}
+          >
+            <Image style={styles.image} source={{ uri: photoPost }} />
+          </View>
 
+          <View>
+            <FlatList
+              data={allComments}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+            />
+          </View>
+        </View>
         <View
           style={{
-            position: "relative",
-            flex: 1,
-            justifyContent: "flex-end",
+            paddingTop: 32,
+            paddingBottom: 16,
+            backgroundColor: "#FFFFFF",
+            overflow: "hidden",
 
             borderWidth: 1,
             borderColor: "blue",
           }}
         >
-          <TextInput
-            style={styles.comment}
-            placeholder="Коментувати..."
-            placeholderTextColor="#BDBDBD"
-            value={comment}
-            onChangeText={(value) => setComment(value)}
-          />
-          <View style={styles.send}>
-            <AntDesign
-              name="arrowup"
-              size={18}
-              color="#ffffff"
-              onPress={createComment}
+          <View
+            style={{
+              position: "relative",
+              // flex: 1,
+              // justifyContent: "flex-end",
+              width: dimensions,
+            }}
+          >
+            <TextInput
+              style={styles.comment}
+              placeholder="Коментувати..."
+              placeholderTextColor="#BDBDBD"
+              value={comment}
+              onChangeText={(value) => setComment(value)}
             />
+            <View style={styles.send}>
+              <AntDesign
+                name="arrowup"
+                size={18}
+                color="#ffffff"
+                onPress={handlePress}
+              />
+            </View>
           </View>
         </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -154,25 +216,57 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#FFFFFF",
+    borderTopColor: "#BDBDBD",
+    borderTopWidth: 1,
   },
   container: {
     flex: 1,
   },
-  photoPost: {
+
+  photoWrap: {
     overflow: "hidden",
     borderRadius: 8,
+    marginVertical: 32,
   },
   image: {
     height: "100%",
     width: "100%",
     resizeMode: "cover",
   },
+
+  item: {
+    marginBottom: 24,
+  },
+
+  commentWrap: {
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
+    borderBottomLeftRadius: 6,
+    borderBottomRightRadius: 6,
+    borderTopLeftRadius: 6,
+    padding: 16,
+    gap: 8,
+  },
+  text: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 13,
+    lineHeight: 18,
+    color: "#212121",
+  },
+  date: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 10,
+    lineHeight: 12,
+    color: "#BDBDBD",
+  },
+
   comment: {
-    marginBottom: 16,
     padding: 16,
     borderWidth: 1,
     borderRadius: 100,
-    borderColor: "#E8E8E8",
+
+    // borderColor: "#E8E8E8",
+    borderColor: "blue",
+
     backgroundColor: "#F6F6F6",
     color: "#212121",
     fontFamily: "Roboto-Regular",
@@ -182,7 +276,7 @@ const styles = StyleSheet.create({
   send: {
     position: "absolute",
     right: 8,
-    bottom: 30,
+    bottom: 15,
     width: 34,
     height: 34,
     alignItems: "center",

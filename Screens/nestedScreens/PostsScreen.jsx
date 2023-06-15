@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  SafeAreaView,
 } from "react-native";
 import { FontAwesome5, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
@@ -68,7 +69,12 @@ const PostsScreen = ({ navigation }) => {
         <View style={styles.content}>
           <View style={styles.wrapContent}>
             <TouchableOpacity
-              onPress={() => navigation.navigate("Comments", { postId: id })}
+              onPress={() =>
+                navigation.navigate("Comments", {
+                  postId: id,
+                  photoPost: photo,
+                })
+              }
               activeOpacity={0.7}
             >
               <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
@@ -108,11 +114,13 @@ const PostsScreen = ({ navigation }) => {
             <Text style={styles.email}>{email}</Text>
           </View>
         </View>
+
         <FlatList
           data={posts}
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />
+
       </View>
     </View>
   );
@@ -125,8 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffffff",
   },
   avatarWrap: {
-    paddingTop: 32,
-    paddingBottom: 32,
+    paddingVertical: 32,
     flexDirection: "row",
     alignItems: "center",
     gap: 8,
