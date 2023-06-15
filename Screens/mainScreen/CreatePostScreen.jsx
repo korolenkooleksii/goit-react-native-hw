@@ -178,145 +178,148 @@ const CreatePostScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.background}>
-        <View style={{ ...styles.container, width: dimensions }}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : ""}
-          >
-            <View style={{ marginBottom: isShowKeyboard ? -150 : 0 }}>
-              <View style={styles.photoArea}>
-                <View
-                  style={{
-                    ...styles.cameraContainer,
-                    height: dimensions * 0.7,
-                  }}
-                >
-                  {pickPhoto ? (
-                    <Image source={{ uri: pickPhoto }} style={styles.image} />
-                  ) : (
-                    <Camera style={styles.camera} ref={setCamera} type={type}>
-                      {photo && (
-                        <View style={styles.takePhotoContainer}>
-                          <Image source={{ uri: photo }} style={styles.image} />
-                        </View>
-                      )}
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""}>
 
-                      <TouchableOpacity
-                        onPress={takePhoto}
-                        style={{
-                          ...styles.snapContainer,
-                          backgroundColor: photo
-                            ? "rgba(255, 255, 255, 0.3)"
-                            : "#FFFFFF",
-                        }}
-                      >
-                        <Image
-                          source={require("../../assets/images/camera.png")}
+          {/* <View style={{ marginBottom: isShowKeyboard ? 0 : 0 }}> */}
+
+            <View style={{ ...styles.container, width: dimensions }}>
+              <View style={{ gap: 32 }}>
+                <View style={{ gap: 8 }}>
+                  <View
+                    style={{
+                      ...styles.cameraContainer,
+                      height: dimensions * 0.7,
+                    }}
+                  >
+                    {pickPhoto ? (
+                      <Image source={{ uri: pickPhoto }} style={styles.image} />
+                    ) : (
+                      <Camera style={styles.camera} ref={setCamera} type={type}>
+                        {photo && (
+                          <View style={styles.takePhotoContainer}>
+                            <Image
+                              source={{ uri: photo }}
+                              style={styles.image}
+                            />
+                          </View>
+                        )}
+
+                        <TouchableOpacity
+                          onPress={takePhoto}
                           style={{
-                            width: 24,
-                            height: 24,
-                            tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                            ...styles.snapContainer,
+                            backgroundColor: photo
+                              ? "rgba(255, 255, 255, 0.3)"
+                              : "#FFFFFF",
                           }}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={toggleCameraType}
-                        style={{
-                          ...styles.flipBtn,
-                          backgroundColor: photo
-                            ? "rgba(255, 255, 255, 0.3)"
-                            : "#FFFFFF",
-                        }}
-                      >
-                        <Image
-                          source={require("../../assets/images/flip.png")}
+                        >
+                          <Image
+                            source={require("../../assets/images/camera.png")}
+                            style={{
+                              width: 24,
+                              height: 24,
+                              tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                            }}
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={toggleCameraType}
                           style={{
-                            width: 15,
-                            height: 15,
-                            tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                            ...styles.flipBtn,
+                            backgroundColor: photo
+                              ? "rgba(255, 255, 255, 0.3)"
+                              : "#FFFFFF",
                           }}
-                        />
+                        >
+                          <Image
+                            source={require("../../assets/images/flip.png")}
+                            style={{
+                              width: 15,
+                              height: 15,
+                              tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                            }}
+                          />
+                        </TouchableOpacity>
+                      </Camera>
+                    )}
+                  </View>
+
+                  <View style={{ alignSelf: "flex-start" }}>
+                    {!photo && !pickPhoto ? (
+                      <Text style={{ ...styles.text }} onPress={pickImage}>
+                        {" "}
+                        Завантажити фото
+                      </Text>
+                    ) : (
+                      <TouchableOpacity onPress={() => deletePhoto()}>
+                        <Text style={{ ...styles.text }}>Редагувати фото</Text>
                       </TouchableOpacity>
-                    </Camera>
-                  )}
+                    )}
+                  </View>
                 </View>
 
-                {!photo && !pickPhoto ? (
-                  <Text style={{ ...styles.text }} onPress={pickImage}>
-                    {" "}
-                    Завантажити фото
-                  </Text>
-                ) : (
-                  <TouchableOpacity onPress={() => deletePhoto()}>
-                    <Text style={{ ...styles.text }}>Редагувати фото</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View style={styles.info}>
-                <TextInput
-                  style={{ ...styles.text, ...styles.name }}
-                  placeholder="Назва..."
-                  placeholderTextColor="#BDBDBD"
-                  value={comment}
-                  onChangeText={(value) => setComment(value)}
-                  onFocus={() => handleFocus()}
-                />
-                <TextInput
-                  style={{ ...styles.text, ...styles.name, ...styles.geo }}
-                  placeholder="Місцевість..."
-                  placeholderTextColor="#BDBDBD"
-                  value={terrain}
-                  onChangeText={(value) => setTerrain(value)}
-                  onFocus={() => handleFocus()}
-                />
-                <Feather
-                  name="map-pin"
-                  size={24}
-                  color="#BDBDBD"
-                  style={styles.mapPin}
-                />
-              </View>
-              <TouchableOpacity
-                style={{
-                  ...styles.btn,
-                  backgroundColor:
-                    (photo || pickPhoto) && comment && terrain
-                      ? "#FF6C00"
-                      : "#F6F6F6",
-                }}
-                disabled={!photo && !comment}
-                activeOpacity={0.7}
-                onPress={() => navigation.navigate("Posts")}
-              >
-                <Text
-                  style={{
-                    ...styles.text,
-                    color: photo && comment ? "#FFFFFF" : "#E8E8E8",
-                  }}
-                  onPress={sendPhoto}
-                >
-                  Опублікувати
-                </Text>
-              </TouchableOpacity>
-              <View
-                style={{
-                  flex: 1,
-                  // justifyContent: "flex-end",
-                  alignItems: "center",
-                }}
-              >
-                <View style={styles.remove}>
-                  <AntDesign
-                    name="delete"
+                <View style={styles.info}>
+                  <TextInput
+                    style={{ ...styles.text, ...styles.name }}
+                    placeholder="Назва..."
+                    placeholderTextColor="#BDBDBD"
+                    value={comment}
+                    onChangeText={(value) => setComment(value)}
+                    onFocus={() => handleFocus()}
+                  />
+                  <TextInput
+                    style={{ ...styles.text, ...styles.name, ...styles.geo }}
+                    placeholder="Місцевість..."
+                    placeholderTextColor="#BDBDBD"
+                    value={terrain}
+                    onChangeText={(value) => setTerrain(value)}
+                    onFocus={() => handleFocus()}
+                  />
+                  <Feather
+                    name="map-pin"
                     size={24}
                     color="#BDBDBD"
-                    onPress={reset}
+                    style={styles.mapPin}
                   />
                 </View>
+
+                <TouchableOpacity
+                  style={{
+                    ...styles.btn,
+                    backgroundColor:
+                      (photo || pickPhoto) && comment && terrain
+                        ? "#FF6C00"
+                        : "#F6F6F6",
+                  }}
+                  disabled={!photo && !comment}
+                  activeOpacity={0.7}
+                  onPress={() => navigation.navigate("Posts")}
+                >
+                  <Text
+                    style={{
+                      ...styles.text,
+                      color: photo && comment ? "#FFFFFF" : "#E8E8E8",
+                    }}
+                    onPress={sendPhoto}
+                  >
+                    Опублікувати
+                  </Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={styles.remove}>
+                <AntDesign
+                  name="delete"
+                  size={24}
+                  color="#BDBDBD"
+                  onPress={reset}
+                />
               </View>
             </View>
-          </KeyboardAvoidingView>
-        </View>
+            
+          {/* </View> */}
+
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -327,20 +330,18 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#FFFFFF",
+    borderTopColor: "#BDBDBD",
+    borderTopWidth: 1,
   },
   container: {
     flex: 1,
-    gap: 32,
     marginTop: 32,
+    justifyContent: "space-between",
   },
   image: {
     height: "100%",
     width: "100%",
     resizeMode: "cover",
-  },
-  photoArea: {
-    flex: 0,
-    gap: 8,
   },
   cameraContainer: {
     backgroundColor: "#F6F6F6",
@@ -386,9 +387,7 @@ const styles = StyleSheet.create({
     lineHeight: 19,
     color: "#BDBDBD",
   },
-  action: {},
   info: {
-    flex: 0,
     gap: 16,
   },
   name: {
@@ -401,26 +400,27 @@ const styles = StyleSheet.create({
   geo: {
     paddingLeft: 30,
   },
+
   mapPin: {
     position: "absolute",
     left: 0,
     bottom: 32,
   },
   btn: {
-    borderRadius: 100,
     alignItems: "center",
     justifyContent: "center",
     padding: 16,
+    borderRadius: 100,
   },
   remove: {
-    flex: 0,
     justifyContent: "center",
     alignItems: "center",
+    alignSelf: "center",
     width: 70,
     height: 40,
+    marginBottom: 22,
     borderRadius: 20,
     backgroundColor: "#F6F6F6",
-    marginBottom: 30,
   },
 });
 
