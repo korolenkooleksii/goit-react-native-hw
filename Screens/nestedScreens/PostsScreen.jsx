@@ -99,7 +99,7 @@ const PostsScreen = ({ navigation }) => {
       <View
         style={{
           width: dimensions,
-          paddingBottom: 105,
+          paddingBottom: 115,
         }}
       >
         <View style={styles.avatarWrap}>
