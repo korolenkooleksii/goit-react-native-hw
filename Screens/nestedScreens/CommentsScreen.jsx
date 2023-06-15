@@ -14,7 +14,14 @@ import { AntDesign } from "@expo/vector-icons";
 import { async } from "@firebase/util";
 import { useAuth } from "../../hooks/useAuth";
 
-import { collection, doc, setDoc, addDoc, add, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  setDoc,
+  addDoc,
+  add,
+  onSnapshot,
+} from "firebase/firestore";
 import { storage, db } from "../../firebase";
 import { currentDate } from "../../utils/currentDate";
 import { currentTime } from "../../utils/currentTime";
@@ -25,10 +32,10 @@ const CommentsScreen = ({ route }) => {
   const { postId } = route.params;
 
   const [comment, setComment] = useState(null);
+  const [allComments, setAllComments] = useState(null);
   const [avatar, setAvatar] = useState(defaultPhoto);
-  
-  const { login } = useAuth();
 
+  const { login } = useAuth();
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
@@ -44,6 +51,7 @@ const CommentsScreen = ({ route }) => {
 
   useEffect(() => {
     getAvatar();
+    getAllComments();
   }, []);
 
   const getAvatar = async () => {
@@ -55,11 +63,8 @@ const CommentsScreen = ({ route }) => {
   };
 
   const createComment = async () => {
-
-    console.log('avatar - ', avatar);
-
-    const date = currentDate()
-    const time =  currentTime()
+    const date = currentDate();
+    const time = currentTime();
 
     try {
       const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
@@ -67,12 +72,23 @@ const CommentsScreen = ({ route }) => {
         login,
         comment,
         date,
-        time
-
+        time,
       });
     } catch (e) {
       console.error("Error adding document: ", e);
     }
+  };
+
+  const getAllComments = async () => {
+    await onSnapshot(
+      collection(db, "posts", postId, "comments"),
+      (snapshot) => {
+        setAllComments(
+          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+        );
+      }
+    );
+    console.log('allComments - ', allComments);
   };
 
   return (
