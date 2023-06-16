@@ -96,7 +96,15 @@ const CreatePostScreen = ({ navigation }) => {
 
   const handleFocus = () => {
     setIsShowKeyboard(true);
-    console.log(Platform.OS);
+  };
+
+  const keyboardHide = () => {
+    setIsShowKeyboard(false);
+    Keyboard.dismiss();
+  };
+
+  const handleEndEditing = () => {
+    setIsShowKeyboard(false);
   };
 
   const toggleCameraType = () => {
@@ -177,14 +185,24 @@ const CreatePostScreen = ({ navigation }) => {
   };
 
   return (
-    <KeyboardAvoidingView 
-    behavior={Platform.OS === "ios" ? "padding" : ""}
-    style={{flex: 1}}>
-      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        {/* <View style={{ marginBottom: isShowKeyboard ? 0 : 0 }}> */}
-        <View style={styles.background}>
-          <View style={{ ...styles.container, width: dimensions }}>
-            <View style={{ gap: 32 }}>
+    <TouchableWithoutFeedback onPress={() => keyboardHide}>
+      <View style={styles.background}>
+        <View style={{ ...styles.container, width: dimensions }}>
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : ""}
+            // style={{ flex: 1 }}
+          >
+            <View
+              style={{
+                gap: 32,
+                // justifyContent: "flex-start",
+                // marginBottom: dimensions * 0.38,
+                marginBottom: isShowKeyboard ? -90 : dimensions * 0.38,
+
+                borderColor: "green",
+                borderWidth: 1,
+              }}
+            >
               <View style={{ gap: 8 }}>
                 <View
                   style={{
@@ -253,16 +271,15 @@ const CreatePostScreen = ({ navigation }) => {
                     </Text>
                   ) : (
                     <TouchableOpacity onPress={() => deletePhoto()}>
-                      <Text style={{ ...styles.text }}>Редагувати фото</Text>
+                      <Text style={{ ...styles.input, color: "#BDBDBD" }}>
+                        Редагувати фото
+                      </Text>
                     </TouchableOpacity>
                   )}
                 </View>
               </View>
 
-              {/* <KeyboardAvoidingView
-              behavior={Platform.OS === "ios" ? "padding" : ""}
-            > */}
-              <View style={styles.form}>
+              <View style={{ gap: 16 }}>
                 <View style={styles.wrapInput}>
                   <TextInput
                     style={styles.input}
@@ -271,17 +288,19 @@ const CreatePostScreen = ({ navigation }) => {
                     value={comment}
                     onChangeText={(value) => setComment(value)}
                     onFocus={() => handleFocus()}
+                    onEndEditing={handleEndEditing}
                   />
                 </View>
 
                 <View style={styles.wrapInput}>
                   <TextInput
-                    style={{ ...styles.input, ...styles.geo }}
+                    style={{ ...styles.input, paddingLeft: 30 }}
                     placeholder="Місцевість..."
                     placeholderTextColor="#BDBDBD"
                     value={terrain}
                     onChangeText={(value) => setTerrain(value)}
                     onFocus={() => handleFocus()}
+                    onEndEditing={handleEndEditing}
                   />
                 </View>
 
@@ -292,7 +311,6 @@ const CreatePostScreen = ({ navigation }) => {
                   style={styles.mapPin}
                 />
               </View>
-              {/* </KeyboardAvoidingView> */}
 
               <TouchableOpacity
                 style={{
@@ -318,20 +336,20 @@ const CreatePostScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
 
-            <View style={styles.remove}>
-              <AntDesign
-                name="delete"
-                size={24}
-                color="#BDBDBD"
-                onPress={reset}
-              />
-            </View>
-          </View>
+            {!isShowKeyboard && (
+              <View style={styles.remove}>
+                <AntDesign
+                  name="delete"
+                  size={24}
+                  color="#BDBDBD"
+                  onPress={reset}
+                />
+              </View>
+            )}
+          </KeyboardAvoidingView>
         </View>
-
-        {/* </View> */}
-      </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
@@ -346,8 +364,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 32,
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
+    // justifyContent: 'space-around',
+    justifyContent: "flex-end",
+
+    borderColor: "red",
+    borderWidth: 1,
   },
+
   image: {
     height: "100%",
     width: "100%",
@@ -392,10 +416,6 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
 
-  form: {
-    gap: 16,
-  },
-
   wrapInput: {
     paddingVertical: 16,
     borderBottomWidth: 1,
@@ -409,10 +429,6 @@ const styles = StyleSheet.create({
     color: "#212121",
   },
 
-  geo: {
-    paddingLeft: 30,
-  },
-
   mapPin: {
     position: "absolute",
     left: 0,
@@ -424,6 +440,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 100,
   },
+
   remove: {
     justifyContent: "center",
     alignItems: "center",

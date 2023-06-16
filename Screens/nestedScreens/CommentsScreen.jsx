@@ -11,6 +11,7 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -124,6 +125,7 @@ const CommentsScreen = ({ route }) => {
               {date} | {time}
             </Text>
           </View>
+
           <View
             style={{
               width: 28,
@@ -161,14 +163,13 @@ const CommentsScreen = ({ route }) => {
             <Image style={styles.image} source={{ uri: photoPost }} />
           </View>
 
-          <View>
-            <FlatList
-              data={allComments}
-              keyExtractor={(item) => item.id}
-              renderItem={renderItem}
-            />
-          </View>
+          <FlatList
+            data={allComments}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+          />
         </View>
+
         <View
           style={{
             paddingTop: 32,
@@ -183,8 +184,6 @@ const CommentsScreen = ({ route }) => {
           <View
             style={{
               position: "relative",
-              // flex: 1,
-              // justifyContent: "flex-end",
               width: dimensions,
             }}
           >
@@ -195,6 +194,7 @@ const CommentsScreen = ({ route }) => {
               value={comment}
               onChangeText={(value) => setComment(value)}
             />
+
             <View style={styles.send}>
               <AntDesign
                 name="arrowup"

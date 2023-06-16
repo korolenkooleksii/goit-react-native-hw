@@ -7,12 +7,7 @@ import * as SplashScreen from "expo-splash-screen";
 
 import Main from "./components/Main/Main";
 
-import { Platform } from "react-native";
-
 const App = () => {
-
-  console.log('Platform.OS --- ', Platform.OS);
-
   const [loadFonts] = useFonts({
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
     "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
