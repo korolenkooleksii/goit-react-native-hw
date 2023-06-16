@@ -121,7 +121,7 @@ const RegisterScreen = ({ navigation }) => {
 
     try {
       const docRef = await addDoc(collection(db, "avatar"), {
-        processedAvatar,
+        processedAvatar, userId: null
       });
     } catch (e) {
       console.error("Error adding document: ", e);

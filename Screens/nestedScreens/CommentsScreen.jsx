@@ -163,11 +163,14 @@ const CommentsScreen = ({ route }) => {
             <Image style={styles.image} source={{ uri: photoPost }} />
           </View>
 
-          <FlatList
+          <View>
+            <FlatList
             data={allComments}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
           />
+          </View>
+          
         </View>
 
         <View

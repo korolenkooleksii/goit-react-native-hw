@@ -57,7 +57,11 @@ const PostsScreen = ({ navigation }) => {
     });
   };
 
-  const renderItem = ({ item: { photo, location, comment, terrain, id } }) => {
+  console.log("posts 🚀  => ", posts);
+
+  const renderItem = ({
+    item: { photo, location, comment, comments, terrain, id },
+  }) => {
     return (
       <View style={styles.list}>
         <View style={{ ...styles.item, height: dimensions * 0.7 }}>
@@ -123,6 +127,7 @@ const PostsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />
+        
       </View>
     </View>
   );
