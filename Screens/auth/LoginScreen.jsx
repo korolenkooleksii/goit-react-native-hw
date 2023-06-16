@@ -87,7 +87,7 @@ const LoginScreen = ({ navigation }) => {
                 marginBottom: isShowKeyboard ? -260 : 0,
               }}
             >
-              <Text style={styles.titleForm}>Войти</Text>
+              <Text style={styles.titleForm}>Увійти</Text>
               <View style={{ ...styles.form, width: dimensions }}>
                 <View style={styles.wrapInput}>
                   <TextInput
