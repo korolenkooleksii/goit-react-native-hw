@@ -35,14 +35,16 @@ const defaultPhoto = "https://via.placeholder.com/130x130";
 const CommentsScreen = ({ route }) => {
   const { postId, photoPost } = route.params;
 
+  console.log("CommentsScreen avatar 🚀  => ", avatar)
+
+
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
-  const [avatar, setAvatar] = useState(defaultPhoto);
-
-  const { login } = useAuth();
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
+
+  const { login, avatar } = useAuth();
 
   useEffect(() => {
     const onChange = () => {
@@ -54,17 +56,8 @@ const CommentsScreen = ({ route }) => {
   }, []);
 
   useEffect(() => {
-    getAvatar();
     getAllComments();
   }, []);
-
-  const getAvatar = async () => {
-    await onSnapshot(collection(db, "avatar"), (snapshot) => {
-      if (snapshot?.docs[0]?.data()) {
-        setAvatar(snapshot.docs[0].data().processedAvatar);
-      }
-    });
-  };
 
   const createComment = async () => {
     const date = currentDate();
@@ -76,6 +69,7 @@ const CommentsScreen = ({ route }) => {
         comment,
         date,
         time,
+        avatar
       });
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -103,21 +97,20 @@ const CommentsScreen = ({ route }) => {
     setComment("");
   };
 
-  const renderItem = ({ item: { comment, date, time } }) => {
+  const renderItem = ({ item: { comment, date, time, avatar } }) => {
     return (
       <View style={styles.item}>
         <View
           style={{
             flexDirection: "row",
-            // gap: 16,
-
+            gap: 16,
             justifyContent: "space-between",
           }}
         >
           <View
             style={{
               ...styles.commentWrap,
-              width: dimensions - 44,
+              flexGrow: 1,
             }}
           >
             <Text style={styles.text}>{comment}</Text>
@@ -137,7 +130,10 @@ const CommentsScreen = ({ route }) => {
               borderColor: "transparent",
             }}
           >
-            <Image style={styles.image} source={{ uri: avatar }} />
+            <Image
+              style={styles.image}
+              source={{ uri: avatar ? avatar : defaultPhoto }}
+            />
           </View>
         </View>
       </View>
@@ -165,12 +161,11 @@ const CommentsScreen = ({ route }) => {
 
           <View>
             <FlatList
-            data={allComments}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-          />
+              data={allComments}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+            />
           </View>
-          
         </View>
 
         <View

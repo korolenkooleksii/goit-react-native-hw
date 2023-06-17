@@ -16,6 +16,9 @@ const authSlice = createSlice({
       state.login = payload.login;
       state.userId = payload.userId;
       state.email = payload.email;
+      state.avatar = payload.avatar;
+
+      console.log('state--------', state);
     },
     addUserAvatar(state, {payload}){
       state.avatar = payload.userAvatar;
@@ -27,6 +30,7 @@ const authSlice = createSlice({
       state.login = null;
       state.userId = null;
       state.email = null;
+      state.avatar = null;
       state.stateChange = false;
     },
   },

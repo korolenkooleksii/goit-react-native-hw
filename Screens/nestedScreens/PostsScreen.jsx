@@ -18,8 +18,8 @@ const defaultPhoto = "https://via.placeholder.com/130x130";
 
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  const [avatar, setAvatar] = useState(defaultPhoto);
-  const { email, login } = useAuth();
+  const { email, login, avatar } = useAuth();
+
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
@@ -37,30 +37,14 @@ const PostsScreen = ({ navigation }) => {
     getAllPosts();
   }, []);
 
-  useEffect(() => {
-    getAvatar();
-  }, []);
-
   const getAllPosts = async () => {
     await onSnapshot(collection(db, "posts"), (snapshot) => {
       setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
     });
-
-    // console.log("posts ---- ", posts);
   };
-
-  const getAvatar = async () => {
-    await onSnapshot(collection(db, "avatar"), (snapshot) => {
-      if (snapshot?.docs[0]?.data()) {
-        setAvatar(snapshot.docs[0].data().processedAvatar);
-      }
-    });
-  };
-
-  console.log("posts 🚀  => ", posts);
 
   const renderItem = ({
-    item: { photo, location, comment, comments, terrain, id },
+    item: { photo, location, comment, terrain, id },
   }) => {
     return (
       <View style={styles.list}>
@@ -114,7 +98,10 @@ const PostsScreen = ({ navigation }) => {
               height: dimensions * 0.18,
             }}
           >
-            <Image source={{ uri: avatar }} style={styles.image} />
+            <Image
+              source={{ uri: avatar ? avatar : defaultPhoto }}
+              style={styles.image}
+            />
           </View>
           <View>
             <Text style={styles.login}>{login}</Text>
@@ -127,7 +114,6 @@ const PostsScreen = ({ navigation }) => {
           keyExtractor={(item) => item.id}
           renderItem={renderItem}
         />
-        
       </View>
     </View>
   );

@@ -31,6 +31,7 @@ const initialState = {
   login: "",
   mail: "",
   password: "",
+  avatar: "",
 };
 
 const RegisterScreen = ({ navigation }) => {
@@ -39,7 +40,7 @@ const RegisterScreen = ({ navigation }) => {
   const [isShowKeyboard, setIsShowKeyboard] = useState(false);
   const [isShowPassword, setIsShowPassword] = useState(true);
 
-  const [avatar, setAvatar] = useState(defaultPhoto);
+  const [avatarPhoto, setAvatar] = useState(null);
   const [isImage, setIsImage] = useState(false);
 
   const [dimensions, setDimensions] = useState(
@@ -58,6 +59,13 @@ const RegisterScreen = ({ navigation }) => {
     return () => dimensionsHandler.remove();
   }, []);
 
+  useEffect(() => {
+    if (state.avatar) {
+      dispatch(authSignUpUser(state));
+      setState(initialState);
+    }
+  }, [state]);
+
   const handleFocus = (val) => {
     setIsShowKeyboard(true);
     setIsActive(val);
@@ -73,11 +81,13 @@ const RegisterScreen = ({ navigation }) => {
   const handleIsShowPassword = () => setIsShowPassword(!isShowPassword);
 
   const handleAuthSignUp = () => {
-    dispatch(authSignUpUser(state));
+    if (!avatarPhoto) {
+      dispatch(authSignUpUser(state));
+      setState(initialState);
+      return;
+    }
 
     uploadAvatarToServer();
-
-    setState(initialState);
   };
 
   const keyboardHide = () => {
@@ -105,27 +115,30 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
+  console.log('avatarPhoto ----- ', avatarPhoto);
+
   const uploadAvatarToServer = async () => {
-    const response = await fetch(avatar);
+    if (!avatarPhoto) {
+      console.log("НЕТ ФОТО");
+      return;
+    }
+    const response = await fetch(avatarPhoto);
+
     const file = await response.blob();
 
     const uniquePostId = Date.now().toString();
-    const storageRef = ref(storage, `avatar/${uniquePostId}`);
+
+    const storageRef = ref(storage, `${uniquePostId}`);
 
     await uploadBytes(storageRef, file).then((snapshot) => {
       // Alert.alert("Uploaded an avatar!");
     });
 
-    const pathReference = ref(storage, `avatar/${uniquePostId}`);
+    const pathReference = ref(storage, `${uniquePostId}`);
+
     const processedAvatar = await getDownloadURL(pathReference);
 
-    try {
-      const docRef = await addDoc(collection(db, "avatar"), {
-        processedAvatar, userId: null
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
+    setState((prevState) => ({ ...prevState, avatar: processedAvatar }));
   };
 
   return (
@@ -153,7 +166,7 @@ const RegisterScreen = ({ navigation }) => {
                   }}
                 >
                   <Image
-                    source={{ uri: avatar }}
+                    source={{ uri: avatarPhoto ? avatarPhoto : defaultPhoto }}
                     style={{
                       width: "100%",
                       height: "100%",

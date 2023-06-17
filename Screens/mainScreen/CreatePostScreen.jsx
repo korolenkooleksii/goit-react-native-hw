@@ -43,7 +43,9 @@ const CreatePostScreen = ({ navigation }) => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
-  const { login, userId } = useAuth();
+  const { login, userId, avatar } = useAuth();
+
+  console.log("avatar CreatePostScreen 🚀  => ", avatar);
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
