@@ -1,4 +1,4 @@
-export const currentDate = () => {
+export const currentDate = (incomingDate) => {
   const monthArr = [
     "Січня",
     "Лютого",
@@ -27,7 +27,7 @@ export const currentDate = () => {
     return month.toLowerCase();
   };
 
-  const date = new Date();
+  const date = new Date(incomingDate);
   const year = date.getFullYear();
   const month = monthNow(date.getMonth());
   const day = addZero(date.getDate());

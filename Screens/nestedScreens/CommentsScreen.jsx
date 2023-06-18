@@ -35,9 +35,6 @@ const defaultPhoto = "https://via.placeholder.com/130x130";
 const CommentsScreen = ({ route }) => {
   const { postId, photoPost } = route.params;
 
-  console.log("CommentsScreen avatar 🚀  => ", avatar)
-
-
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
   const [dimensions, setDimensions] = useState(
@@ -60,16 +57,15 @@ const CommentsScreen = ({ route }) => {
   }, []);
 
   const createComment = async () => {
-    const date = currentDate();
-    const time = currentTime();
+    // const date = currentDate();
+    // const time = currentTime();
 
     try {
       const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
         login,
         comment,
-        date,
-        time,
-        avatar
+        date: new Date().toString(),
+        avatar,
       });
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -82,7 +78,14 @@ const CommentsScreen = ({ route }) => {
       (snapshot) => {
         setAllComments(
           snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+
+          // [...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))].sort(
+          //   (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          // )
         );
+
+        // setPosts([...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))]
+        // .sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()))
       }
     );
   };
@@ -97,7 +100,7 @@ const CommentsScreen = ({ route }) => {
     setComment("");
   };
 
-  const renderItem = ({ item: { comment, date, time, avatar } }) => {
+  const renderItem = ({ item: { comment, date, avatar } }) => {
     return (
       <View style={styles.item}>
         <View
@@ -115,7 +118,7 @@ const CommentsScreen = ({ route }) => {
           >
             <Text style={styles.text}>{comment}</Text>
             <Text style={styles.date}>
-              {date} | {time}
+              {currentDate(date)} | {currentTime(date)}
             </Text>
           </View>
 

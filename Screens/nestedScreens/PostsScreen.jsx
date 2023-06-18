@@ -39,13 +39,16 @@ const PostsScreen = ({ navigation }) => {
 
   const getAllPosts = async () => {
     await onSnapshot(collection(db, "posts"), (snapshot) => {
-      setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      // setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      setPosts(
+        [...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))].sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        )
+      );
     });
   };
 
-  const renderItem = ({
-    item: { photo, location, comment, terrain, id },
-  }) => {
+  const renderItem = ({ item: { photo, location, comment, terrain, id } }) => {
     return (
       <View style={styles.list}>
         <View style={{ ...styles.item, height: dimensions * 0.7 }}>

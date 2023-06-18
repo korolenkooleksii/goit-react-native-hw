@@ -161,6 +161,7 @@ const CreatePostScreen = ({ navigation }) => {
         comment,
         terrain,
         location,
+        date: new Date().toString(),
       });
     } catch (e) {
       console.error("Error adding document: ", e);
