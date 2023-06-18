@@ -15,6 +15,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   Image,
+  Platform,
   Alert,
 } from "react-native";
 import { Add } from "../../components/Add/Add";
