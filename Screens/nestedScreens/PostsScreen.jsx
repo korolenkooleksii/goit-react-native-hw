@@ -14,7 +14,7 @@ import { useAuth } from "../../hooks/useAuth";
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
 
-const defaultPhoto = "https://via.placeholder.com/130x130";
+const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);

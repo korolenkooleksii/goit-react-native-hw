@@ -26,7 +26,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import { storage, db } from "../../firebase";
 
-const defaultPhoto = "https://via.placeholder.com/130x130";
+const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const initialState = {
   login: "",
@@ -103,6 +103,12 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   const pickImage = async () => {
+    if (isImage) {
+      setAvatar(defaultPhoto ? defaultPhoto : null);
+      setIsImage(false);
+      return;
+    }
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -116,7 +122,7 @@ const RegisterScreen = ({ navigation }) => {
     }
   };
 
-  console.log('avatarPhoto ----- ', avatarPhoto);
+  console.log("avatarPhoto ----- ", avatarPhoto);
 
   const uploadAvatarToServer = async () => {
     if (!avatarPhoto) {
@@ -158,7 +164,11 @@ const RegisterScreen = ({ navigation }) => {
                 marginBottom: isShowKeyboard ? -200 : 0,
               }}
             >
-              <View style={styles.addPhoto}>
+              <TouchableOpacity
+                style={styles.addPhoto}
+                activeOpacity={0.9}
+                onPress={pickImage}
+              >
                 <View
                   style={{
                     overflow: "hidden",
@@ -178,9 +188,9 @@ const RegisterScreen = ({ navigation }) => {
                 {isImage ? (
                   <Remove style={styles.removePhotoBtn} />
                 ) : (
-                  <Add style={styles.addPhotoBtn} onPress={pickImage} />
+                  <Add style={styles.addPhotoBtn} />
                 )}
-              </View>
+              </TouchableOpacity>
 
               <Text style={styles.titleForm}>Реєстрація</Text>
               <View style={{ ...styles.form, width: dimensions }}>

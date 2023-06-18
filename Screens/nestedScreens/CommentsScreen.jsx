@@ -30,7 +30,7 @@ import { storage, db } from "../../firebase";
 import { currentDate } from "../../utils/currentDate";
 import { currentTime } from "../../utils/currentTime";
 
-const defaultPhoto = "https://via.placeholder.com/130x130";
+const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const CommentsScreen = ({ route }) => {
   const { postId, photoPost, idPostingUser } = route.params;
@@ -240,7 +240,7 @@ const CommentsScreen = ({ route }) => {
 
         </View>
 
-        
+
       </View>
     </TouchableWithoutFeedback>
   );
@@ -257,7 +257,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "flex-start",
-
     marginVertical: 32,
     gap: 32,
   },
@@ -265,7 +264,6 @@ const styles = StyleSheet.create({
   photoWrap: {
     overflow: "hidden",
     borderRadius: 8,
-    // marginVertical: 32,
   },
   image: {
     height: "100%",
@@ -281,7 +279,6 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
-
     padding: 16,
     gap: 8,
   },
