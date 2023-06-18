@@ -45,8 +45,6 @@ const CreatePostScreen = ({ navigation }) => {
 
   const { login, userId, avatar } = useAuth();
 
-  console.log("avatar CreatePostScreen 🚀  => ", avatar);
-
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
   );
@@ -156,7 +154,7 @@ const CreatePostScreen = ({ navigation }) => {
     try {
       const docRef = await addDoc(collection(db, "posts"), {
         login,
-        userId,
+        idPostingUser: userId,
         photo,
         comment,
         terrain,

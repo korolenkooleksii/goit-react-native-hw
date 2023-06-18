@@ -48,7 +48,7 @@ const PostsScreen = ({ navigation }) => {
     });
   };
 
-  const renderItem = ({ item: { photo, location, comment, terrain, id } }) => {
+  const renderItem = ({ item: { photo, location, comment, terrain, id, idPostingUser } }) => {
     return (
       <View style={styles.list}>
         <View style={{ ...styles.item, height: dimensions * 0.7 }}>
@@ -62,6 +62,7 @@ const PostsScreen = ({ navigation }) => {
                 navigation.navigate("Comments", {
                   postId: id,
                   photoPost: photo,
+                  idPostingUser
                 })
               }
               activeOpacity={0.7}

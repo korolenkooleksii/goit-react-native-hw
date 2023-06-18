@@ -33,7 +33,7 @@ import { currentTime } from "../../utils/currentTime";
 const defaultPhoto = "https://via.placeholder.com/130x130";
 
 const CommentsScreen = ({ route }) => {
-  const { postId, photoPost } = route.params;
+  const { postId, photoPost, idPostingUser } = route.params;
 
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
@@ -41,7 +41,7 @@ const CommentsScreen = ({ route }) => {
     Dimensions.get("window").width - 16 * 2
   );
 
-  const { login, avatar } = useAuth();
+  const { avatar, userId } = useAuth();
 
   useEffect(() => {
     const onChange = () => {
@@ -57,12 +57,9 @@ const CommentsScreen = ({ route }) => {
   }, []);
 
   const createComment = async () => {
-    // const date = currentDate();
-    // const time = currentTime();
-
     try {
       const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
-        login,
+        idCommentingUser: userId,
         comment,
         date: new Date().toString(),
         avatar,
@@ -77,15 +74,10 @@ const CommentsScreen = ({ route }) => {
       collection(db, "posts", postId, "comments"),
       (snapshot) => {
         setAllComments(
-          snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
-
-          // [...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))].sort(
-          //   (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-          // )
+          [...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))].sort(
+            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+          )
         );
-
-        // setPosts([...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))]
-        // .sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()))
       }
     );
   };
@@ -100,7 +92,9 @@ const CommentsScreen = ({ route }) => {
     setComment("");
   };
 
-  const renderItem = ({ item: { comment, date, avatar } }) => {
+  const renderItem = ({
+    item: { comment, date, avatar, idCommentingUser },
+  }) => {
     return (
       <View style={styles.item}>
         <View
@@ -110,6 +104,75 @@ const CommentsScreen = ({ route }) => {
             justifyContent: "space-between",
           }}
         >
+          {idCommentingUser === idPostingUser ? (
+            <>
+              <View
+                style={{
+                  ...styles.commentWrap,
+                  flexGrow: 1,
+                  borderTopLeftRadius: 6,
+                }}
+              >
+                <Text style={styles.text}>{comment}</Text>
+                <Text style={styles.date}>
+                  {currentDate(date)} | {currentTime(date)}
+                </Text>
+              </View>
+
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 50,
+                  // backgroundColor: "#F6F6F6",
+                  // borderWidth: 1,
+                  overflow: "hidden",
+                  borderColor: "transparent",
+                }}
+              >
+                <Image
+                  style={styles.image}
+                  source={{ uri: avatar ? avatar : defaultPhoto }}
+                />
+              </View>
+            </>
+          ) : (
+            <>
+              <View
+                style={{
+                  width: 28,
+                  height: 28,
+                  borderRadius: 50,
+                  // backgroundColor: "#F6F6F6",
+                  // borderWidth: 1,
+                  overflow: "hidden",
+                  borderColor: "transparent",
+                }}
+              >
+                <Image
+                  style={styles.image}
+                  source={{ uri: avatar ? avatar : defaultPhoto }}
+                />
+              </View>
+
+              <View
+                style={{
+                  ...styles.commentWrap,
+                  flexGrow: 1,
+                  borderTopRightRadius: 6,
+                }}
+              >
+                <Text style={styles.text}>{comment}</Text>
+                <Text
+                  style={{ ...styles.date, flex: 1, alignSelf: "flex-end" }}
+                >
+                  {currentDate(date)} | {currentTime(date)}
+                </Text>
+              </View>
+            </>
+          )}
+
+          {/* <>
           <View
             style={{
               ...styles.commentWrap,
@@ -138,6 +201,7 @@ const CommentsScreen = ({ route }) => {
               source={{ uri: avatar ? avatar : defaultPhoto }}
             />
           </View>
+          </> */}
         </View>
       </View>
     );
@@ -242,7 +306,7 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
-    borderTopLeftRadius: 6,
+
     padding: 16,
     gap: 8,
   },
