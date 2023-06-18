@@ -171,37 +171,6 @@ const CommentsScreen = ({ route }) => {
               </View>
             </>
           )}
-
-          {/* <>
-          <View
-            style={{
-              ...styles.commentWrap,
-              flexGrow: 1,
-            }}
-          >
-            <Text style={styles.text}>{comment}</Text>
-            <Text style={styles.date}>
-              {currentDate(date)} | {currentTime(date)}
-            </Text>
-          </View>
-
-          <View
-            style={{
-              width: 28,
-              height: 28,
-              borderRadius: 50,
-              // backgroundColor: "#F6F6F6",
-              // borderWidth: 1,
-              overflow: "hidden",
-              borderColor: "transparent",
-            }}
-          >
-            <Image
-              style={styles.image}
-              source={{ uri: avatar ? avatar : defaultPhoto }}
-            />
-          </View>
-          </> */}
         </View>
       </View>
     );
@@ -214,6 +183,9 @@ const CommentsScreen = ({ route }) => {
           style={{
             ...styles.container,
             width: dimensions,
+
+            borderColor: "red",
+            borderWidth: 1,
           }}
         >
           <View
@@ -237,13 +209,8 @@ const CommentsScreen = ({ route }) => {
 
         <View
           style={{
-            paddingTop: 32,
-            paddingBottom: 16,
+            marginBottom: 16,
             backgroundColor: "#FFFFFF",
-            overflow: "hidden",
-
-            borderWidth: 1,
-            borderColor: "blue",
           }}
         >
           <View
@@ -269,7 +236,11 @@ const CommentsScreen = ({ route }) => {
               />
             </View>
           </View>
+
+
         </View>
+
+        
       </View>
     </TouchableWithoutFeedback>
   );
@@ -285,12 +256,16 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+    justifyContent: "flex-start",
+
+    marginVertical: 32,
+    gap: 32,
   },
 
   photoWrap: {
     overflow: "hidden",
     borderRadius: 8,
-    marginVertical: 32,
+    // marginVertical: 32,
   },
   image: {
     height: "100%",
