@@ -23,17 +23,23 @@ import {
   doc,
   setDoc,
   addDoc,
+  updateDoc,
   add,
   onSnapshot,
+  snapshot,
 } from "firebase/firestore";
 import { storage, db } from "../../firebase";
+
 import { currentDate } from "../../utils/currentDate";
 import { currentTime } from "../../utils/currentTime";
+import { updateCommentCounter } from "../../utils/updateCommentCounter";
+import { addCommentInCollection } from "../../utils/addCommentInCollection";
+import { getCommentsCollection } from "../../utils/getCommentsCollection";
 
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const CommentsScreen = ({ route }) => {
-  const { postId, photoPost, idPostingUser } = route.params;
+  const { postId, photoPost, idPostingUser, commentCounter } = route.params;
 
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
@@ -57,29 +63,15 @@ const CommentsScreen = ({ route }) => {
   }, []);
 
   const createComment = async () => {
-    try {
-      const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
-        idCommentingUser: userId,
-        comment,
-        date: new Date().toString(),
-        avatar,
-      });
-    } catch (e) {
-      console.error("Error adding document: ", e);
+    if (idPostingUser !== userId) {
+      updateCommentCounter(postId, commentCounter);
     }
+
+    addCommentInCollection(postId, userId, comment, avatar);
   };
 
-  const getAllComments = async () => {
-    await onSnapshot(
-      collection(db, "posts", postId, "comments"),
-      (snapshot) => {
-        setAllComments(
-          [...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))].sort(
-            (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-          )
-        );
-      }
-    );
+  const getAllComments = () => {
+    getCommentsCollection(postId, setAllComments);
   };
 
   const keyboardHide = () => {
@@ -236,11 +228,7 @@ const CommentsScreen = ({ route }) => {
               />
             </View>
           </View>
-
-
         </View>
-
-
       </View>
     </TouchableWithoutFeedback>
   );

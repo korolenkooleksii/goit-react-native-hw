@@ -39,6 +39,7 @@ const TabNavigator = () => {
         headerTitleAlign: "center",
       }}
     >
+
       <MainTab.Screen
         name="Posts"
         component={PostsScreen}

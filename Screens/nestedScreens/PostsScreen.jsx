@@ -9,10 +9,13 @@ import {
   Dimensions,
   SafeAreaView,
 } from "react-native";
-import { FontAwesome5, Feather } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome, Feather } from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
+
 import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "../../firebase";
+
+import { getPostsCollection } from "../../utils/getPostsCollection";
 
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
@@ -37,18 +40,21 @@ const PostsScreen = ({ navigation }) => {
     getAllPosts();
   }, []);
 
-  const getAllPosts = async () => {
-    await onSnapshot(collection(db, "posts"), (snapshot) => {
-      // setPosts(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      setPosts(
-        [...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))].sort(
-          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-        )
-      );
-    });
+  const getAllPosts = () => {
+    getPostsCollection(setPosts);
   };
 
-  const renderItem = ({ item: { photo, location, comment, terrain, id, idPostingUser } }) => {
+  const renderItem = ({
+    item: {
+      photo,
+      location,
+      comment,
+      terrain,
+      id,
+      idPostingUser,
+      commentCounter,
+    },
+  }) => {
     return (
       <View style={styles.list}>
         <View style={{ ...styles.item, height: dimensions * 0.7 }}>
@@ -62,14 +68,26 @@ const PostsScreen = ({ navigation }) => {
                 navigation.navigate("Comments", {
                   postId: id,
                   photoPost: photo,
-                  idPostingUser
+                  idPostingUser,
+                  commentCounter,
                 })
               }
               activeOpacity={0.7}
             >
-              <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
+              {commentCounter > 0 ? (
+                <FontAwesome name="comment" size={24} color="#FF6C00" />
+              ) : (
+                <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
+              )}
             </TouchableOpacity>
-            <Text style={styles.counter}>0</Text>
+            <Text
+              style={{
+                ...styles.counter,
+                color: commentCounter > 0 ? "#212121" : "#BDBDBD",
+              }}
+            >
+              {commentCounter}
+            </Text>
           </View>
           <View style={styles.wrapContent}>
             <TouchableOpacity
@@ -129,7 +147,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#ffffff",
     borderTopColor: "#BDBDBD",
+    borderBottomColor: "#BDBDBD",
     borderTopWidth: 1,
+    borderBottomWidth: 1,
   },
   avatarWrap: {
     paddingVertical: 32,
@@ -192,7 +212,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
-    color: "#BDBDBD",
   },
 });
 
