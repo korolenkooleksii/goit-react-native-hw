@@ -1,16 +1,12 @@
-import {
-  collection,
-  doc,
-  setDoc,
-  addDoc,
-  updateDoc,
-  add,
-  onSnapshot,
-  snapshot,
-} from "firebase/firestore";
-import { storage, db } from "../firebase";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
-export const addCommentInCollection = async (postId, userId, comment, avatar) => {
+export const addCommentInCollection = async ({
+  postId,
+  userId,
+  comment,
+  avatar,
+}) => {
   try {
     const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
       idCommentingUser: userId,

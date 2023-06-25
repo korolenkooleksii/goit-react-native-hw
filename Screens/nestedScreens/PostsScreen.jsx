@@ -19,12 +19,15 @@ import { useAuth } from "../../hooks/useAuth";
 import { getPostsCollection } from "../../utils/getPostsCollection";
 import { addLike, removeLike } from "../../utils/updateLike";
 
+import { getAvatar } from "../../utils/updateAvatar";
+
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
+  const [userAvatar, setUserAvatar] = useState(null);
 
-  const { email, login, avatar, userId } = useAuth();
+  const { email, login, userId } = useAuth();
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
@@ -43,12 +46,15 @@ const PostsScreen = ({ navigation }) => {
     getAllPosts();
   }, []);
 
+  useEffect(() => {
+    getAvatar(userId, setUserAvatar);
+  }, []);
+
   const getAllPosts = () => {
     getPostsCollection(setPosts);
   };
 
   const handleAddLike = (postId) => {
-    console.log('ADD LIKE');
     addLike(postId, userId);
   };
 
@@ -109,28 +115,33 @@ const PostsScreen = ({ navigation }) => {
             )}
 
             {owner !== userId && likes.length === 0 && (
-              <TouchableOpacity onPress={()=>handleAddLike(id)} activeOpacity={0.7}>
+              <TouchableOpacity
+                onPress={() => handleAddLike(id)}
+                activeOpacity={0.7}
+              >
                 <AntDesign name="like2" size={24} color="#BDBDBD" />
               </TouchableOpacity>
             )}
 
             {likes.includes(userId) && owner !== userId && likes.length > 0 && (
               <TouchableOpacity
-                onPress={()=>handleRemoveLike(id)}
+                onPress={() => handleRemoveLike(id)}
                 activeOpacity={0.7}
               >
                 <AntDesign name="like1" size={24} color="#FF6C00" />
               </TouchableOpacity>
             )}
 
-            {!(likes.includes(userId)) && owner !== userId && likes.length > 0 && (
-              <TouchableOpacity
-              onPress={()=>handleAddLike(id)}
-                activeOpacity={0.7}
-              >
-                <AntDesign name="like2" size={24} color="#FF6C00" />
-              </TouchableOpacity>
-            )} 
+            {!likes.includes(userId) &&
+              owner !== userId &&
+              likes.length > 0 && (
+                <TouchableOpacity
+                  onPress={() => handleAddLike(id)}
+                  activeOpacity={0.7}
+                >
+                  <AntDesign name="like2" size={24} color="#FF6C00" />
+                </TouchableOpacity>
+              )}
 
             <Text
               style={{
@@ -174,7 +185,9 @@ const PostsScreen = ({ navigation }) => {
             }}
           >
             <Image
-              source={{ uri: avatar ? avatar : defaultPhoto }}
+              source={{
+                uri: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto,
+              }}
               style={styles.image}
             />
           </View>

@@ -24,10 +24,14 @@ import { updateCommentsCounter } from "../../utils/updateCommentsCounter";
 import { addCommentInCollection } from "../../utils/addCommentInCollection";
 import { getCommentsCollection } from "../../utils/getCommentsCollection";
 
+import { getAvatar } from "../../utils/updateAvatar";
+
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const CommentsScreen = ({ route }) => {
   const { postId, photoPost, owner, commentsCounter } = route.params;
+
+  const [userAvatar, setUserAvatar] = useState(null);
 
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
@@ -35,7 +39,7 @@ const CommentsScreen = ({ route }) => {
     Dimensions.get("window").width - 16 * 2
   );
 
-  const { avatar, userId } = useAuth();
+  const { userId } = useAuth();
 
   useEffect(() => {
     const onChange = () => {
@@ -50,6 +54,10 @@ const CommentsScreen = ({ route }) => {
     getAllComments();
   }, []);
 
+  useEffect(() => {
+    getAvatar(userId, setUserAvatar);
+  }, []);
+
   const createComment = async () => {
     if (comment === "") return;
 
@@ -57,7 +65,7 @@ const CommentsScreen = ({ route }) => {
       updateCommentsCounter(postId, commentsCounter);
     }
 
-    addCommentInCollection(postId, userId, comment, avatar);
+    addCommentInCollection({postId, userId, comment, avatar: userAvatar.avatar});
   };
 
   const getAllComments = () => {

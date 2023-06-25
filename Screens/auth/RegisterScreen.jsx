@@ -23,8 +23,7 @@ import { Remove } from "../../components/Remove/Remove";
 import * as ImagePicker from "expo-image-picker";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { addDoc, collection } from "firebase/firestore";
-import { storage, db } from "../../firebase";
+import { storage, } from "../../firebase";
 
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
@@ -121,8 +120,6 @@ const RegisterScreen = ({ navigation }) => {
       setIsImage(true);
     }
   };
-
-  console.log("avatarPhoto ----- ", avatarPhoto);
 
   const uploadAvatarToServer = async () => {
     if (!avatarPhoto) {

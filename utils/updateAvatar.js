@@ -1,18 +1,15 @@
 import {
   collection,
-  doc,
-  setDoc,
   addDoc,
-  updateDoc,
-  add,
   onSnapshot,
-  snapshot,
+  query,
+  where,
 } from "firebase/firestore";
-import { storage, db } from "../firebase";
+import { db } from "../firebase";
 
-const addAvatar = async (userId, avatar) => {
+const addAvatar = async ({ userId, avatar }) => {
   try {
-    const docRef = await addDoc(collection(db, "avatar"), {
+    const docRef = await addDoc(collection(db, "avatars"), {
       userId,
       avatar,
     });
@@ -21,17 +18,16 @@ const addAvatar = async (userId, avatar) => {
   }
 };
 
-const getAvatar = async (userId) => {
-  await onSnapshot(collection(db, "avatar"), (snapshot) => {
-    const avatarsCollection = snapshot.docs.map((doc) => ({
-      ...doc.data(),
-      id: doc.id,
-    }));
+const getAvatar = async (userId, setUserAvatar) => {
+  const q = query(collection(db, "avatars"), where("userId", "==", userId));
 
-    const result = avatarsCollection.find((el) => el.userId === userId);
-
-    console.log("result.avatar 🚀  => ", result.avatar);
-    console.log("result.id 🚀  => ", result.id);
+  await onSnapshot(q, (snapshot) => {
+    snapshot.docs.map((doc) =>
+      setUserAvatar({
+        ...doc.data(),
+        id: doc.id,
+      })
+    );
   });
 };
 

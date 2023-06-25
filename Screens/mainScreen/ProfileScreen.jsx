@@ -2,7 +2,9 @@ import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 import { Button } from "react-native-paper";
 
-import {addAvatar, getAvatar} from '../../utils/updateAvatar'
+import { addAvatar, getAvatar } from "../../utils/updateAvatar";
+
+import {useAuth} from '../../hooks/useAuth'
 
 const ProfileScreen = () => {
   const { userId, avatar } = useAuth();

@@ -7,6 +7,7 @@ import {
 } from "firebase/auth";
 import { auth } from "../../firebase";
 import { updateUserProfile, authStateChange, authSignOut } from "./authSlice";
+import { addAvatar } from "../../utils/updateAvatar";
 
 const authSignUpUser =
   ({ login, mail, password, avatar }) =>
@@ -31,6 +32,8 @@ const authSignUpUser =
           avatar: photoURL,
         })
       );
+
+      addAvatar({ userId: uid, avatar });
     } catch (error) {
       const errorCode = error.code;
       const errorMessage = error.message;
@@ -74,7 +77,6 @@ const authSignOutUser = () => async (dispatch, getState) => {
 const authStateChangeUser = () => async (dispatch, getState) => {
   await onAuthStateChanged(auth, (user) => {
     if (user) {
-      
       dispatch(
         updateUserProfile({
           login: user.displayName,
