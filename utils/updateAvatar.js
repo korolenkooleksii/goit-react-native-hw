@@ -1,6 +1,8 @@
 import {
   collection,
   addDoc,
+  doc,
+  deleteDoc,
   onSnapshot,
   query,
   where,
@@ -9,7 +11,7 @@ import { db } from "../firebase";
 
 const addAvatar = async ({ userId, avatar }) => {
   try {
-    const docRef = await addDoc(collection(db, "avatars"), {
+    await addDoc(collection(db, "avatars"), {
       userId,
       avatar,
     });
@@ -31,4 +33,14 @@ const getAvatar = async (userId, setUserAvatar) => {
   });
 };
 
-export { addAvatar, getAvatar };
+const removeAvatar = async (id) => {
+  try {
+    await deleteDoc(doc(db, "avatars", id))
+  } catch (e) {
+    console.error("Error remove document: ", e);
+  }
+};
+
+// await deleteDoc(doc(db, "cities", "DC"));
+
+export { addAvatar, getAvatar, removeAvatar };

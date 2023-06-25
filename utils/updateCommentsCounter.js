@@ -1,14 +1,5 @@
-import {
-  collection,
-  doc,
-  setDoc,
-  addDoc,
-  updateDoc,
-  add,
-  onSnapshot,
-  snapshot,
-} from "firebase/firestore";
-import { storage, db } from "../firebase";
+import { doc, updateDoc } from "firebase/firestore";
+import { db } from "../firebase";
 
 export const updateCommentsCounter = async (postId, value) => {
   const postRef = doc(db, "posts", postId);

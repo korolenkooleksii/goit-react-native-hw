@@ -1,16 +1,5 @@
-import {
-  collection,
-  doc,
-  setDoc,
-  addDoc,
-  updateDoc,
-  add,
-  onSnapshot,
-  snapshot,
-  arrayUnion,
-  arrayRemove,
-} from "firebase/firestore";
-import { storage, db } from "../firebase";
+import { doc, updateDoc, arrayUnion, arrayRemove } from "firebase/firestore";
+import { db } from "../firebase";
 
 const addLike = async (postId, userId) => {
   const postRef = doc(db, "posts", postId);
