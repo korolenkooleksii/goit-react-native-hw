@@ -32,14 +32,14 @@ import { storage, db } from "../../firebase";
 
 import { currentDate } from "../../utils/currentDate";
 import { currentTime } from "../../utils/currentTime";
-import { updateCommentCounter } from "../../utils/updateCommentCounter";
+import { updateCommentsCounter } from "../../utils/updateCommentsCounter";
 import { addCommentInCollection } from "../../utils/addCommentInCollection";
 import { getCommentsCollection } from "../../utils/getCommentsCollection";
 
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const CommentsScreen = ({ route }) => {
-  const { postId, photoPost, idPostingUser, commentCounter } = route.params;
+  const { postId, photoPost, owner, commentsCounter } = route.params;
 
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
@@ -63,8 +63,11 @@ const CommentsScreen = ({ route }) => {
   }, []);
 
   const createComment = async () => {
-    if (idPostingUser !== userId) {
-      updateCommentCounter(postId, commentCounter);
+
+    if (comment === "") return;
+
+    if (owner !== userId) {
+      updateCommentsCounter(postId, commentsCounter);
     }
 
     addCommentInCollection(postId, userId, comment, avatar);
@@ -96,7 +99,7 @@ const CommentsScreen = ({ route }) => {
             justifyContent: "space-between",
           }}
         >
-          {idCommentingUser === idPostingUser ? (
+          {idCommentingUser === owner ? (
             <>
               <View
                 style={{

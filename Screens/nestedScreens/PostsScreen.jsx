@@ -7,21 +7,24 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
-  SafeAreaView,
 } from "react-native";
-import { FontAwesome5, FontAwesome, Feather } from "@expo/vector-icons";
+import {
+  FontAwesome5,
+  FontAwesome,
+  Feather,
+  AntDesign,
+} from "@expo/vector-icons";
 import { useAuth } from "../../hooks/useAuth";
 
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../firebase";
-
 import { getPostsCollection } from "../../utils/getPostsCollection";
+import { addLike, removeLike } from "../../utils/updateLike";
 
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
-  const { email, login, avatar } = useAuth();
+
+  const { email, login, avatar, userId } = useAuth();
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
@@ -44,6 +47,15 @@ const PostsScreen = ({ navigation }) => {
     getPostsCollection(setPosts);
   };
 
+  const handleAddLike = (postId) => {
+    console.log('ADD LIKE');
+    addLike(postId, userId);
+  };
+
+  const handleRemoveLike = (postId) => {
+    removeLike(postId, userId);
+  };
+
   const renderItem = ({
     item: {
       photo,
@@ -51,8 +63,9 @@ const PostsScreen = ({ navigation }) => {
       comment,
       terrain,
       id,
-      idPostingUser,
-      commentCounter,
+      owner,
+      commentsCounter,
+      likes,
     },
   }) => {
     return (
@@ -68,13 +81,13 @@ const PostsScreen = ({ navigation }) => {
                 navigation.navigate("Comments", {
                   postId: id,
                   photoPost: photo,
-                  idPostingUser,
-                  commentCounter,
+                  owner,
+                  commentsCounter,
                 })
               }
               activeOpacity={0.7}
             >
-              {commentCounter > 0 ? (
+              {commentsCounter > 0 ? (
                 <FontAwesome name="comment" size={24} color="#FF6C00" />
               ) : (
                 <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
@@ -83,12 +96,52 @@ const PostsScreen = ({ navigation }) => {
             <Text
               style={{
                 ...styles.counter,
-                color: commentCounter > 0 ? "#212121" : "#BDBDBD",
+                color: commentsCounter > 0 ? "#212121" : "#BDBDBD",
               }}
             >
-              {commentCounter}
+              {commentsCounter}
             </Text>
           </View>
+
+          <View style={styles.wrapContent}>
+            {owner === userId && likes.length >= 0 && (
+              <AntDesign name="like2" size={24} color="#BDBDBD" />
+            )}
+
+            {owner !== userId && likes.length === 0 && (
+              <TouchableOpacity onPress={()=>handleAddLike(id)} activeOpacity={0.7}>
+                <AntDesign name="like2" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            )}
+
+            {likes.includes(userId) && owner !== userId && likes.length > 0 && (
+              <TouchableOpacity
+                onPress={()=>handleRemoveLike(id)}
+                activeOpacity={0.7}
+              >
+                <AntDesign name="like1" size={24} color="#FF6C00" />
+              </TouchableOpacity>
+            )}
+
+            {!(likes.includes(userId)) && owner !== userId && likes.length > 0 && (
+              <TouchableOpacity
+              onPress={()=>handleAddLike(id)}
+                activeOpacity={0.7}
+              >
+                <AntDesign name="like2" size={24} color="#FF6C00" />
+              </TouchableOpacity>
+            )} 
+
+            <Text
+              style={{
+                ...styles.counter,
+                color: likes.length > 0 ? "#212121" : "#BDBDBD",
+              }}
+            >
+              {likes.length}
+            </Text>
+          </View>
+
           <View style={styles.wrapContent}>
             <TouchableOpacity
               onPress={() => navigation.navigate("Map", { location })}

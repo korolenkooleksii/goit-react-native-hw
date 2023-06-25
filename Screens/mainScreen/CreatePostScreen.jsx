@@ -19,8 +19,7 @@ import {
 import { Camera, CameraType } from "expo-camera";
 
 // import icons
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
@@ -154,13 +153,15 @@ const CreatePostScreen = ({ navigation }) => {
     try {
       const docRef = await addDoc(collection(db, "posts"), {
         login,
-        idPostingUser: userId,
+        owner: userId,
         photo,
         comment,
         terrain,
         location,
         date: new Date().toString(),
-        commentCounter: 0,
+        commentsCounter: 0,
+        likes: [],
+
       });
     } catch (e) {
       console.error("Error adding document: ", e);
