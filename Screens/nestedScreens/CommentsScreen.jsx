@@ -11,24 +11,12 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   Keyboard,
-  ScrollView,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
-import { async } from "@firebase/util";
 import { useAuth } from "../../hooks/useAuth";
-
-import {
-  collection,
-  doc,
-  setDoc,
-  addDoc,
-  updateDoc,
-  add,
-  onSnapshot,
-  snapshot,
-} from "firebase/firestore";
-import { storage, db } from "../../firebase";
 
 import { currentDate } from "../../utils/currentDate";
 import { currentTime } from "../../utils/currentTime";
@@ -63,7 +51,6 @@ const CommentsScreen = ({ route }) => {
   }, []);
 
   const createComment = async () => {
-
     if (comment === "") return;
 
     if (owner !== userId) {
@@ -202,36 +189,38 @@ const CommentsScreen = ({ route }) => {
           </View>
         </View>
 
-        <View
-          style={{
-            marginBottom: 16,
-            backgroundColor: "#FFFFFF",
-          }}
-        >
+        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""}>
           <View
             style={{
-              position: "relative",
-              width: dimensions,
+              marginBottom: 16,
+              backgroundColor: "#FFFFFF",
             }}
           >
-            <TextInput
-              style={styles.comment}
-              placeholder="Коментувати..."
-              placeholderTextColor="#BDBDBD"
-              value={comment}
-              onChangeText={(value) => setComment(value)}
-            />
-
-            <View style={styles.send}>
-              <AntDesign
-                name="arrowup"
-                size={18}
-                color="#ffffff"
-                onPress={handlePress}
+            <View
+              style={{
+                position: "relative",
+                width: dimensions,
+              }}
+            >
+              <TextInput
+                style={styles.comment}
+                placeholder="Коментувати..."
+                placeholderTextColor="#BDBDBD"
+                value={comment}
+                onChangeText={(value) => setComment(value)}
               />
+
+              <View style={styles.send}>
+                <AntDesign
+                  name="arrowup"
+                  size={18}
+                  color="#ffffff"
+                  onPress={handlePress}
+                />
+              </View>
             </View>
           </View>
-        </View>
+        </KeyboardAvoidingView>
       </View>
     </TouchableWithoutFeedback>
   );
