@@ -7,8 +7,11 @@ export const addCommentInCollection = async ({
   comment,
   avatar,
 }) => {
+
+  const commentsRef = collection(db, "posts", postId, "comments")
+
   try {
-    const docRef = await addDoc(collection(db, "posts", postId, "comments"), {
+    await addDoc(commentsRef, {
       idCommentingUser: userId,
       comment,
       date: new Date().toString(),

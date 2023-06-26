@@ -44,9 +44,6 @@ const PostsScreen = ({ navigation }) => {
 
   useEffect(() => {
     getAllPosts();
-  }, []);
-
-  useEffect(() => {
     getAvatar(userId, setUserAvatar);
   }, []);
 
@@ -81,7 +78,7 @@ const PostsScreen = ({ navigation }) => {
         </View>
         <Text style={styles.comment}>{comment}</Text>
         <View style={styles.content}>
-          <View style={styles.wrapContent}>
+          <View style={styles.counterContent}>
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate("Comments", {
@@ -93,76 +90,80 @@ const PostsScreen = ({ navigation }) => {
               }
               activeOpacity={0.7}
             >
-              {commentsCounter > 0 ? (
-                <FontAwesome name="comment" size={24} color="#FF6C00" />
-              ) : (
-                <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
-              )}
+              <View style={styles.wrapContent}>
+                {commentsCounter > 0 ? (
+                  <FontAwesome name="comment" size={24} color="#FF6C00" />
+                ) : (
+                  <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
+                )}
+
+                <Text
+                  style={{
+                    ...styles.counter,
+                    color: commentsCounter > 0 ? "#212121" : "#BDBDBD",
+                  }}
+                >
+                  {commentsCounter}
+                </Text>
+              </View>
             </TouchableOpacity>
-            <Text
-              style={{
-                ...styles.counter,
-                color: commentsCounter > 0 ? "#212121" : "#BDBDBD",
-              }}
-            >
-              {commentsCounter}
-            </Text>
-          </View>
 
-          <View style={styles.wrapContent}>
-            {owner === userId && likes.length >= 0 && (
-              <AntDesign name="like2" size={24} color="#BDBDBD" />
-            )}
-
-            {owner !== userId && likes.length === 0 && (
-              <TouchableOpacity
-                onPress={() => handleAddLike(id)}
-                activeOpacity={0.7}
-              >
+            <View style={styles.wrapContent}>
+              {owner === userId && likes.length >= 0 && (
                 <AntDesign name="like2" size={24} color="#BDBDBD" />
-              </TouchableOpacity>
-            )}
+              )}
 
-            {likes.includes(userId) && owner !== userId && likes.length > 0 && (
-              <TouchableOpacity
-                onPress={() => handleRemoveLike(id)}
-                activeOpacity={0.7}
-              >
-                <AntDesign name="like1" size={24} color="#FF6C00" />
-              </TouchableOpacity>
-            )}
-
-            {!likes.includes(userId) &&
-              owner !== userId &&
-              likes.length > 0 && (
+              {owner !== userId && likes.length === 0 && (
                 <TouchableOpacity
                   onPress={() => handleAddLike(id)}
                   activeOpacity={0.7}
                 >
-                  <AntDesign name="like2" size={24} color="#FF6C00" />
+                  <AntDesign name="like2" size={24} color="#BDBDBD" />
                 </TouchableOpacity>
               )}
 
-            <Text
-              style={{
-                ...styles.counter,
-                color: likes.length > 0 ? "#212121" : "#BDBDBD",
-              }}
-            >
-              {likes.length}
-            </Text>
+              {likes.includes(userId) &&
+                owner !== userId &&
+                likes.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => handleRemoveLike(id)}
+                    activeOpacity={0.7}
+                  >
+                    <AntDesign name="like1" size={24} color="#FF6C00" />
+                  </TouchableOpacity>
+                )}
+
+              {!likes.includes(userId) &&
+                owner !== userId &&
+                likes.length > 0 && (
+                  <TouchableOpacity
+                    onPress={() => handleAddLike(id)}
+                    activeOpacity={0.7}
+                  >
+                    <AntDesign name="like2" size={24} color="#FF6C00" />
+                  </TouchableOpacity>
+                )}
+
+              <Text
+                style={{
+                  ...styles.counter,
+                  color: likes.length > 0 ? "#212121" : "#BDBDBD",
+                }}
+              >
+                {likes.length}
+              </Text>
+            </View>
           </View>
 
-          <View style={styles.wrapContent}>
-            <TouchableOpacity
-              onPress={() => navigation.navigate("Map", { location })}
-              activeOpacity={0.7}
-            >
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Map", { location })}
+            activeOpacity={0.7}
+          >
+            <View style={styles.wrapContent}>
               <Feather name="map-pin" size={24} color="#BDBDBD" />
-            </TouchableOpacity>
-
-            <Text style={styles.terrain}>{terrain}</Text>
-          </View>
+              <Text style={styles.terrain}>{terrain}</Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </View>
     );
@@ -253,8 +254,12 @@ const styles = StyleSheet.create({
     borderColor: "transparent",
   },
   content: {
+    justifyContent: "space-between",
     flexDirection: "row",
-    gap: 50,
+  },
+  counterContent: {
+    flexDirection: "row",
+    gap: 24
   },
   wrapContent: {
     flexDirection: "row",

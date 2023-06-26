@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { authSignUpUser } from "../../redux/auth/authOperations";
+import { authSignOutUser } from "../../redux/auth/authOperations";
 
 import {
   StyleSheet,
@@ -17,7 +17,9 @@ import {
   Image,
   Platform,
   Alert,
+  FlatList,
 } from "react-native";
+
 import { Add } from "../../components/Add/Add";
 import { Remove } from "../../components/Remove/Remove";
 import * as ImagePicker from "expo-image-picker";
@@ -25,25 +27,33 @@ import * as ImagePicker from "expo-image-picker";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "../../firebase";
 
-const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
-
-const initialState = {
-  login: "",
-  mail: "",
-  password: "",
-  avatar: "",
-};
-
 import { addAvatar, getAvatar, removeAvatar } from "../../utils/updateAvatar";
 
 import { useAuth } from "../../hooks/useAuth";
+import { getPostsCurrentUser } from "../../utils/getPostsCurrentUser";
 
-const ProfileScreen = () => {
+//icons import
+import {
+  FontAwesome5,
+  FontAwesome,
+  Feather,
+  AntDesign,
+} from "@expo/vector-icons";
+
+const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
+
+const ProfileScreen = ({ navigation }) => {
+  const [userAvatar, setUserAvatar] = useState(null);
+  const [selectAvatar, setSelectAvatar] = useState(null);
+  const [posts, setPosts] = useState([]);
+
   const { userId, login } = useAuth();
 
-  const [userAvatar, setUserAvatar] = useState(null);
-  const [isImage, setIsImage] = useState(false);
-  const [selectAvatar, setSelectAvatar] = useState(null);
+  const dispatch = useDispatch();
+
+  const signOut = () => {
+    dispatch(authSignOutUser());
+  };
 
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - 16 * 2
@@ -61,10 +71,7 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     getAvatar(userId, setUserAvatar);
-
-    if (userAvatar?.avatar) {
-      setIsImage(true);
-    }
+    getPostsCurrentUser(userId, setPosts);
   }, []);
 
   const uploadAvatarToServer = async () => {
@@ -89,15 +96,11 @@ const ProfileScreen = () => {
     const processedAvatar = await getDownloadURL(pathReference);
 
     addAvatar({ userId, avatar: processedAvatar });
-
-    setIsImage(true);
   };
 
   const pickImage = async () => {
-    if (isImage) {
+    if (userAvatar) {
       removeAvatar(userAvatar.id);
-      setIsImage(false);
-      setUserAvatar(null);
       return;
     }
 
@@ -113,6 +116,86 @@ const ProfileScreen = () => {
     }
 
     uploadAvatarToServer();
+  };
+
+  const renderItem = ({
+    item: {
+      photo,
+      location,
+      comment,
+      terrain,
+      id,
+      owner,
+      commentsCounter,
+      likes,
+    },
+  }) => {
+    return (
+      <View style={styles.list}>
+        <View style={{ ...styles.item, height: dimensions * 0.7 }}>
+          <Image style={styles.image} source={{ uri: photo }} />
+        </View>
+        <Text style={styles.comment}>{comment}</Text>
+        <View style={styles.content}>
+          <View style={styles.counterContent}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("Comments", {
+                  postId: id,
+                  photoPost: photo,
+                  owner,
+                  commentsCounter,
+                })
+              }
+              activeOpacity={0.7}
+            >
+              <View style={styles.wrapContent}>
+                {commentsCounter > 0 ? (
+                  <FontAwesome name="comment" size={24} color="#FF6C00" />
+                ) : (
+                  <FontAwesome5 name="comment" size={24} color="#BDBDBD" />
+                )}
+                <Text
+                  style={{
+                    ...styles.counter,
+                    color: commentsCounter > 0 ? "#212121" : "#BDBDBD",
+                  }}
+                >
+                  {commentsCounter}
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <View style={styles.wrapContent}>
+              {likes.length > 0 ? (
+                <AntDesign name="like2" size={24} color="#FF6C00" />
+              ) : (
+                <AntDesign name="like2" size={24} color="#BDBDBD" />
+              )}
+
+              <Text
+                style={{
+                  ...styles.counter,
+                  color: likes.length > 0 ? "#212121" : "#BDBDBD",
+                }}
+              >
+                {likes.length}
+              </Text>
+            </View>
+          </View>
+
+          <TouchableOpacity
+            onPress={() => navigation.navigate("Map", { location })}
+            activeOpacity={0.7}
+          >
+            <View style={styles.wrapContent}>
+              <Feather name="map-pin" size={24} color="#BDBDBD" />
+              <Text style={styles.terrain}>{terrain}</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
   };
 
   return (
@@ -145,25 +228,33 @@ const ProfileScreen = () => {
                 }}
               />
             </View>
-            {isImage ? (
+            {userAvatar?.avatar ? (
               <Remove style={styles.removePhotoBtn} />
             ) : (
               <Add style={styles.addPhotoBtn} />
             )}
           </TouchableOpacity>
 
+          <TouchableOpacity onPress={signOut} style={styles.btnSignOut}>
+            <Feather name="log-out" size={24} color="#BDBDBD" />
+          </TouchableOpacity>
+
           <View
             style={{
               width: dimensions,
               flex: 1,
-              borderWidth: 1,
-              borderColor: "blue",
+              // borderWidth: 1,
+              // borderColor: "blue",
             }}
           >
             <View style={styles.wrapperContent}>
               <Text style={styles.title}>{login}</Text>
               <View style={styles.listPosts}>
-                <Text>AAAAAAAAAA</Text>
+                <FlatList
+                  data={posts}
+                  keyExtractor={(item) => item.id}
+                  renderItem={renderItem}
+                />
               </View>
             </View>
           </View>
@@ -212,6 +303,14 @@ const styles = StyleSheet.create({
     width: 25,
     height: 25,
   },
+  btnSignOut: {
+    position: "absolute",
+    top: 0,
+    right: 0,
+    marginTop: 32,
+    marginRight: 16,
+    zIndex: 10,
+  },
   wrapperContent: {
     marginTop: 92,
     gap: 32,
@@ -224,7 +323,67 @@ const styles = StyleSheet.create({
     letterSpacing: 0.01,
     color: "#212121",
   },
-  listPosts: {},
+  listPosts: {
+    marginBottom: 130,
+    borderWidth: 1,
+    borderColor: "blue",
+  },
+
+  list: { marginBottom: 32, gap: 8 },
+  item: {
+    flex: 1,
+    marginBottom: 8,
+    borderRadius: 8,
+    overflow: "hidden",
+  },
+  login: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 13,
+    lineHeight: 15,
+  },
+  email: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 11,
+    lineHeight: 13,
+  },
+  photoUser: {
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+    borderWidth: 1,
+    overflow: "hidden",
+    borderColor: "transparent",
+  },
+  content: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+  },
+  counterContent: {
+    flexDirection: "row",
+    gap: 24,
+  },
+  wrapContent: {
+    flexDirection: "row",
+    gap: 6,
+    alignItems: "flex-end",
+  },
+  comment: {
+    fontFamily: "Roboto-Medium",
+    fontSize: 16,
+    lineHeight: 19,
+    color: "#212121",
+  },
+  terrain: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+    textDecorationLine: "underline",
+    color: "#212121",
+  },
+  counter: {
+    fontFamily: "Roboto-Regular",
+    fontSize: 16,
+    lineHeight: 19,
+  },
 });
 
 export default ProfileScreen;

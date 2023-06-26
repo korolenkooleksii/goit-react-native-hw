@@ -52,9 +52,6 @@ const CommentsScreen = ({ route }) => {
 
   useEffect(() => {
     getAllComments();
-  }, []);
-
-  useEffect(() => {
     getAvatar(userId, setUserAvatar);
   }, []);
 
@@ -65,7 +62,7 @@ const CommentsScreen = ({ route }) => {
       updateCommentsCounter(postId, commentsCounter);
     }
 
-    addCommentInCollection({postId, userId, comment, avatar: userAvatar.avatar});
+    addCommentInCollection({postId, userId, comment, avatar: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto});
   };
 
   const getAllComments = () => {

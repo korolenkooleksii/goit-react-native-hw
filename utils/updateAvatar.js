@@ -10,8 +10,10 @@ import {
 import { db } from "../firebase";
 
 const addAvatar = async ({ userId, avatar }) => {
+  const avatarsRef = collection(db, "avatars");
+
   try {
-    await addDoc(collection(db, "avatars"), {
+    await addDoc(avatarsRef, {
       userId,
       avatar,
     });
@@ -21,7 +23,8 @@ const addAvatar = async ({ userId, avatar }) => {
 };
 
 const getAvatar = async (userId, setUserAvatar) => {
-  const q = query(collection(db, "avatars"), where("userId", "==", userId));
+  const avatarsRef = collection(db, "avatars");
+  const q = query(avatarsRef, where("userId", "==", userId));
 
   await onSnapshot(q, (snapshot) => {
     snapshot.docs.map((doc) =>
@@ -34,13 +37,13 @@ const getAvatar = async (userId, setUserAvatar) => {
 };
 
 const removeAvatar = async (id) => {
+  const avatarRef = doc(db, "avatars", id);
+
   try {
-    await deleteDoc(doc(db, "avatars", id))
+    await deleteDoc(avatarRef);
   } catch (e) {
     console.error("Error remove document: ", e);
   }
 };
-
-// await deleteDoc(doc(db, "cities", "DC"));
 
 export { addAvatar, getAvatar, removeAvatar };
