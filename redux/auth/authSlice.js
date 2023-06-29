@@ -5,7 +5,6 @@ const initialState = {
   userId: null,
   email: null,
   stateChange: false,
-  avatar: null,
 };
 
 const authSlice = createSlice({
@@ -16,10 +15,6 @@ const authSlice = createSlice({
       state.login = payload.login;
       state.userId = payload.userId;
       state.email = payload.email;
-      state.avatar = payload.avatar;
-    },
-    addUserAvatar(state, {payload}){
-      state.avatar = payload.userAvatar;
     },
     authStateChange(state, { payload }) {
       state.stateChange = payload.stateChange;
@@ -28,7 +23,6 @@ const authSlice = createSlice({
       state.login = null;
       state.userId = null;
       state.email = null;
-      state.avatar = null;
       state.stateChange = false;
     },
   },
@@ -36,5 +30,8 @@ const authSlice = createSlice({
 
 export const authReducer = authSlice.reducer;
 
-export const { updateUserProfile, authStateChange, authSignOut, addUserAvatar } =
-  authSlice.actions;
+export const {
+  updateUserProfile,
+  authStateChange,
+  authSignOut,
+} = authSlice.actions;

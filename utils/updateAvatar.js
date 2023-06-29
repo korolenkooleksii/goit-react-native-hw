@@ -27,20 +27,21 @@ const getAvatar = async (userId, setUserAvatar) => {
   const q = query(avatarsRef, where("userId", "==", userId));
 
   await onSnapshot(q, (snapshot) => {
-    snapshot.docs.map((doc) =>
-      setUserAvatar({
+    setUserAvatar(
+      ...snapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
-      })
+      }))
     );
   });
 };
 
-const removeAvatar = async (id) => {
+const removeAvatar = async (id, setUserAvatar) => {
   const avatarRef = doc(db, "avatars", id);
 
   try {
     await deleteDoc(avatarRef);
+    setUserAvatar(null);
   } catch (e) {
     console.error("Error remove document: ", e);
   }

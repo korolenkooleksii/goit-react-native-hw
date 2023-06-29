@@ -19,17 +19,15 @@ const authSignUpUser =
 
       await updateProfile(auth.currentUser, {
         displayName: login,
-        photoURL: avatar,
       });
 
-      const { displayName, uid, email, photoURL } = await auth.currentUser;
+      const { displayName, uid, email } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
           login: displayName,
           userId: uid,
           email,
-          avatar: photoURL,
         })
       );
 
@@ -49,14 +47,13 @@ const authSignInUser =
     try {
       await signInWithEmailAndPassword(auth, mail, password);
 
-      const { displayName, uid, email, photoURL } = await auth.currentUser;
+      const { displayName, uid, email } = await auth.currentUser;
 
       dispatch(
         updateUserProfile({
           login: displayName,
           userId: uid,
           email,
-          avatar: photoURL,
         })
       );
     } catch (error) {
@@ -82,7 +79,6 @@ const authStateChangeUser = () => async (dispatch, getState) => {
           login: user.displayName,
           userId: user.uid,
           email: user.email,
-          avatar: user.photoURL,
         })
       );
 

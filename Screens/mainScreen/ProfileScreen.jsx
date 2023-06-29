@@ -40,7 +40,6 @@ const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const ProfileScreen = ({ navigation }) => {
   const [userAvatar, setUserAvatar] = useState(null);
-  const [selectAvatar, setSelectAvatar] = useState(null);
   const [posts, setPosts] = useState([]);
 
   const [dimensions, setDimensions] = useState(
@@ -74,7 +73,7 @@ const ProfileScreen = ({ navigation }) => {
     getPostsCurrentUser(userId, setPosts);
   }, []);
 
-  const uploadAvatarToServer = async () => {
+  const uploadAvatarToServer = async (selectAvatar) => {
     if (!selectAvatar) {
       console.log("НЕТ ФОТО");
       return;
@@ -100,7 +99,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const pickImage = async () => {
     if (userAvatar) {
-      removeAvatar(userAvatar.id);
+      removeAvatar(userAvatar.id, setUserAvatar);
       return;
     }
 
@@ -112,10 +111,10 @@ const ProfileScreen = ({ navigation }) => {
     });
 
     if (!result.canceled) {
-      setSelectAvatar(result.assets[0].uri);
+      uploadAvatarToServer(result.assets[0].uri);
     }
 
-    uploadAvatarToServer();
+    console.log("НЕТ ФОТО");
   };
 
   const renderItem = ({
