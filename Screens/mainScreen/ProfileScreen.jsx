@@ -113,7 +113,6 @@ const ProfileScreen = ({ navigation }) => {
     if (!result.canceled) {
       uploadAvatarToServer(result.assets[0].uri);
     }
-
     console.log("НЕТ ФОТО");
   };
 

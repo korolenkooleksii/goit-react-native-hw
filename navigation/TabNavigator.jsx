@@ -73,7 +73,7 @@ const TabNavigator = () => {
               activeOpacity={0.7}
               style={{ marginHorizontal: 16 }}
             >
-              <AntDesign name="arrowleft" size={24} color="#BDBDBD" />
+              <AntDesign name="arrowleft" size={24} color="rgba(33, 33, 33, 0.8)" />
             </TouchableOpacity>
           ),
           tabBarStyle: {
