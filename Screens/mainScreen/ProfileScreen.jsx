@@ -1,38 +1,34 @@
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-import { authSignOutUser } from "../../redux/auth/authOperations";
-
 import {
   StyleSheet,
   ImageBackground,
   View,
   TouchableOpacity,
   Text,
-  TextInput,
-  Keyboard,
-  TouchableWithoutFeedback,
   Dimensions,
-  KeyboardAvoidingView,
   Image,
-  Platform,
-  Alert,
   FlatList,
+  ScrollView,
 } from "react-native";
+
+import * as ImagePicker from "expo-image-picker";
 
 import { Add } from "../../components/Add/Add";
 import { Remove } from "../../components/Remove/Remove";
-import * as ImagePicker from "expo-image-picker";
 
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { authSignOutUser } from "../../redux/auth/authOperations";
+import { useAuth } from "../../hooks/useAuth";
+
 import { storage } from "../../firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { addAvatar, getAvatar, removeAvatar } from "../../utils/updateAvatar";
-
-import { useAuth } from "../../hooks/useAuth";
 import { getPostsCurrentUser } from "../../utils/getPostsCurrentUser";
 
-//icons import
+import { PADDING } from "../../constants/constants";
+
 import {
   FontAwesome5,
   FontAwesome,
@@ -47,6 +43,12 @@ const ProfileScreen = ({ navigation }) => {
   const [selectAvatar, setSelectAvatar] = useState(null);
   const [posts, setPosts] = useState([]);
 
+  const [dimensions, setDimensions] = useState(
+    Dimensions.get("window").width - PADDING
+  );
+  const [heightScreen, setHeightScreen] = useState(
+    Dimensions.get("window").height
+  );
   const { userId, login } = useAuth();
 
   const dispatch = useDispatch();
@@ -55,14 +57,12 @@ const ProfileScreen = ({ navigation }) => {
     dispatch(authSignOutUser());
   };
 
-  const [dimensions, setDimensions] = useState(
-    Dimensions.get("window").width - 16 * 2
-  );
-
   useEffect(() => {
     const onChange = () => {
-      const deviceWidth = Dimensions.get("window").width - 16 * 2;
+      const deviceWidth = Dimensions.get("window").width - PADDING;
+      const height = Dimensions.get("window").height;
       setDimensions(deviceWidth);
+      setHeightScreen(height);
     };
 
     const dimensionsHandler = Dimensions.addEventListener("change", onChange);
@@ -201,83 +201,83 @@ const ProfileScreen = ({ navigation }) => {
   return (
     <View style={{ flex: 1 }}>
       <ImageBackground
-        style={styles.image}
+        style={styles.imageBg}
         source={require("../../assets/images/photo_bg.jpg")}
       >
-        <View style={styles.background}>
-          <TouchableOpacity
-            style={styles.addPhoto}
-            activeOpacity={0.9}
-            onPress={pickImage}
-          >
+        <ScrollView>
+          <View style={{ ...styles.background, minHeight: heightScreen }}>
+            <TouchableOpacity
+              style={styles.addPhoto}
+              activeOpacity={0.9}
+              onPress={pickImage}
+            >
+              <View style={styles.wrapImage}>
+                <Image
+                  source={{
+                    uri: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto,
+                  }}
+                  style={styles.image}
+                />
+              </View>
+              {userAvatar?.avatar ? (
+                <Remove style={styles.removePhotoBtn} />
+              ) : (
+                <Add style={styles.addPhotoBtn} />
+              )}
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={signOut} style={styles.btnSignOut}>
+              <Feather name="log-out" size={24} color="#BDBDBD" />
+            </TouchableOpacity>
+
             <View
               style={{
-                overflow: "hidden",
-                borderRadius: 16,
-                backgroundColor: "#F6F6F6",
+                width: dimensions,
               }}
             >
-              <Image
-                source={{
-                  uri: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto,
-                }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  resizeMode: "cover",
-                }}
-              />
-            </View>
-            {userAvatar?.avatar ? (
-              <Remove style={styles.removePhotoBtn} />
-            ) : (
-              <Add style={styles.addPhotoBtn} />
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={signOut} style={styles.btnSignOut}>
-            <Feather name="log-out" size={24} color="#BDBDBD" />
-          </TouchableOpacity>
-
-          <View
-            style={{
-              width: dimensions,
-              flex: 1,
-              // borderWidth: 1,
-              // borderColor: "blue",
-            }}
-          >
-            <View style={styles.wrapperContent}>
-              <Text style={styles.title}>{login}</Text>
-              <View style={styles.listPosts}>
-                <FlatList
-                  data={posts}
-                  keyExtractor={(item) => item.id}
-                  renderItem={renderItem}
-                />
+              <View style={styles.wrapperContent}>
+                <Text style={styles.title}>{login}</Text>
+                <View>
+                  <FlatList
+                    nestedScrollEnabled={true}
+                    scrollEnabled={false}
+                    data={posts}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                  />
+                </View>
               </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </ImageBackground>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  image: {
+  imageBg: {
     flex: 1,
     resizeMode: "cover",
-    justifyContent: "flex-end",
   },
   background: {
+    flex: 1,
     position: "relative",
     alignItems: "center",
-    justifyContent: "flex-end",
-    backgroundColor: "#FFFFFF",
-    height: 580,
+    marginTop: 103,
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
+    backgroundColor: "#FFFFFF",
+  },
+  wrapImage: {
+    overflow: "hidden",
+    borderRadius: 16,
+    backgroundColor: "#F6F6F6",
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    resizeMode: "cover",
   },
   addPhoto: {
     position: "absolute",
@@ -312,7 +312,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   wrapperContent: {
-    marginTop: 92,
+    marginTop: 80,
     gap: 32,
   },
   title: {
@@ -323,12 +323,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.01,
     color: "#212121",
   },
-  listPosts: {
-    marginBottom: 130,
-    borderWidth: 1,
-    borderColor: "blue",
-  },
-
   list: { marginBottom: 32, gap: 8 },
   item: {
     flex: 1,

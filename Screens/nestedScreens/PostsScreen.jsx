@@ -7,19 +7,23 @@ import {
   Image,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from "react-native";
+
+import { useAuth } from "../../hooks/useAuth";
+
+import { PADDING } from "../../constants/constants";
+
+import { getPostsCollection } from "../../utils/getPostsCollection";
+import { getAvatar } from "../../utils/updateAvatar";
+import { addLike, removeLike } from "../../utils/updateLike";
+
 import {
   FontAwesome5,
   FontAwesome,
   Feather,
   AntDesign,
 } from "@expo/vector-icons";
-import { useAuth } from "../../hooks/useAuth";
-
-import { getPostsCollection } from "../../utils/getPostsCollection";
-import { addLike, removeLike } from "../../utils/updateLike";
-
-import { getAvatar } from "../../utils/updateAvatar";
 
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
@@ -27,15 +31,15 @@ const PostsScreen = ({ navigation }) => {
   const [posts, setPosts] = useState([]);
   const [userAvatar, setUserAvatar] = useState(null);
 
-  const { email, login, userId } = useAuth();
-
   const [dimensions, setDimensions] = useState(
-    Dimensions.get("window").width - 16 * 2
+    Dimensions.get("window").width - PADDING
   );
+
+  const { email, login, userId } = useAuth();
 
   useEffect(() => {
     const onChange = () => {
-      const deviceWidth = Dimensions.get("window").width - 16 * 2;
+      const deviceWidth = Dimensions.get("window").width - PADDING;
       setDimensions(deviceWidth);
     };
     const dimensionsHandler = Dimensions.addEventListener("change", onChange);
@@ -171,39 +175,43 @@ const PostsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.background}>
-      <View
-        style={{
-          width: dimensions,
-          paddingBottom: 120,
-        }}
-      >
-        <View style={styles.avatarWrap}>
-          <View
-            style={{
-              ...styles.photoUser,
-              width: dimensions * 0.18,
-              height: dimensions * 0.18,
-            }}
-          >
-            <Image
-              source={{
-                uri: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto,
+      <ScrollView>
+        <View
+          style={{
+            width: dimensions,
+            // paddingBottom: 120,
+          }}
+        >
+          <View style={styles.avatarWrap}>
+            <View
+              style={{
+                ...styles.photoUser,
+                width: dimensions * 0.18,
+                height: dimensions * 0.18,
               }}
-              style={styles.image}
-            />
+            >
+              <Image
+                source={{
+                  uri: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto,
+                }}
+                style={styles.image}
+              />
+            </View>
+            <View>
+              <Text style={styles.login}>{login}</Text>
+              <Text style={styles.email}>{email}</Text>
+            </View>
           </View>
-          <View>
-            <Text style={styles.login}>{login}</Text>
-            <Text style={styles.email}>{email}</Text>
-          </View>
-        </View>
 
-        <FlatList
-          data={posts}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-        />
-      </View>
+          <FlatList
+            nestedScrollEnabled={true}
+            scrollEnabled={false}
+            data={posts}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -259,7 +267,7 @@ const styles = StyleSheet.create({
   },
   counterContent: {
     flexDirection: "row",
-    gap: 24
+    gap: 24,
   },
   wrapContent: {
     flexDirection: "row",
