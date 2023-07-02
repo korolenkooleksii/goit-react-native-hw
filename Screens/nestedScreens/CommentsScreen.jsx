@@ -180,7 +180,7 @@ const CommentsScreen = ({ route }) => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.background}>
-        {/* <ScrollView> */}
+  
           <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : ""}
           >
@@ -193,11 +193,7 @@ const CommentsScreen = ({ route }) => {
                 borderWidth: 1,
               }}
             >
-              <View style={{
-                // flex: 1, 
-                // justifyContent: 'space-between',
-                // height: heightScreen - 100,
-                }}>
+            
 
                 <View
                   style={{
@@ -218,7 +214,7 @@ const CommentsScreen = ({ route }) => {
                     renderItem={renderItem}
                   />
                 </ScrollView>
-              </View>
+         
 
               <View
                 style={{
@@ -258,8 +254,8 @@ const CommentsScreen = ({ route }) => {
                 </View>
               </View>
             </View>
+        
           </KeyboardAvoidingView>
-        {/* </ScrollView> */}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -275,9 +271,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    // justifyContent: "flex-start",
-    // marginVertical: 32,
-    gap: 32,
   },
 
   photoWrap: {
