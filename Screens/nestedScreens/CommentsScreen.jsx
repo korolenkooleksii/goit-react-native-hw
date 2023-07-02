@@ -12,7 +12,8 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
-  Platform
+  Platform,
+  ScrollView,
 } from "react-native";
 
 import { AntDesign } from "@expo/vector-icons";
@@ -26,6 +27,8 @@ import { getCommentsCollection } from "../../utils/getCommentsCollection";
 
 import { getAvatar } from "../../utils/updateAvatar";
 
+import { PADDING } from "../../constants/constants";
+
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const CommentsScreen = ({ route }) => {
@@ -36,16 +39,22 @@ const CommentsScreen = ({ route }) => {
   const [comment, setComment] = useState("");
   const [allComments, setAllComments] = useState([]);
   const [dimensions, setDimensions] = useState(
-    Dimensions.get("window").width - 16 * 2
+    Dimensions.get("window").width - PADDING
+  );
+  const [heightScreen, setHeightScreen] = useState(
+    Dimensions.get("window").height
   );
 
   const { userId } = useAuth();
 
   useEffect(() => {
     const onChange = () => {
-      const deviceWidth = Dimensions.get("window").width - 16 * 2;
+      const deviceWidth = Dimensions.get("window").width - PADDING;
+      const height = Dimensions.get("window").height;
       setDimensions(deviceWidth);
+      setHeightScreen(height);
     };
+
     const dimensionsHandler = Dimensions.addEventListener("change", onChange);
     return () => dimensionsHandler.remove();
   }, []);
@@ -62,7 +71,12 @@ const CommentsScreen = ({ route }) => {
       updateCommentsCounter(postId, commentsCounter);
     }
 
-    addCommentInCollection({postId, userId, comment, avatar: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto});
+    addCommentInCollection({
+      postId,
+      userId,
+      comment,
+      avatar: userAvatar?.avatar ? userAvatar.avatar : defaultPhoto,
+    });
   };
 
   const getAllComments = () => {
@@ -166,66 +180,86 @@ const CommentsScreen = ({ route }) => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.background}>
-        <View
-          style={{
-            ...styles.container,
-            width: dimensions,
-
-            borderColor: "red",
-            borderWidth: 1,
-          }}
-        >
-          <View
-            style={{
-              ...styles.photoWrap,
-              width: dimensions,
-              height: dimensions * 0.7,
-            }}
-          >
-            <Image style={styles.image} source={{ uri: photoPost }} />
-          </View>
-
-          <View>
-            <FlatList
-              data={allComments}
-              keyExtractor={(item) => item.id}
-              renderItem={renderItem}
-            />
-          </View>
-        </View>
-
-        <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : ""}>
-          <View
-            style={{
-              marginBottom: 16,
-              backgroundColor: "#FFFFFF",
-            }}
+        {/* <ScrollView> */}
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : ""}
           >
             <View
               style={{
-                position: "relative",
+                ...styles.container,
                 width: dimensions,
+
+                borderColor: "red",
+                borderWidth: 1,
               }}
             >
-              <TextInput
-                style={styles.comment}
-                placeholder="Коментувати..."
-                placeholderTextColor="#BDBDBD"
-                value={comment}
-                onChangeText={(value) => setComment(value)}
-              />
+              <View style={{
+                // flex: 1, 
+                // justifyContent: 'space-between',
+                // height: heightScreen - 100,
+                }}>
 
-              <View style={styles.send}>
-                <AntDesign
-                  name="arrowup"
-                  size={18}
-                  color="#ffffff"
-                  onPress={handlePress}
-                />
+                <View
+                  style={{
+                    ...styles.photoWrap,
+                    width: dimensions,
+                    height: dimensions * 0.7,
+                  }}
+                >
+                  <Image style={styles.image} source={{ uri: photoPost }} />
+                </View>
+
+                <ScrollView>
+                  <FlatList
+                    nestedScrollEnabled={true}
+                    scrollEnabled={false}
+                    data={allComments}
+                    keyExtractor={(item) => item.id}
+                    renderItem={renderItem}
+                  />
+                </ScrollView>
+              </View>
+
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  paddingVertical: 16,
+                  // marginBottom: 16,
+                  backgroundColor: "#FFFFFF",
+
+                  borderWidth: 1,
+                  borderColor: "blue",
+                }}
+              >
+                <View
+                  style={{
+                    position: "relative",
+                    width: dimensions,
+                  }}
+                >
+                  <TextInput
+                    style={styles.comment}
+                    placeholder="Коментувати..."
+                    placeholderTextColor="#BDBDBD"
+                    value={comment}
+                    onChangeText={(value) => setComment(value)}
+                  />
+
+                  <View style={styles.send}>
+                    <AntDesign
+                      name="arrowup"
+                      size={18}
+                      color="#ffffff"
+                      onPress={handlePress}
+                    />
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-        </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        {/* </ScrollView> */}
       </View>
     </TouchableWithoutFeedback>
   );
@@ -241,14 +275,15 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    justifyContent: "flex-start",
-    marginVertical: 32,
+    // justifyContent: "flex-start",
+    // marginVertical: 32,
     gap: 32,
   },
 
   photoWrap: {
     overflow: "hidden",
     borderRadius: 8,
+    marginVertical: 32,
   },
   image: {
     height: "100%",
