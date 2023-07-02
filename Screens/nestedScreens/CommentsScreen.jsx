@@ -220,29 +220,34 @@ const CommentsScreen = ({ route }) => {
               borderColor: "blue",
             }}
           >
-            <View
-              style={{
-                position: "relative",
-                width: dimensions,
-              }}
+            <KeyboardAwareScrollView
+           
             >
-              <TextInput
-                style={styles.comment}
-                placeholder="Коментувати..."
-                placeholderTextColor="#BDBDBD"
-                value={comment}
-                onChangeText={(value) => setComment(value)}
-              />
-
-              <View style={styles.send}>
-                <AntDesign
-                  name="arrowup"
-                  size={18}
-                  color="#ffffff"
-                  onPress={handlePress}
+              <View
+                style={{
+                  position: "relative",
+                  width: dimensions,
+                }}
+              >
+                <TextInput
+                  style={styles.comment}
+                  placeholder="Коментувати..."
+                  placeholderTextColor="#BDBDBD"
+                  value={comment}
+                  onChangeText={(value) => setComment(value)}
+                  
                 />
+
+                <View style={styles.send}>
+                  <AntDesign
+                    name="arrowup"
+                    size={18}
+                    color="#ffffff"
+                    onPress={handlePress}
+                  />
+                </View>
               </View>
-            </View>
+            </KeyboardAwareScrollView>
           </View>
         </View>
       </View>
