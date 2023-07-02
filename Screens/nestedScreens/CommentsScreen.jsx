@@ -29,6 +29,8 @@ import { getAvatar } from "../../utils/updateAvatar";
 
 import { PADDING } from "../../constants/constants";
 
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const CommentsScreen = ({ route }) => {
@@ -180,82 +182,69 @@ const CommentsScreen = ({ route }) => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.background}>
-  
-          <KeyboardAvoidingView
-            behavior={Platform.OS === "ios" ? "padding" : ""}
+        <View
+          style={{
+            ...styles.container,
+            width: dimensions,
+
+            borderColor: "red",
+            borderWidth: 1,
+          }}
+        >
+          <View
+            style={{
+              ...styles.photoWrap,
+              width: dimensions,
+              height: dimensions * 0.7,
+            }}
+          >
+            <Image style={styles.image} source={{ uri: photoPost }} />
+          </View>
+
+          <ScrollView>
+            <FlatList
+              nestedScrollEnabled={true}
+              scrollEnabled={false}
+              data={allComments}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+            />
+          </ScrollView>
+
+          <View
+            style={{
+              paddingVertical: 16,
+              backgroundColor: "#FFFFFF",
+
+              borderWidth: 1,
+              borderColor: "blue",
+            }}
           >
             <View
               style={{
-                ...styles.container,
+                position: "relative",
                 width: dimensions,
-
-                borderColor: "red",
-                borderWidth: 1,
               }}
             >
-            
+              <TextInput
+                style={styles.comment}
+                placeholder="Коментувати..."
+                placeholderTextColor="#BDBDBD"
+                value={comment}
+                onChangeText={(value) => setComment(value)}
+              />
 
-                <View
-                  style={{
-                    ...styles.photoWrap,
-                    width: dimensions,
-                    height: dimensions * 0.7,
-                  }}
-                >
-                  <Image style={styles.image} source={{ uri: photoPost }} />
-                </View>
-
-                <ScrollView>
-                  <FlatList
-                    nestedScrollEnabled={true}
-                    scrollEnabled={false}
-                    data={allComments}
-                    keyExtractor={(item) => item.id}
-                    renderItem={renderItem}
-                  />
-                </ScrollView>
-         
-
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  paddingVertical: 16,
-                  // marginBottom: 16,
-                  backgroundColor: "#FFFFFF",
-
-                  borderWidth: 1,
-                  borderColor: "blue",
-                }}
-              >
-                <View
-                  style={{
-                    position: "relative",
-                    width: dimensions,
-                  }}
-                >
-                  <TextInput
-                    style={styles.comment}
-                    placeholder="Коментувати..."
-                    placeholderTextColor="#BDBDBD"
-                    value={comment}
-                    onChangeText={(value) => setComment(value)}
-                  />
-
-                  <View style={styles.send}>
-                    <AntDesign
-                      name="arrowup"
-                      size={18}
-                      color="#ffffff"
-                      onPress={handlePress}
-                    />
-                  </View>
-                </View>
+              <View style={styles.send}>
+                <AntDesign
+                  name="arrowup"
+                  size={18}
+                  color="#ffffff"
+                  onPress={handlePress}
+                />
               </View>
             </View>
-        
-          </KeyboardAvoidingView>
+          </View>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -310,8 +299,8 @@ const styles = StyleSheet.create({
 
   comment: {
     padding: 16,
-    borderWidth: 1,
     borderRadius: 100,
+    borderWidth: 1,
 
     // borderColor: "#E8E8E8",
     borderColor: "blue",
