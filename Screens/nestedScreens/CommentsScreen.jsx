@@ -180,17 +180,18 @@ const CommentsScreen = ({ route }) => {
   };
 
   return (
-    // <TouchableWithoutFeedback onPress={keyboardHide}>
-      <View style={styles.background}>
-        <View
-          style={{
-            ...styles.container,
-            width: dimensions,
+    <View style={styles.background}>
+      <KeyboardAwareScrollView>
 
-            borderColor: "red",
-            borderWidth: 1,
-          }}
-        >
+      
+      <View
+        style={{
+          ...styles.container,
+          width: dimensions,
+
+        }}
+      >
+        <View >
           <View
             style={{
               ...styles.photoWrap,
@@ -201,55 +202,54 @@ const CommentsScreen = ({ route }) => {
             <Image style={styles.image} source={{ uri: photoPost }} />
           </View>
 
-          <ScrollView>
+          {/* <ScrollView> */}
+         
             <FlatList
               nestedScrollEnabled={true}
               scrollEnabled={false}
               data={allComments}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
+              
             />
-          </ScrollView>
+          {/* </ScrollView> */}
+        </View>
 
-          <View
-            style={{
-              paddingVertical: 16,
-              backgroundColor: "#FFFFFF",
+        <View
+          style={{
+            paddingVertical: 16,
+            backgroundColor: "#FFFFFF",
 
-              borderWidth: 1,
-              borderColor: "blue",
-            }}
-          >
-            <KeyboardAwareScrollView>
-              <View
-                style={{
-                  flex: 1,
-                  // position: "relative",
-                  width: dimensions,
-                }}
-              >
-                <TextInput
-                  style={styles.comment}
-                  placeholder="Коментувати..."
-                  placeholderTextColor="#BDBDBD"
-                  value={comment}
-                  onChangeText={(value) => setComment(value)}
-                />
+            borderWidth: 1,
+            borderColor: "blue",
 
-                <View style={styles.send}>
-                  <AntDesign
-                    name="arrowup"
-                    size={18}
-                    color="#ffffff"
-                    onPress={handlePress}
-                  />
-                </View>
-              </View>
-            </KeyboardAwareScrollView>
+            position: "absolute",
+            bottom: 0,
+            width: dimensions
+          }}
+        >
+          <TextInput
+            style={styles.comment}
+            placeholder="Коментувати..."
+            placeholderTextColor="#BDBDBD"
+            value={comment}
+            onChangeText={(value) => setComment(value)}
+          />
+
+          <View style={styles.send}>
+            <AntDesign
+              name="arrowup"
+              size={18}
+              color="#ffffff"
+              onPress={handlePress}
+            />
           </View>
         </View>
+
       </View>
-    //  </TouchableWithoutFeedback> 
+
+      </KeyboardAwareScrollView>
+    </View>
   );
 };
 
@@ -263,6 +263,12 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+
+    // flexDirection: "column",
+    justifyContent: "space-between",
+    
+    borderColor: "red",
+    borderWidth: 1,
   },
 
   photoWrap: {
