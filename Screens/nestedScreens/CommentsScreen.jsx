@@ -39,6 +39,7 @@ const CommentsScreen = ({ route }) => {
   const [userAvatar, setUserAvatar] = useState(null);
 
   const [comment, setComment] = useState("");
+
   const [allComments, setAllComments] = useState([]);
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - PADDING
@@ -91,7 +92,7 @@ const CommentsScreen = ({ route }) => {
 
   const handlePress = () => {
     createComment();
-    Keyboard.dismiss();
+    // Keyboard.dismiss();
     setComment("");
   };
 
@@ -223,9 +224,9 @@ const CommentsScreen = ({ route }) => {
             borderWidth: 1,
             borderColor: "blue",
 
-            position: "absolute",
-            bottom: 0,
-            width: dimensions
+            position: 'relative',
+            // bottom: 0,
+            // width: dimensions
           }}
         >
           <TextInput
