@@ -115,6 +115,8 @@ const CommentsScreen = ({ route }) => {
                   ...styles.commentWrap,
                   flexGrow: 1,
                   borderTopLeftRadius: 6,
+
+                  maxWidth: dimensions - 44,
                 }}
               >
                 <Text style={styles.text}>{comment}</Text>
@@ -183,72 +185,66 @@ const CommentsScreen = ({ route }) => {
   return (
     <View style={styles.background}>
       <KeyboardAwareScrollView>
+        <View
+          style={{
+            ...styles.container,
+            width: dimensions,
+          }}
+        >
+          <View>
+            <View
+              style={{
+                ...styles.photoWrap,
+                width: dimensions,
+                height: dimensions * 0.7,
+              }}
+            >
+              <Image style={styles.image} source={{ uri: photoPost }} />
+            </View>
 
-      
-      <View
-        style={{
-          ...styles.container,
-          width: dimensions,
+            {/* <ScrollView> */}
 
-        }}
-      >
-        <View >
-          <View
-            style={{
-              ...styles.photoWrap,
-              width: dimensions,
-              height: dimensions * 0.7,
-            }}
-          >
-            <Image style={styles.image} source={{ uri: photoPost }} />
-          </View>
-
-          {/* <ScrollView> */}
-         
             <FlatList
               nestedScrollEnabled={true}
               scrollEnabled={false}
               data={allComments}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
-              
             />
-          {/* </ScrollView> */}
-        </View>
+            {/* </ScrollView> */}
+          </View>
 
-        <View
-          style={{
-            paddingVertical: 16,
-            backgroundColor: "#FFFFFF",
+          <View
+            style={{
+              paddingVertical: 16,
+              backgroundColor: "#FFFFFF",
 
-            borderWidth: 1,
-            borderColor: "blue",
+              borderWidth: 1,
+              borderColor: "blue",
 
-            position: 'relative',
-            // bottom: 0,
-            // width: dimensions
-          }}
-        >
-          <TextInput
-            style={styles.comment}
-            placeholder="Коментувати..."
-            placeholderTextColor="#BDBDBD"
-            value={comment}
-            onChangeText={(value) => setComment(value)}
-          />
-
-          <View style={styles.send}>
-            <AntDesign
-              name="arrowup"
-              size={18}
-              color="#ffffff"
-              onPress={handlePress}
+              position: "relative",
+              // bottom: 0,
+              // width: dimensions
+            }}
+          >
+            <TextInput
+              style={styles.comment}
+              placeholder="Коментувати..."
+              placeholderTextColor="#BDBDBD"
+              value={comment}
+              onChangeText={(value) => setComment(value)}
             />
+
+            <View style={styles.send}>
+              <AntDesign
+                name="arrowup"
+                size={18}
+                color="#ffffff"
+                onPress={handlePress}
+              />
+            </View>
           </View>
         </View>
-
-      </View>
-
       </KeyboardAwareScrollView>
     </View>
   );
@@ -265,9 +261,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
 
-    // flexDirection: "column",
-    justifyContent: "space-between",
-    
+    // justifyContent: "space-between",
+
     borderColor: "red",
     borderWidth: 1,
   },
@@ -324,7 +319,7 @@ const styles = StyleSheet.create({
   send: {
     position: "absolute",
     right: 8,
-    bottom: 15,
+    bottom: 30,
     width: 34,
     height: 34,
     alignItems: "center",
