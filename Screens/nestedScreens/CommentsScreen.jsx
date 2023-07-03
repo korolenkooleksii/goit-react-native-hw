@@ -180,7 +180,7 @@ const CommentsScreen = ({ route }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={keyboardHide}>
+    // <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.background}>
         <View
           style={{
@@ -220,12 +220,11 @@ const CommentsScreen = ({ route }) => {
               borderColor: "blue",
             }}
           >
-            <KeyboardAwareScrollView
-           
-            >
+            <KeyboardAwareScrollView>
               <View
                 style={{
-                  position: "relative",
+                  flex: 1,
+                  // position: "relative",
                   width: dimensions,
                 }}
               >
@@ -235,7 +234,6 @@ const CommentsScreen = ({ route }) => {
                   placeholderTextColor="#BDBDBD"
                   value={comment}
                   onChangeText={(value) => setComment(value)}
-                  
                 />
 
                 <View style={styles.send}>
@@ -251,7 +249,7 @@ const CommentsScreen = ({ route }) => {
           </View>
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    //  </TouchableWithoutFeedback> 
   );
 };
 
