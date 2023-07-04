@@ -161,7 +161,6 @@ const CreatePostScreen = ({ navigation }) => {
         date: new Date().toString(),
         commentsCounter: 0,
         likes: [],
-
       });
     } catch (e) {
       console.error("Error adding document: ", e);
@@ -188,19 +187,24 @@ const CreatePostScreen = ({ navigation }) => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => keyboardHide}>
-      <View style={styles.background}>
-        <View style={{ ...styles.container, width: dimensions }}>
-          <KeyboardAvoidingView
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : null}
+      keyboardVerticalOffset={50}
+      style={{ flex: 1 }}
+    >
+      <TouchableWithoutFeedback onPress={keyboardHide}>
+        <View style={styles.background}>
+          <View style={{ ...styles.container, width: dimensions }}>
+            {/* <KeyboardAvoidingView
             behavior={Platform.OS === "ios" ? "padding" : ""}
             // style={{ flex: 1 }}
-          >
+          > */}
             <View
               style={{
                 gap: 32,
                 // justifyContent: "flex-start",
                 // marginBottom: dimensions * 0.38,
-                marginBottom: isShowKeyboard ? -90 : dimensions * 0.38,
+                // marginBottom: isShowKeyboard ? -90 : dimensions * 0.38,
 
                 borderColor: "green",
                 borderWidth: 1,
@@ -349,10 +353,11 @@ const CreatePostScreen = ({ navigation }) => {
                 />
               </View>
             )}
-          </KeyboardAvoidingView>
+            {/* </KeyboardAvoidingView> */}
+          </View>
         </View>
-      </View>
-    </TouchableWithoutFeedback>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -367,9 +372,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     marginTop: 32,
-    // justifyContent: "space-between",
+    justifyContent: "space-between",
     // justifyContent: 'space-around',
-    justifyContent: "flex-end",
+    // justifyContent: "flex-end",
 
     borderColor: "red",
     borderWidth: 1,
