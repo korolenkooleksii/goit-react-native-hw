@@ -15,6 +15,7 @@ import {
   KeyboardAvoidingView,
   Alert,
   Platform,
+  ScrollView
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 
@@ -187,6 +188,10 @@ const CreatePostScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.background}>
+      <ScrollView>
+
+      
+
         <View
           style={{
             ...styles.container,
@@ -216,9 +221,7 @@ const CreatePostScreen = ({ navigation }) => {
                       onPress={takePhoto}
                       style={{
                         ...styles.snapContainer,
-                        backgroundColor: photo
-                          ? "rgba(255, 255, 255, 0.3)"
-                          : "#FFFFFF",
+                        backgroundColor: photo ? "transparent" : "#FFFFFF",
                       }}
                     >
                       <Image
@@ -226,7 +229,7 @@ const CreatePostScreen = ({ navigation }) => {
                         style={{
                           width: 24,
                           height: 24,
-                          tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                          tintColor: photo ? "transparent" : "#BDBDBD",
                         }}
                       />
                     </TouchableOpacity>
@@ -234,9 +237,7 @@ const CreatePostScreen = ({ navigation }) => {
                       onPress={toggleCameraType}
                       style={{
                         ...styles.flipBtn,
-                        backgroundColor: photo
-                          ? "rgba(255, 255, 255, 0.3)"
-                          : "#FFFFFF",
+                        backgroundColor: photo ? "transparent" : "#FFFFFF",
                       }}
                     >
                       <Image
@@ -244,7 +245,7 @@ const CreatePostScreen = ({ navigation }) => {
                         style={{
                           width: 15,
                           height: 15,
-                          tintColor: photo ? "#FFFFFF" : "#BDBDBD",
+                          tintColor: photo ? "transparent" : "#BDBDBD",
                         }}
                       />
                     </TouchableOpacity>
@@ -328,7 +329,21 @@ const CreatePostScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {!isShowKeyboard && (
+          {/* {!isShowKeyboard && (
+            <View style={styles.remove}>
+              <AntDesign
+                name="delete"
+                size={24}
+                color="#BDBDBD"
+                onPress={reset}
+              />
+            </View>
+          )} */}
+        </View>
+
+        </ScrollView>
+
+        {!isShowKeyboard && (
             <View style={styles.remove}>
               <AntDesign
                 name="delete"
@@ -338,7 +353,8 @@ const CreatePostScreen = ({ navigation }) => {
               />
             </View>
           )}
-        </View>
+
+
       </View>
     </TouchableWithoutFeedback>
   );
@@ -427,6 +443,8 @@ const styles = StyleSheet.create({
   },
 
   remove: {
+    position: 'absolute',
+    bottom: 0,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
