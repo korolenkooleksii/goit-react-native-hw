@@ -15,7 +15,7 @@ import {
   KeyboardAvoidingView,
   Alert,
   Platform,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { Camera, CameraType } from "expo-camera";
 
@@ -45,11 +45,14 @@ const CreatePostScreen = ({ navigation }) => {
   const [type, setType] = useState(CameraType.back);
   const [permission, requestPermission] = Camera.useCameraPermissions();
 
-  const { login, userId } = useAuth();
-
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - PADDING
   );
+  const [heightScreen, setHeightScreen] = useState(
+    Dimensions.get("window").height
+  );
+
+  const { login, userId } = useAuth();
 
   useEffect(() => {
     (async () => {
@@ -71,8 +74,11 @@ const CreatePostScreen = ({ navigation }) => {
   useEffect(() => {
     const onChange = () => {
       const deviceWidth = Dimensions.get("window").width - PADDING;
+      const height = Dimensions.get("window").height;
       setDimensions(deviceWidth);
+      setHeightScreen(height);
     };
+
     const dimensionsHandler = Dimensions.addEventListener("change", onChange);
     return () => dimensionsHandler.remove();
   }, []);
@@ -188,173 +194,157 @@ const CreatePostScreen = ({ navigation }) => {
   return (
     <TouchableWithoutFeedback onPress={keyboardHide}>
       <View style={styles.background}>
-      <ScrollView>
+        <ScrollView>
+          <View
+            style={{
+              ...styles.container,
+              width: dimensions,
+              marginTop: isShowKeyboard ? 10 : 32,
+              height: heightScreen - 70,
+            }}
+          >
+            <View style={{ gap: 32 }}>
+              <View style={{ gap: 8 }}>
+                <View
+                  style={{
+                    ...styles.cameraContainer,
+                    height: dimensions * 0.7,
+                  }}
+                >
+                  {pickPhoto ? (
+                    <Image source={{ uri: pickPhoto }} style={styles.image} />
+                  ) : (
+                    <Camera style={styles.camera} ref={setCamera} type={type}>
+                      {photo && (
+                        <View style={styles.takePhotoContainer}>
+                          <Image source={{ uri: photo }} style={styles.image} />
+                        </View>
+                      )}
 
-      
-
-        <View
-          style={{
-            ...styles.container,
-            width: dimensions,
-            marginTop: isShowKeyboard ? 10 : 32,
-          }}
-        >
-          <View style={{ gap: 32 }}>
-            <View style={{ gap: 8 }}>
-              <View
-                style={{
-                  ...styles.cameraContainer,
-                  height: dimensions * 0.7,
-                }}
-              >
-                {pickPhoto ? (
-                  <Image source={{ uri: pickPhoto }} style={styles.image} />
-                ) : (
-                  <Camera style={styles.camera} ref={setCamera} type={type}>
-                    {photo && (
-                      <View style={styles.takePhotoContainer}>
-                        <Image source={{ uri: photo }} style={styles.image} />
-                      </View>
-                    )}
-
-                    <TouchableOpacity
-                      onPress={takePhoto}
-                      style={{
-                        ...styles.snapContainer,
-                        backgroundColor: photo ? "transparent" : "#FFFFFF",
-                      }}
-                    >
-                      <Image
-                        source={require("../../assets/images/camera.png")}
+                      <TouchableOpacity
+                        onPress={takePhoto}
                         style={{
-                          width: 24,
-                          height: 24,
-                          tintColor: photo ? "transparent" : "#BDBDBD",
+                          ...styles.snapContainer,
+                          backgroundColor: photo ? "transparent" : "#FFFFFF",
                         }}
-                      />
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={toggleCameraType}
-                      style={{
-                        ...styles.flipBtn,
-                        backgroundColor: photo ? "transparent" : "#FFFFFF",
-                      }}
-                    >
-                      <Image
-                        source={require("../../assets/images/flip.png")}
+                      >
+                        <Image
+                          source={require("../../assets/images/camera.png")}
+                          style={{
+                            width: 24,
+                            height: 24,
+                            tintColor: photo ? "transparent" : "#BDBDBD",
+                          }}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={toggleCameraType}
                         style={{
-                          width: 15,
-                          height: 15,
-                          tintColor: photo ? "transparent" : "#BDBDBD",
+                          ...styles.flipBtn,
+                          backgroundColor: photo ? "transparent" : "#FFFFFF",
                         }}
-                      />
-                    </TouchableOpacity>
-                  </Camera>
-                )}
-              </View>
+                      >
+                        <Image
+                          source={require("../../assets/images/flip.png")}
+                          style={{
+                            width: 15,
+                            height: 15,
+                            tintColor: photo ? "transparent" : "#BDBDBD",
+                          }}
+                        />
+                      </TouchableOpacity>
+                    </Camera>
+                  )}
+                </View>
 
-              <View style={{ alignSelf: "flex-start" }}>
-                {!photo && !pickPhoto ? (
-                  <Text
-                    style={{ ...styles.input, color: "#BDBDBD" }}
-                    onPress={pickImage}
-                  >
-                    {" "}
-                    Завантажити фото
-                  </Text>
-                ) : (
-                  <TouchableOpacity onPress={() => deletePhoto()}>
-                    <Text style={{ ...styles.input, color: "#BDBDBD" }}>
-                      Редагувати фото
+                <View style={{ alignSelf: "flex-start" }}>
+                  {!photo && !pickPhoto ? (
+                    <Text
+                      style={{ ...styles.input, color: "#BDBDBD" }}
+                      onPress={pickImage}
+                    >
+                      {" "}
+                      Завантажити фото
                     </Text>
-                  </TouchableOpacity>
-                )}
+                  ) : (
+                    <TouchableOpacity onPress={() => deletePhoto()}>
+                      <Text style={{ ...styles.input, color: "#BDBDBD" }}>
+                        Редагувати фото
+                      </Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
               </View>
-            </View>
 
-            <View style={{ gap: 16 }}>
-              <View style={styles.wrapInput}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Назва..."
-                  placeholderTextColor="#BDBDBD"
-                  value={comment}
-                  onChangeText={(value) => setComment(value)}
-                  onFocus={() => handleFocus()}
-                  onEndEditing={handleEndEditing}
+              <View style={{ gap: 16 }}>
+                <View style={styles.wrapInput}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Назва..."
+                    placeholderTextColor="#BDBDBD"
+                    value={comment}
+                    onChangeText={(value) => setComment(value)}
+                    onFocus={() => handleFocus()}
+                    onEndEditing={handleEndEditing}
+                  />
+                </View>
+
+                <View style={styles.wrapInput}>
+                  <TextInput
+                    style={{ ...styles.input, paddingLeft: 30 }}
+                    placeholder="Місцевість..."
+                    placeholderTextColor="#BDBDBD"
+                    value={terrain}
+                    onChangeText={(value) => setTerrain(value)}
+                    onFocus={() => handleFocus()}
+                    onEndEditing={handleEndEditing}
+                  />
+                </View>
+
+                <Feather
+                  name="map-pin"
+                  size={24}
+                  color="#BDBDBD"
+                  style={styles.mapPin}
                 />
               </View>
 
-              <View style={styles.wrapInput}>
-                <TextInput
-                  style={{ ...styles.input, paddingLeft: 30 }}
-                  placeholder="Місцевість..."
-                  placeholderTextColor="#BDBDBD"
-                  value={terrain}
-                  onChangeText={(value) => setTerrain(value)}
-                  onFocus={() => handleFocus()}
-                  onEndEditing={handleEndEditing}
-                />
-              </View>
-
-              <Feather
-                name="map-pin"
-                size={24}
-                color="#BDBDBD"
-                style={styles.mapPin}
-              />
-            </View>
-
-            <TouchableOpacity
-              style={{
-                ...styles.btn,
-                backgroundColor:
-                  (photo || pickPhoto) && comment && terrain
-                    ? "#FF6C00"
-                    : "#F6F6F6",
-              }}
-              disabled={!photo && !comment}
-              activeOpacity={0.7}
-              onPress={() => navigation.navigate("Posts")}
-            >
-              <Text
+              <TouchableOpacity
                 style={{
-                  ...styles.input,
-                  color: photo && comment ? "#FFFFFF" : "#E8E8E8",
+                  ...styles.btn,
+                  backgroundColor:
+                    (photo || pickPhoto) && comment && terrain
+                      ? "#FF6C00"
+                      : "#F6F6F6",
                 }}
-                onPress={sendPhoto}
+                disabled={!photo && !comment}
+                activeOpacity={0.7}
+                onPress={() => navigation.navigate("Posts")}
               >
-                Опублікувати
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    ...styles.input,
+                    color: photo && comment ? "#FFFFFF" : "#E8E8E8",
+                  }}
+                  onPress={sendPhoto}
+                >
+                  Опублікувати
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {!isShowKeyboard && (
+              <View style={styles.remove}>
+                <AntDesign
+                  name="delete"
+                  size={24}
+                  color="#BDBDBD"
+                  onPress={reset}
+                />
+              </View>
+            )}
           </View>
-
-          {/* {!isShowKeyboard && (
-            <View style={styles.remove}>
-              <AntDesign
-                name="delete"
-                size={24}
-                color="#BDBDBD"
-                onPress={reset}
-              />
-            </View>
-          )} */}
-        </View>
-
         </ScrollView>
-
-        {!isShowKeyboard && (
-            <View style={styles.remove}>
-              <AntDesign
-                name="delete"
-                size={24}
-                color="#BDBDBD"
-                onPress={reset}
-              />
-            </View>
-          )}
-
-
       </View>
     </TouchableWithoutFeedback>
   );
@@ -369,8 +359,11 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
   },
   container: {
-    flex: 1,
+    // flex: 1,
     justifyContent: "space-between",
+
+    borderColor: "red",
+    borderWidth: 1,
   },
 
   image: {
@@ -443,8 +436,6 @@ const styles = StyleSheet.create({
   },
 
   remove: {
-    position: 'absolute',
-    bottom: 0,
     justifyContent: "center",
     alignItems: "center",
     alignSelf: "center",
