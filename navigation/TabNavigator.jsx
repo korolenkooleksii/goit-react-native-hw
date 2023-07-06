@@ -11,6 +11,8 @@ import ProfileScreen from "../screens/mainScreen/ProfileScreen";
 //icons import
 import { Feather, AntDesign } from "@expo/vector-icons";
 
+import { Ionicons } from "react-native-vector-icons";
+
 const MainTab = createBottomTabNavigator();
 
 const TabNavigator = () => {
@@ -21,10 +23,44 @@ const TabNavigator = () => {
   };
   return (
     <MainTab.Navigator
-      screenOptions={{
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          if (route.name === "Posts") {
+            return focused ? (
+              <View style={styles.createBtn}>
+                <Feather name="grid" size={size} color={color} />
+              </View>
+            ) : (
+              <Feather name="grid" size={size} color={color} />
+            );
+          } else if (route.name === "Create Post") {
+            return focused ? (
+              <View style={styles.createBtn}>
+                <Feather name="plus" size={20} color={color} />
+              </View>
+            ) : (
+              <Feather name="plus" size={20} color={color} />
+            );
+          } else if (route.name === "Profile") {
+            return focused ? (
+              <View style={{ ...styles.createBtn }}>
+                <Feather name="user" size={size} color={color} />
+              </View>
+            ) : (
+              <Feather name="user" size={size} color={color} />
+            );
+          }
+        },
+        tabBarActiveTintColor: "#FFFFFF",
+        tabBarInactiveTintColor: "rgba(33, 33, 33, 0.8)",
+
         tabBarShowLabel: false,
         tabBarStyle: {
+          position: "absolute",
+          bottom: 0,
           height: 80,
+          flex: 1,
+          flexDirection: "row",
         },
         headerStyle: {
           height: 88,
@@ -37,16 +73,12 @@ const TabNavigator = () => {
           color: "#212121",
         },
         headerTitleAlign: "center",
-      }}
+      })}
     >
-
       <MainTab.Screen
         name="Posts"
         component={PostsScreen}
         options={() => ({
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="grid" size={24} color="rgba(33, 33, 33, 0.8)" />
-          ),
           headerRight: ({ focused, size, color }) => (
             <TouchableOpacity
               onPress={signOut}
@@ -62,18 +94,17 @@ const TabNavigator = () => {
         name="Create Post"
         component={CreatePostScreen}
         options={({ navigation }) => ({
-          tabBarIcon: ({ focused, size, color }) => (
-            <View style={styles.createBtn}>
-              <Feather name="plus" size={20} color="#FFFFFF" />
-            </View>
-          ),
           headerLeft: () => (
             <TouchableOpacity
               onPress={() => navigation.navigate("Posts")}
               activeOpacity={0.7}
               style={{ marginHorizontal: 16 }}
             >
-              <AntDesign name="arrowleft" size={24} color="rgba(33, 33, 33, 0.8)" />
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color="rgba(33, 33, 33, 0.8)"
+              />
             </TouchableOpacity>
           ),
           tabBarStyle: {
@@ -81,15 +112,7 @@ const TabNavigator = () => {
           },
         })}
       />
-      <MainTab.Screen
-        name="Profile"
-        component={ProfileScreen}
-        options={{
-          tabBarIcon: ({ focused, size, color }) => (
-            <Feather name="user" size={24} color="rgba(33, 33, 33, 0.8)" />
-          ),
-        }}
-      />
+      <MainTab.Screen name="Profile" component={ProfileScreen} />
     </MainTab.Navigator>
   );
 };
