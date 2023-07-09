@@ -34,13 +34,7 @@ const TabNavigator = () => {
               <Feather name="grid" size={size} color={color} />
             );
           } else if (route.name === "Create Post") {
-            return focused ? (
-              <View style={styles.createBtn}>
-                <Feather name="plus" size={20} color={color} />
-              </View>
-            ) : (
-              <Feather name="plus" size={20} color={color} />
-            );
+            return <Feather name="plus" size={20} color={color} />;
           } else if (route.name === "Profile") {
             return focused ? (
               <View style={{ ...styles.createBtn }}>
@@ -56,11 +50,7 @@ const TabNavigator = () => {
 
         tabBarShowLabel: false,
         tabBarStyle: {
-          position: "absolute",
-          bottom: 0,
           height: 80,
-          flex: 1,
-          flexDirection: "row",
         },
         headerStyle: {
           height: 88,

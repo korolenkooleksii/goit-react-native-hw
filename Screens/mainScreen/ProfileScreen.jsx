@@ -235,7 +235,7 @@ const ProfileScreen = ({ navigation }) => {
             >
               <View style={styles.wrapperContent}>
                 <Text style={styles.title}>{login}</Text>
-                <View style={{marginBottom: 60}}>
+                <View >
                   <FlatList
                     nestedScrollEnabled={true}
                     scrollEnabled={false}

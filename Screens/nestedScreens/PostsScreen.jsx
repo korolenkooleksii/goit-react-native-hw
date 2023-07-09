@@ -209,7 +209,6 @@ const PostsScreen = ({ navigation }) => {
             data={posts}
             keyExtractor={(item) => item.id}
             renderItem={renderItem}
-            style={{marginBottom: 60}}
           />
         </View>
       </ScrollView>
