@@ -184,7 +184,7 @@ const CommentsScreen = ({ route }) => {
 
   return (
     <View style={styles.background}>
-      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''}>
+      {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''}> */}
         <KeyboardAwareScrollView>
           <View
             style={{
@@ -213,9 +213,9 @@ const CommentsScreen = ({ route }) => {
               />
             </View>
           </View>
-        </KeyboardAwareScrollView>
 
-        <View
+
+          <View
           style={{
             paddingVertical: 16,
             backgroundColor: "#FFFFFF",
@@ -241,7 +241,11 @@ const CommentsScreen = ({ route }) => {
             />
           </View>
         </View>
-      </KeyboardAvoidingView>
+
+        </KeyboardAwareScrollView>
+
+        
+      {/* </KeyboardAvoidingView> */}
     </View>
   );
 };
@@ -307,7 +311,7 @@ const styles = StyleSheet.create({
   send: {
     position: "absolute",
     right: 8,
-    bottom: 30,
+    top: "50%",
     width: 34,
     height: 34,
     alignItems: "center",
