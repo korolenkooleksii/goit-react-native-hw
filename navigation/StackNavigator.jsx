@@ -46,29 +46,37 @@ const StackNavigator = () => {
         options={({ navigation }) => ({
           headerLeft: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("Posts")}
+              onPress={() => navigation.goBack()}
               activeOpacity={0.7}
               style={{ marginHorizontal: 16 }}
             >
-              <AntDesign name="arrowleft" size={24} color="rgba(33, 33, 33, 0.8)" />
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color="rgba(33, 33, 33, 0.8)"
+              />
             </TouchableOpacity>
           ),
         })}
       />
-      <NestedScreen.Screen 
-      name="Comments" 
-      component={CommentsScreen}
-      options={({ navigation }) => ({
-        headerLeft: () => (
-          <TouchableOpacity
-            onPress={() => navigation.navigate("Posts")}
-            activeOpacity={0.7}
-            style={{ marginHorizontal: 16 }}
-          >
-            <AntDesign name="arrowleft" size={24} color="rgba(33, 33, 33, 0.8)" />
-          </TouchableOpacity>
-        ),
-      })}
+      <NestedScreen.Screen
+        name="Comments"
+        component={CommentsScreen}
+        options={({ navigation }) => ({
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              activeOpacity={0.7}
+              style={{ marginHorizontal: 16 }}
+            >
+              <AntDesign
+                name="arrowleft"
+                size={24}
+                color="rgba(33, 33, 33, 0.8)"
+              />
+            </TouchableOpacity>
+          ),
+        })}
       />
     </NestedScreen.Navigator>
   );

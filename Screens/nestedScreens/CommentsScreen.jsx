@@ -192,6 +192,7 @@ const CommentsScreen = ({ route }) => {
           }}
         >
           <View>
+
             <View
               style={{
                 ...styles.photoWrap,
@@ -202,50 +203,45 @@ const CommentsScreen = ({ route }) => {
               <Image style={styles.image} source={{ uri: photoPost }} />
             </View>
 
-            {/* <ScrollView> */}
-
             <FlatList
               nestedScrollEnabled={true}
               scrollEnabled={false}
               data={allComments}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
-            />
-            {/* </ScrollView> */}
-          </View>
-
-          <View
-            style={{
-              paddingVertical: 16,
-              backgroundColor: "#FFFFFF",
-
-              borderWidth: 1,
-              borderColor: "blue",
-
-              position: "relative",
-              // bottom: 0,
-              // width: dimensions
-            }}
-          >
-            <TextInput
-              style={styles.comment}
-              placeholder="Коментувати..."
-              placeholderTextColor="#BDBDBD"
-              value={comment}
-              onChangeText={(value) => setComment(value)}
+              style={{marginBottom: 60}}
             />
 
-            <View style={styles.send}>
-              <AntDesign
-                name="arrowup"
-                size={18}
-                color="#ffffff"
-                onPress={handlePress}
-              />
-            </View>
           </View>
         </View>
       </KeyboardAwareScrollView>
+
+      <View
+        style={{
+          paddingVertical: 16,
+          backgroundColor: "#FFFFFF",
+          position: "absolute",
+          bottom: 0,
+          width: dimensions,
+        }}
+      >
+        <TextInput
+          style={styles.comment}
+          placeholder="Коментувати..."
+          placeholderTextColor="#BDBDBD"
+          value={comment}
+          onChangeText={(value) => setComment(value)}
+        />
+
+        <View style={styles.send}>
+          <AntDesign
+            name="arrowup"
+            size={18}
+            color="#ffffff"
+            onPress={handlePress}
+          />
+        </View>
+      </View>
     </View>
   );
 };
@@ -260,11 +256,6 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-
-    // justifyContent: "space-between",
-
-    borderColor: "red",
-    borderWidth: 1,
   },
 
   photoWrap: {
@@ -306,10 +297,7 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 100,
     borderWidth: 1,
-
-    // borderColor: "#E8E8E8",
-    borderColor: "blue",
-
+    borderColor: "#E8E8E8",
     backgroundColor: "#F6F6F6",
     color: "#212121",
     fontFamily: "Roboto-Regular",
