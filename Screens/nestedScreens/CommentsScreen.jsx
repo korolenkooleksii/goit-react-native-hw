@@ -44,18 +44,14 @@ const CommentsScreen = ({ route }) => {
   const [dimensions, setDimensions] = useState(
     Dimensions.get("window").width - PADDING
   );
-  const [heightScreen, setHeightScreen] = useState(
-    Dimensions.get("window").height
-  );
 
   const { userId } = useAuth();
 
   useEffect(() => {
     const onChange = () => {
       const deviceWidth = Dimensions.get("window").width - PADDING;
-      const height = Dimensions.get("window").height;
+
       setDimensions(deviceWidth);
-      setHeightScreen(height);
     };
 
     const dimensionsHandler = Dimensions.addEventListener("change", onChange);
@@ -198,7 +194,7 @@ const CommentsScreen = ({ route }) => {
               data={allComments}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
-              style={{ marginBottom: 60 }}
+              style={{ marginBottom: 75 }}
             />
           </View>
         </View>
@@ -247,6 +243,9 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+
+    borderColor: "blue",
+    borderWidth: 1,
   },
 
   photoWrap: {
