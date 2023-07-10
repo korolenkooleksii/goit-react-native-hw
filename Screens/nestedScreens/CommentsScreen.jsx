@@ -184,38 +184,36 @@ const CommentsScreen = ({ route }) => {
 
   return (
     <View style={styles.background}>
-      {/* <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''}> */}
-        <KeyboardAwareScrollView>
-          <View
-            style={{
-              ...styles.container,
-              width: dimensions,
-            }}
-          >
-            <View>
-              <View
-                style={{
-                  ...styles.photoWrap,
-                  width: dimensions,
-                  height: dimensions * 0.7,
-                }}
-              >
-                <Image style={styles.image} source={{ uri: photoPost }} />
-              </View>
-
-              <FlatList
-                nestedScrollEnabled={true}
-                scrollEnabled={false}
-                data={allComments}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
-                style={{ marginBottom: 60 }}
-              />
+      <KeyboardAwareScrollView>
+        <View
+          style={{
+            ...styles.container,
+            width: dimensions,
+          }}
+        >
+          <View>
+            <View
+              style={{
+                ...styles.photoWrap,
+                width: dimensions,
+                height: dimensions * 0.7,
+              }}
+            >
+              <Image style={styles.image} source={{ uri: photoPost }} />
             </View>
+
+            <FlatList
+              nestedScrollEnabled={true}
+              scrollEnabled={false}
+              data={allComments}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+              style={{ marginBottom: 60 }}
+            />
           </View>
+        </View>
 
-
-          <View
+        <View
           style={{
             paddingVertical: 16,
             backgroundColor: "#FFFFFF",
@@ -241,11 +239,7 @@ const CommentsScreen = ({ route }) => {
             />
           </View>
         </View>
-
-        </KeyboardAwareScrollView>
-
-        
-      {/* </KeyboardAvoidingView> */}
+      </KeyboardAwareScrollView>
     </View>
   );
 };
