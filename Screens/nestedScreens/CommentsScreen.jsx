@@ -213,7 +213,10 @@ const CommentsScreen = ({ route }) => {
           </View>
         </View>
 
-        <View
+        
+      </KeyboardAwareScrollView>
+
+      <View
           style={{
             paddingVertical: 16,
             backgroundColor: "#FFFFFF",
@@ -239,7 +242,8 @@ const CommentsScreen = ({ route }) => {
             />
           </View>
         </View>
-      </KeyboardAwareScrollView>
+
+
     </View>
   );
 };
@@ -251,6 +255,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopColor: "#BDBDBD",
     borderTopWidth: 1,
+
+    borderColor: "red",
+    borderWidth: 1,
   },
   container: {
     flex: 1,
