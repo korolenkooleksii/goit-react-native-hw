@@ -86,13 +86,8 @@ const CommentsScreen = ({ route }) => {
     getCommentsCollection(postId, setAllComments);
   };
 
-  const keyboardHide = () => {
-    Keyboard.dismiss();
-  };
-
   const handlePress = () => {
     createComment();
-    // Keyboard.dismiss();
     setComment("");
   };
 
@@ -115,7 +110,6 @@ const CommentsScreen = ({ route }) => {
                   ...styles.commentWrap,
                   flexGrow: 1,
                   borderTopLeftRadius: 6,
-
                   maxWidth: dimensions - 44,
                 }}
               >
@@ -130,8 +124,6 @@ const CommentsScreen = ({ route }) => {
                   width: 28,
                   height: 28,
                   borderRadius: 50,
-                  // backgroundColor: "#F6F6F6",
-                  // borderWidth: 1,
                   overflow: "hidden",
                   borderColor: "transparent",
                 }}
@@ -149,8 +141,6 @@ const CommentsScreen = ({ route }) => {
                   width: 28,
                   height: 28,
                   borderRadius: 50,
-                  // backgroundColor: "#F6F6F6",
-                  // borderWidth: 1,
                   overflow: "hidden",
                   borderColor: "transparent",
                 }}
@@ -213,10 +203,7 @@ const CommentsScreen = ({ route }) => {
           </View>
         </View>
 
-        
-      </KeyboardAwareScrollView>
-
-      <View
+        <View
           style={{
             paddingVertical: 16,
             backgroundColor: "#FFFFFF",
@@ -242,8 +229,7 @@ const CommentsScreen = ({ route }) => {
             />
           </View>
         </View>
-
-
+      </KeyboardAwareScrollView>
     </View>
   );
 };
