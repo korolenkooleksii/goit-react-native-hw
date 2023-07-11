@@ -51,8 +51,8 @@ const TabNavigator = () => {
         tabBarShowLabel: false,
         tabBarStyle: {
           height: 80,
-          alignItems: "center",
-          justifyContent: "center"
+          paddingVertical: 10,
+
         },
         headerStyle: {
           height: 88,
