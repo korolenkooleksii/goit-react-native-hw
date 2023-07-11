@@ -169,8 +169,6 @@ const CommentsScreen = ({ route }) => {
     );
   };
 
-  console.log(Platform.OS);
-
   return (
     <View style={styles.background}>
 
@@ -179,12 +177,10 @@ const CommentsScreen = ({ route }) => {
           style={{
             paddingVertical: 16,
             backgroundColor: "#FFFFFF",
-            // position: "relative",
-            // bottom: 0,
+            position: "absolute",
+            bottom: 0,
             width: dimensions,
-            // zIndex: 10,
-
-            // flex: 1
+            zIndex: 10,
           }}
         >
           <TextInput
@@ -230,7 +226,7 @@ const CommentsScreen = ({ route }) => {
               data={allComments}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
-              // style={{ marginBottom: 75 }}
+              style={{ marginBottom: 75 }}
             />
           </View>
         </View>
@@ -247,17 +243,12 @@ const styles = StyleSheet.create({
     borderTopColor: "#BDBDBD",
     borderTopWidth: 1,
 
-    borderColor: "red",
-    borderWidth: 1,
-
-    flexDirection: "column-reverse",
-    // justifyContent: "space-between",
+    backgroundColor: "#f0d2ac"
   },
   container: {
     flex: 1,
 
-    borderColor: "blue",
-    borderWidth: 1,
+    backgroundColor: "#aff19f"
   },
   photoWrap: {
     overflow: "hidden",
