@@ -171,33 +171,39 @@ const CommentsScreen = ({ route }) => {
   return (
     <View style={styles.background}>
 
-      <View
-        style={{
-          paddingVertical: 16,
-          backgroundColor: "#FFFFFF",
-          position: "absolute",
-          bottom: 0,
-          width: dimensions,
-          zIndex: 10
-        }}
+      <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "bottom" : ""}
       >
-        <TextInput
-          style={styles.comment}
-          placeholder="Коментувати..."
-          placeholderTextColor="#BDBDBD"
-          value={comment}
-          onChangeText={(value) => setComment(value)}
-        />
+        <View
+          style={{
+            paddingVertical: 16,
+            backgroundColor: "#FFFFFF",
+            // position: "relative",
+            // bottom: 0,
+            width: dimensions,
+            // zIndex: 10,
 
-        <View style={styles.send}>
-          <AntDesign
-            name="arrowup"
-            size={18}
-            color="#ffffff"
-            onPress={handlePress}
+            // flex: 1
+          }}
+        >
+          <TextInput
+            style={styles.comment}
+            placeholder="Коментувати..."
+            placeholderTextColor="#BDBDBD"
+            value={comment}
+            onChangeText={(value) => setComment(value)}
           />
+
+          <View style={styles.send}>
+            <AntDesign
+              name="arrowup"
+              size={18}
+              color="#ffffff"
+              onPress={handlePress}
+            />
+          </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
 
       <KeyboardAwareScrollView>
         <View
@@ -243,8 +249,8 @@ const styles = StyleSheet.create({
     borderColor: "red",
     borderWidth: 1,
 
-    flexDirection: "column",
-    justifyContent: "space-between",
+    flexDirection: "column-reverse",
+    // justifyContent: "space-between",
   },
   container: {
     flex: 1,
