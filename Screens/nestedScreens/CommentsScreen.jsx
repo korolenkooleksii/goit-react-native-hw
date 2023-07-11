@@ -170,6 +170,35 @@ const CommentsScreen = ({ route }) => {
 
   return (
     <View style={styles.background}>
+
+      <View
+        style={{
+          paddingVertical: 16,
+          backgroundColor: "#FFFFFF",
+          position: "absolute",
+          bottom: 0,
+          width: dimensions,
+          zIndex: 10
+        }}
+      >
+        <TextInput
+          style={styles.comment}
+          placeholder="Коментувати..."
+          placeholderTextColor="#BDBDBD"
+          value={comment}
+          onChangeText={(value) => setComment(value)}
+        />
+
+        <View style={styles.send}>
+          <AntDesign
+            name="arrowup"
+            size={18}
+            color="#ffffff"
+            onPress={handlePress}
+          />
+        </View>
+      </View>
+
       <KeyboardAwareScrollView>
         <View
           style={{
@@ -194,34 +223,7 @@ const CommentsScreen = ({ route }) => {
               data={allComments}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
-              style={{ marginBottom: 75 }}
-            />
-          </View>
-        </View>
-
-        <View
-          style={{
-            paddingVertical: 16,
-            backgroundColor: "#FFFFFF",
-            position: "absolute",
-            bottom: 0,
-            width: dimensions,
-          }}
-        >
-          <TextInput
-            style={styles.comment}
-            placeholder="Коментувати..."
-            placeholderTextColor="#BDBDBD"
-            value={comment}
-            onChangeText={(value) => setComment(value)}
-          />
-
-          <View style={styles.send}>
-            <AntDesign
-              name="arrowup"
-              size={18}
-              color="#ffffff"
-              onPress={handlePress}
+              // style={{ marginBottom: 75 }}
             />
           </View>
         </View>
@@ -240,6 +242,9 @@ const styles = StyleSheet.create({
 
     borderColor: "red",
     borderWidth: 1,
+
+    flexDirection: "column",
+    justifyContent: "space-between",
   },
   container: {
     flex: 1,
