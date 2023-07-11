@@ -152,6 +152,7 @@ const CommentsScreen = ({ route }) => {
                   ...styles.commentWrap,
                   flexGrow: 1,
                   borderTopRightRadius: 6,
+                  maxWidth: dimensions - 44,
                 }}
               >
                 <Text style={styles.text}>{comment}</Text>
@@ -173,9 +174,7 @@ const CommentsScreen = ({ route }) => {
   return (
     <View style={styles.background}>
 
-      <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "padding" : ""}
-      >
+     
         <View
           style={{
             paddingVertical: 16,
@@ -205,7 +204,7 @@ const CommentsScreen = ({ route }) => {
             />
           </View>
         </View>
-      </KeyboardAvoidingView>
+    
 
       <KeyboardAwareScrollView>
         <View
@@ -260,7 +259,6 @@ const styles = StyleSheet.create({
     borderColor: "blue",
     borderWidth: 1,
   },
-
   photoWrap: {
     overflow: "hidden",
     borderRadius: 8,
@@ -271,11 +269,9 @@ const styles = StyleSheet.create({
     width: "100%",
     resizeMode: "cover",
   },
-
   item: {
     marginBottom: 24,
   },
-
   commentWrap: {
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderBottomLeftRadius: 6,
@@ -295,9 +291,9 @@ const styles = StyleSheet.create({
     lineHeight: 12,
     color: "#BDBDBD",
   },
-
   comment: {
     padding: 16,
+    paddingRight: 50,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: "#E8E8E8",
