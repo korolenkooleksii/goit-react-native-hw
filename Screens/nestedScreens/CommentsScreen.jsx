@@ -168,11 +168,13 @@ const CommentsScreen = ({ route }) => {
     );
   };
 
+  console.log(Platform.OS);
+
   return (
     <View style={styles.background}>
 
       <KeyboardAvoidingView 
-      behavior={Platform.OS === "ios" ? "bottom" : ""}
+      behavior={Platform.OS === "ios" ? "padding" : ""}
       >
         <View
           style={{
