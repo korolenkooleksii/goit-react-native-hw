@@ -171,38 +171,35 @@ const CommentsScreen = ({ route }) => {
 
   return (
     <View style={styles.background}>
+      {/* <View
+        style={{
+          paddingVertical: 16,
+          backgroundColor: "#FFFFFF",
+          position: "absolute",
+          bottom: 0,
+          width: dimensions,
+          zIndex: 10,
+        }}
+      >
+        <TextInput
+          style={styles.comment}
+          placeholder="Коментувати..."
+          placeholderTextColor="#BDBDBD"
+          value={comment}
+          onChangeText={(value) => setComment(value)}
+        />
 
-     
-        <View
-          style={{
-            paddingVertical: 16,
-            backgroundColor: "#FFFFFF",
-            position: "absolute",
-            bottom: 0,
-            width: dimensions,
-            zIndex: 10,
-          }}
-        >
-          <TextInput
-            style={styles.comment}
-            placeholder="Коментувати..."
-            placeholderTextColor="#BDBDBD"
-            value={comment}
-            onChangeText={(value) => setComment(value)}
+        <View style={styles.send}>
+          <AntDesign
+            name="arrowup"
+            size={18}
+            color="#ffffff"
+            onPress={handlePress}
           />
-
-          <View style={styles.send}>
-            <AntDesign
-              name="arrowup"
-              size={18}
-              color="#ffffff"
-              onPress={handlePress}
-            />
-          </View>
         </View>
-    
+      </View> */}
 
-      <KeyboardAwareScrollView>
+      <ScrollView>
         <View
           style={{
             ...styles.container,
@@ -230,7 +227,39 @@ const CommentsScreen = ({ route }) => {
             />
           </View>
         </View>
-      </KeyboardAwareScrollView>
+      </ScrollView>
+
+      <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}>
+        <View
+          style={{
+            paddingVertical: 16,
+            backgroundColor: "#FFFFFF",
+            position: 'absolute',
+            bottom: 0,
+            right: "-46%",
+            // left: "-50%",
+            width: dimensions,
+            zIndex: 10,
+          }}
+        >
+          <TextInput
+            style={styles.comment}
+            placeholder="Коментувати..."
+            placeholderTextColor="#BDBDBD"
+            value={comment}
+            onChangeText={(value) => setComment(value)}
+          />
+
+          <View style={styles.send}>
+            <AntDesign
+              name="arrowup"
+              size={18}
+              color="#ffffff"
+              onPress={handlePress}
+            />
+          </View>
+        </View>
+      </KeyboardAvoidingView>
     </View>
   );
 };
@@ -243,12 +272,12 @@ const styles = StyleSheet.create({
     borderTopColor: "#BDBDBD",
     borderTopWidth: 1,
 
-    backgroundColor: "#f0d2ac"
+    backgroundColor: "#f0d2ac",
   },
   container: {
     flex: 1,
 
-    backgroundColor: "#aff19f"
+    backgroundColor: "#aff19f",
   },
   photoWrap: {
     overflow: "hidden",
