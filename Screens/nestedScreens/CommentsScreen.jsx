@@ -171,73 +171,44 @@ const CommentsScreen = ({ route }) => {
 
   return (
     <View style={styles.background}>
-      {/* <View
-        style={{
-          paddingVertical: 16,
-          backgroundColor: "#FFFFFF",
-          position: "absolute",
-          bottom: 0,
-          width: dimensions,
-          zIndex: 10,
-        }}
-      >
-        <TextInput
-          style={styles.comment}
-          placeholder="Коментувати..."
-          placeholderTextColor="#BDBDBD"
-          value={comment}
-          onChangeText={(value) => setComment(value)}
-        />
-
-        <View style={styles.send}>
-          <AntDesign
-            name="arrowup"
-            size={18}
-            color="#ffffff"
-            onPress={handlePress}
-          />
-        </View>
-      </View> */}
-
-      <ScrollView>
-        <View
-          style={{
-            ...styles.container,
-            width: dimensions,
-          }}
-        >
-          <View>
-            <View
-              style={{
-                ...styles.photoWrap,
-                width: dimensions,
-                height: dimensions * 0.7,
-              }}
-            >
-              <Image style={styles.image} source={{ uri: photoPost }} />
-            </View>
-
-            <FlatList
-              nestedScrollEnabled={true}
-              scrollEnabled={false}
-              data={allComments}
-              keyExtractor={(item) => item.id}
-              renderItem={renderItem}
-              style={{ marginBottom: 75 }}
-            />
-          </View>
-        </View>
-      </ScrollView>
-
       <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}>
+ 
+        <ScrollView>
+          <View
+            style={{
+              ...styles.container,
+              width: dimensions,
+            }}
+          >
+            <View>
+              <View
+                style={{
+                  ...styles.photoWrap,
+                  width: dimensions,
+                  height: dimensions * 0.7,
+                }}
+              >
+                <Image style={styles.image} source={{ uri: photoPost }} />
+              </View>
+
+              <FlatList
+                nestedScrollEnabled={true}
+                scrollEnabled={false}
+                data={allComments}
+                keyExtractor={(item) => item.id}
+                renderItem={renderItem}
+                style={{ marginBottom: 75 }}
+              />
+            </View>
+          </View>
+        </ScrollView>
+
         <View
           style={{
             paddingVertical: 16,
             backgroundColor: "#FFFFFF",
-            position: 'absolute',
+            position: "absolute",
             bottom: 0,
-            right: "-46%",
-            // left: "-50%",
             width: dimensions,
             zIndex: 10,
           }}
@@ -293,6 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   commentWrap: {
+    flex: 1,
     backgroundColor: "rgba(0, 0, 0, 0.03)",
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
