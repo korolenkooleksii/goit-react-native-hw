@@ -214,6 +214,7 @@ const CommentsScreen = ({ route }) => {
           }}
         >
           <TextInput
+          multiline
             style={styles.comment}
             placeholder="Коментувати..."
             placeholderTextColor="#BDBDBD"
@@ -294,6 +295,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     fontSize: 16,
     lineHeight: 19,
+    flexWrap: "wrap"
   },
   send: {
     position: "absolute",
