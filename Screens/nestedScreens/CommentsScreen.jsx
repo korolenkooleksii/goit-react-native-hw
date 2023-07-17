@@ -29,8 +29,6 @@ import { getAvatar } from "../../utils/updateAvatar";
 
 import { PADDING } from "../../constants/constants";
 
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-
 const defaultPhoto = "https://fakeimg.pl/100x100?text=avatar&font=bebas";
 
 const CommentsScreen = ({ route }) => {
