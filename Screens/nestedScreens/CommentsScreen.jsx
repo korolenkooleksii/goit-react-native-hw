@@ -204,83 +204,82 @@ const CommentsScreen = ({ route }) => {
 
   return (
     <View style={styles.background}>
-      {/* <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}> */}
-      <TouchableWithoutFeedback onPress={handleTouch}>
+      <TouchableWithoutFeedback 
+      onPress={()=>handleTouch()}
+      // onPress={Keyboard.dismiss}
+      >
+        {/* <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}> */}
+      
         <>
-       
-        <View
-          style={{
-            ...styles.container,
-            width: dimensions,
-          }}
-        >
-          <View>
-            <View
-              style={{
-                ...styles.photoWrap,
-                width: dimensions,
-                height: dimensions * 0.7,
-              }}
-            >
-              <Image style={styles.image} source={{ uri: photoPost }} />
-            </View>
-
-            <ScrollView>
-              <FlatList
-                nestedScrollEnabled={true}
-                scrollEnabled={false}
-                data={allComments}
-                keyExtractor={(item) => item.id}
-                renderItem={renderItem}
+          <View
+            style={{
+              ...styles.container,
+              width: dimensions,
+            }}
+          >
+            <View>
+              <View
                 style={{
-                  marginBottom: 420,
-                  flex: 1,
-
-                  backgroundColor: "#ecb4b4",
+                  ...styles.photoWrap,
+                  width: dimensions,
+                  height: dimensions * 0.7,
                 }}
-                // style={{ marginBottom: 95 }}
-              />
-            </ScrollView>
+              >
+                <Image style={styles.image} source={{ uri: photoPost }} />
+              </View>
+
+              <ScrollView>
+                <FlatList
+                  nestedScrollEnabled={true}
+                  scrollEnabled={false}
+                  data={allComments}
+                  keyExtractor={(item) => item.id}
+                  renderItem={renderItem}
+                  style={{
+                    marginBottom: 420,
+                    flex: 1,
+                  
+                    backgroundColor: "#ecb4b4",
+                  }}
+                  // style={{ marginBottom: 95 }}
+                />
+              </ScrollView>
+            </View>
           </View>
-
-          
-
-        </View>
-        <View
-          style={{
-            paddingVertical: 16,
-            backgroundColor: "#FFFFFF",
-            position: "absolute",
-            bottom:
-              Platform.OS === "ios" && isShowKeyboard ? keyboardHeight : 0,
-            width: dimensions,
-            zIndex: 10,
-          }}
-        >
-          <TextInput
-            multiline
-            style={styles.comment}
-            placeholder="Коментувати..."
-            placeholderTextColor="#BDBDBD"
-            value={comment}
-            onChangeText={(value) => setComment(value)}
-            onFocus={handleFocus}
-            onEndEditing={() => setIsShowKeyboard(false)}
-          />
-
-          <View style={styles.send}>
-            <AntDesign
-              name="arrowup"
-              size={18}
-              color="#ffffff"
-              onPress={handlePress}
+          <View
+            style={{
+              paddingVertical: 16,
+              backgroundColor: "#FFFFFF",
+              position: "absolute",
+              bottom:
+                Platform.OS === "ios" && isShowKeyboard ? keyboardHeight : 0,
+              width: dimensions,
+              zIndex: 10,
+            }}
+          >
+            <TextInput
+              multiline
+              style={styles.comment}
+              placeholder="Коментувати..."
+              placeholderTextColor="#BDBDBD"
+              value={comment}
+              onChangeText={(value) => setComment(value)}
+              onFocus={handleFocus}
+              onEndEditing={() => setIsShowKeyboard(false)}
             />
-          </View>
-        </View>
 
+            <View style={styles.send}>
+              <AntDesign
+                name="arrowup"
+                size={18}
+                color="#ffffff"
+                onPress={handlePress}
+              />
+            </View>
+          </View>
         </>
-      </TouchableWithoutFeedback>
       {/* </KeyboardAvoidingView> */}
+      </TouchableWithoutFeedback>
     </View>
   );
 };
