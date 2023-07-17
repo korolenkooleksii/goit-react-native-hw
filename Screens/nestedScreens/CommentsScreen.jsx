@@ -45,7 +45,29 @@ const CommentsScreen = ({ route }) => {
     Dimensions.get("window").width - PADDING
   );
 
+  const [isShowKeyboard, setIsShowKeyboard] = useState(false);
+
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
   const { userId } = useAuth();
+
+  useEffect(() => {
+    const keyboardWillShow = (e) => setKeyboardHeight(e.endCoordinates.height);
+    const keyboardWillHide = () => setKeyboardHeight(0);
+
+    const showSubscription = Keyboard.addListener(
+      "keyboardWillShow",
+      keyboardWillShow
+    );
+    const hideSubscription = Keyboard.addListener(
+      "keyboardWillHide",
+      keyboardWillHide
+    );
+    return () => {
+      showSubscription.remove();
+      hideSubscription.remove();
+    };
+  }, []);
 
   useEffect(() => {
     const onChange = () => {
@@ -86,6 +108,16 @@ const CommentsScreen = ({ route }) => {
     createComment();
     setComment("");
     Keyboard.dismiss();
+    setIsShowKeyboard(false);
+  };
+
+  const handleFocus = (val) => {
+    setIsShowKeyboard(true);
+  };
+
+  const handleTouch = () => {
+    Keyboard.dismiss();
+    setIsShowKeyboard(false);
   };
 
   const renderItem = ({
@@ -173,65 +205,81 @@ const CommentsScreen = ({ route }) => {
   return (
     <View style={styles.background}>
       {/* <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}> */}
+      <TouchableWithoutFeedback onPress={handleTouch}>
+        <>
+       
+        <View
+          style={{
+            ...styles.container,
+            width: dimensions,
+          }}
+        >
+          <View>
+            <View
+              style={{
+                ...styles.photoWrap,
+                width: dimensions,
+                height: dimensions * 0.7,
+              }}
+            >
+              <Image style={styles.image} source={{ uri: photoPost }} />
+            </View>
 
-      <View
-        style={{
-          ...styles.container,
-          width: dimensions,
-        }}
-      >
-        <View>
-          <View
-            style={{
-              ...styles.photoWrap,
-              width: dimensions,
-              height: dimensions * 0.7,
-            }}
-          >
-            <Image style={styles.image} source={{ uri: photoPost }} />
+            <ScrollView>
+              <FlatList
+                nestedScrollEnabled={true}
+                scrollEnabled={false}
+                data={allComments}
+                keyExtractor={(item) => item.id}
+                renderItem={renderItem}
+                style={{
+                  marginBottom: 420,
+                  flex: 1,
+
+                  backgroundColor: "#ecb4b4",
+                }}
+                // style={{ marginBottom: 95 }}
+              />
+            </ScrollView>
           </View>
 
-          <ScrollView>
-            <FlatList
-              nestedScrollEnabled={true}
-              scrollEnabled={false}
-              data={allComments}
-              keyExtractor={(item) => item.id}
-              renderItem={renderItem}
-              style={{ marginBottom: 75 }}
-            />
-          </ScrollView>
+          
+
         </View>
-      </View>
-
-      <View
-        style={{
-          paddingVertical: 16,
-          backgroundColor: "#FFFFFF",
-          position: "absolute",
-          bottom: 0,
-          width: dimensions,
-          zIndex: 10,
-        }}
-      >
-        <TextInput
-          multiline
-          style={styles.comment}
-          placeholder="Коментувати..."
-          placeholderTextColor="#BDBDBD"
-          value={comment}
-          onChangeText={(value) => setComment(value)}
-        />
-
-        <View style={styles.send}>
-          <AntDesign
-            name="arrowup"
-            size={18}
-            color="#ffffff"
-            onPress={handlePress}
+        <View
+          style={{
+            paddingVertical: 16,
+            backgroundColor: "#FFFFFF",
+            position: "absolute",
+            bottom:
+              Platform.OS === "ios" && isShowKeyboard ? keyboardHeight : 0,
+            width: dimensions,
+            zIndex: 10,
+          }}
+        >
+          <TextInput
+            multiline
+            style={styles.comment}
+            placeholder="Коментувати..."
+            placeholderTextColor="#BDBDBD"
+            value={comment}
+            onChangeText={(value) => setComment(value)}
+            onFocus={handleFocus}
+            onEndEditing={() => setIsShowKeyboard(false)}
           />
+
+          <View style={styles.send}>
+            <AntDesign
+              name="arrowup"
+              size={18}
+              color="#ffffff"
+              onPress={handlePress}
+            />
+          </View>
         </View>
-      </View>
+
+        </>
+      </TouchableWithoutFeedback>
       {/* </KeyboardAvoidingView> */}
     </View>
   );
@@ -286,7 +334,10 @@ const styles = StyleSheet.create({
     color: "#BDBDBD",
   },
   comment: {
-    padding: 16,
+    paddingTop: 16,
+    paddingRight: 50,
+    paddingLeft: 16,
+    paddingBottom: 16,
     paddingRight: 50,
     borderRadius: 100,
     borderWidth: 1,
