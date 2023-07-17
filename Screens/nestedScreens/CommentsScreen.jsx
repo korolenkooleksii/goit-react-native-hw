@@ -204,12 +204,9 @@ const CommentsScreen = ({ route }) => {
 
   return (
     <View style={styles.background}>
-      <TouchableWithoutFeedback 
-      onPress={()=>handleTouch()}
-      // onPress={Keyboard.dismiss}
+      <TouchableWithoutFeedback
+        onPress={() => handleTouch()}
       >
-        {/* <KeyboardAvoidingView behavior={Platform.OS == "ios" ? "padding" : ""}> */}
-      
         <>
           <View
             style={{
@@ -236,12 +233,9 @@ const CommentsScreen = ({ route }) => {
                   keyExtractor={(item) => item.id}
                   renderItem={renderItem}
                   style={{
-                    marginBottom: 420,
                     flex: 1,
-                  
-                    backgroundColor: "#ecb4b4",
+                    marginBottom: isShowKeyboard ? keyboardHeight + 415 : 415,
                   }}
-                  // style={{ marginBottom: 95 }}
                 />
               </ScrollView>
             </View>
@@ -278,7 +272,6 @@ const CommentsScreen = ({ route }) => {
             </View>
           </View>
         </>
-      {/* </KeyboardAvoidingView> */}
       </TouchableWithoutFeedback>
     </View>
   );
@@ -291,13 +284,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderTopColor: "#BDBDBD",
     borderTopWidth: 1,
-
-    backgroundColor: "#f0d2ac",
   },
   container: {
     flex: 1,
-
-    backgroundColor: "#aff19f",
   },
   photoWrap: {
     overflow: "hidden",
