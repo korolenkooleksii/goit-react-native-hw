@@ -47,6 +47,8 @@ const CommentsScreen = ({ route }) => {
 
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
+  console.log("keyboardHeight 🚀  => ", keyboardHeight);
+
   const { userId } = useAuth();
 
   useEffect(() => {
@@ -201,10 +203,8 @@ const CommentsScreen = ({ route }) => {
   };
 
   return (
-    <View style={styles.background}>
-      <TouchableWithoutFeedback
-        onPress={() => handleTouch()}
-      >
+    <TouchableWithoutFeedback onPress={() => handleTouch()}>
+      <View style={styles.background}>
         <>
           <View
             style={{
@@ -270,8 +270,8 @@ const CommentsScreen = ({ route }) => {
             </View>
           </View>
         </>
-      </TouchableWithoutFeedback>
-    </View>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 

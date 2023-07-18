@@ -7,7 +7,7 @@ export const getPostsCollection = async (setPosts) => {
   await onSnapshot(postsRef, (snapshot) => {
     setPosts(
       [...snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }))].sort(
-        (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
       )
     );
   });
