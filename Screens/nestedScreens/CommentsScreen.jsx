@@ -47,8 +47,6 @@ const CommentsScreen = ({ route }) => {
 
   const [keyboardHeight, setKeyboardHeight] = useState(0);
 
-  console.log("keyboardHeight 🚀  => ", keyboardHeight);
-
   const { userId } = useAuth();
 
   useEffect(() => {
